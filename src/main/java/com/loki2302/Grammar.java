@@ -30,6 +30,15 @@ public class Grammar extends BaseParser<DOMElement> {
     			optionalGap()));
 	}
 	
+	public Rule boolLiteral() {
+		return Sequence(
+				optionalGap(),
+				Sequence(
+						FirstOf("true", "false"),
+						push(new DOMLiteralExpression(DOMLiteralType.Bool, match()))),
+				optionalGap());
+	}
+	
 	public Rule gap() {
 		return String(" ");
 	}

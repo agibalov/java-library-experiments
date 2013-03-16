@@ -48,6 +48,16 @@ public class LiteralTest extends ParserTestBase {
 		parameters.add(new Object[] {"123", parseDouble(), fail() });
 		parameters.add(new Object[] {"abc", parseDouble(), fail() });
 		
+		parameters.add(new Object[] {"true", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("true"))) });
+		parameters.add(new Object[] {"false", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("false"))) });
+		parameters.add(new Object[] {" true", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("true"))) });
+		parameters.add(new Object[] {"true ", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("true"))) });
+		parameters.add(new Object[] {" true ", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("true"))) });
+		parameters.add(new Object[] {" false", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("false"))) });
+		parameters.add(new Object[] {"false ", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("false"))) });
+		parameters.add(new Object[] {" false ", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("false"))) });
+		parameters.add(new Object[] {"abc", parseBool(), fail() });
+		
 		return parameters;
 	}
 	
@@ -55,33 +65,5 @@ public class LiteralTest extends ParserTestBase {
 	public void testLiteralParseResult() {
 		ParseResult parseResult = parser.parse(expression);
 		parseResultExpectation.check(parseResult);
-	}
-	
-	protected static ExpressionParser parseInt() {
-		return new IntExpressionParser();
-	}
-	
-	protected static ExpressionParser parseDouble() {
-		return new DoubleExpressionParser();
-	}
-	
-	public static interface ExpressionParser {
-		ParseResult parse(String expression);
-	}
-	
-	public static class IntExpressionParser implements ExpressionParser {
-		@Override
-		public ParseResult parse(String expression) {
-			Parser parser = new Parser();
-			return parser.parseIntLiteral(expression);
-		}		
-	}
-	
-	public static class DoubleExpressionParser implements ExpressionParser {
-		@Override
-		public ParseResult parse(String expression) {
-			Parser parser = new Parser();
-			return parser.parseDoubleLiteral(expression);
-		}		
-	}
+	}	
 }

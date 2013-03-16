@@ -30,4 +30,14 @@ public class Parser {
 		
 		return ParseResult.ok(parsingResult.resultValue);
 	}
+	
+	public ParseResult parseBoolLiteral(String expression) {
+		ParseRunner<DOMElement> parseRunner = new RecoveringParseRunner<DOMElement>(grammar.boolLiteral());
+		ParsingResult<DOMElement> parsingResult = parseRunner.run(expression);
+		if(parsingResult.hasErrors() || !parsingResult.matched) {
+			return ParseResult.fail();
+		}
+		
+		return ParseResult.ok(parsingResult.resultValue);
+	}
 }

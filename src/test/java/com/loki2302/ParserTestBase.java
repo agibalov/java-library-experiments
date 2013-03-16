@@ -30,4 +30,16 @@ public abstract class ParserTestBase {
 	protected static DOMLiteralExpressionExpectation havingValueOf(String stringValue) {
 		return new HasStringValueExpectation(stringValue);
 	}
+	
+	protected static ExpressionParser parseInt() {
+		return new IntExpressionParser();
+	}
+	
+	protected static ExpressionParser parseDouble() {
+		return new DoubleExpressionParser();
+	}
+	
+	protected static ExpressionParser parseBool() {
+		return new BoolExpressionParser();
+	}
 }
