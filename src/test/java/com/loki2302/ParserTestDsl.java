@@ -24,6 +24,7 @@ import com.loki2302.parser.ExpressionParser;
 import com.loki2302.parser.IntExpressionParser;
 import com.loki2302.parser.LiteralExpressionParser;
 import com.loki2302.parser.MulDivExpressionParser;
+import com.loki2302.parser.RootExpressionParser;
 
 public class ParserTestDsl {
 	private ParserTestDsl() {		
@@ -83,6 +84,10 @@ public class ParserTestDsl {
 	
 	public static ExpressionParser parseAddSub() {
 		return new AddSubExpressionParser();
+	}
+	
+	public static ExpressionParser parseExpression() {
+	    return new RootExpressionParser();
 	}
 	
 	public static BinaryExpressionExpectation withLeftExpression(ExpressionExpectation... leftExpressionExpectations) {

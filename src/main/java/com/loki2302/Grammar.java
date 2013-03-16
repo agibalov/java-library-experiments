@@ -10,7 +10,18 @@ import com.loki2302.dom.DOMExpression;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 
-public class Grammar extends BaseParser<DOMElement> {
+public class Grammar extends BaseParser<DOMElement> {    
+    public Rule expression() {
+        return addSubExpression();
+    }
+    
+    public Rule parensExpression() {
+        return Sequence(
+                openParenthesis(),
+                expression(),
+                closeParenthesis());
+    }
+    
 	public Rule addSubExpression() {
 		StringVar op = new StringVar();
 		return Sequence(
@@ -29,16 +40,22 @@ public class Grammar extends BaseParser<DOMElement> {
 	public Rule mulDivExpression() {
 		StringVar op = new StringVar();
 		return Sequence(
-				literal(),
+		        factor(),
 				ZeroOrMore(
 						decorateWithOptionalGaps(Sequence(
 								FirstOf("*", "/"),
 								op.set(match()))),
-						literal(),
+						factor(),
 						push(Helper.domBinaryExpressionFromString(
 								op.get(), 
 								(DOMExpression)pop(1), 
 								(DOMExpression)pop()))));
+	}
+	
+	public Rule factor() {
+	    return FirstOf(
+	            parensExpression(),
+	            literal());
 	}
 	
 	public Rule literal() {
@@ -71,6 +88,14 @@ public class Grammar extends BaseParser<DOMElement> {
 						FirstOf("true", "false"),
 						push(new DOMLiteralExpression(DOMLiteralType.Bool, match()))));
 	}
+	
+	public Rule openParenthesis() {
+	    return decorateWithOptionalGaps(String("("));
+	}
+	
+	public Rule closeParenthesis() {
+        return decorateWithOptionalGaps(String(")"));
+    }
 	
 	public Rule gap() {
 		return String(" ");

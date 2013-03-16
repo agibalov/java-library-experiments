@@ -35,6 +35,10 @@ public class Parser {
 		return parseExpressionWithRule(expression, grammar.addSubExpression());
 	}
 	
+	public ParseResult parseExpression(String expression) {
+        return parseExpressionWithRule(expression, grammar.expression());
+    }
+	
 	private ParseResult parseExpressionWithRule(String expression, Rule rule) {
 		ParseRunner<DOMElement> parseRunner = new RecoveringParseRunner<DOMElement>(rule);
 		ParsingResult<DOMElement> parsingResult = parseRunner.run(expression);

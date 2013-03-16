@@ -103,7 +103,7 @@ public class BinaryExpressionTest {
 				isExpression(isBinary(
 						ofType(DOMBinaryExpressionType.Add),
 						withLeftExpression(
-								isBinary(
+						        isBinary(
 										ofType(DOMBinaryExpressionType.Mul),
 										withLeftExpression(isLiteral(
 												ofType(DOMLiteralType.Int),
@@ -122,6 +122,26 @@ public class BinaryExpressionTest {
 												havingValueOf("4")))))))
 												
 				) });
+		
+		parameters.add(new Object[] { " (1 + 2) * 3 ", parseExpression(), result(
+                
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Mul),
+                        withLeftExpression(
+                                isBinary(
+                                        ofType(DOMBinaryExpressionType.Add),
+                                        withLeftExpression(isLiteral(
+                                                ofType(DOMLiteralType.Int),
+                                                havingValueOf("1"))),
+                                        withRightExpression(isLiteral(
+                                                ofType(DOMLiteralType.Int),
+                                                havingValueOf("2"))))),
+                        withRightExpression(
+                                isLiteral(
+                                        ofType(DOMLiteralType.Int),
+                                        havingValueOf("3")))))
+                
+                ) });
 		
 		return parameters;
 	}
