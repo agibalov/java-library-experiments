@@ -42,4 +42,8 @@ public abstract class ParserTestBase {
 	protected static ExpressionParser parseBool() {
 		return new BoolExpressionParser();
 	}
+	
+	protected static ExpressionParser parseLiteral() {
+		return new LiteralExpressionParser();
+	}
 }

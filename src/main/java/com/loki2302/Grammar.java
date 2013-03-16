@@ -9,6 +9,13 @@ import com.loki2302.dom.DOMLiteralType;
 
 
 public class Grammar extends BaseParser<DOMElement> {
+	public Rule literal() {
+		return FirstOf(
+				boolLiteral(),
+				doubleLiteral(),
+				intLiteral());
+	}
+	
 	public Rule intLiteral() {
 		return Sequence(
 				optionalGap(),

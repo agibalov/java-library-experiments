@@ -58,6 +58,11 @@ public class LiteralTest extends ParserTestBase {
 		parameters.add(new Object[] {" false ", parseBool(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("false"))) });
 		parameters.add(new Object[] {"abc", parseBool(), fail() });
 		
+		parameters.add(new Object[] {"true", parseLiteral(), result(isLiteral(ofType(DOMLiteralType.Bool), havingValueOf("true"))) });
+		parameters.add(new Object[] {"123", parseLiteral(), result(isLiteral(ofType(DOMLiteralType.Int), havingValueOf("123"))) });
+		parameters.add(new Object[] {"123.", parseLiteral(), result(isLiteral(ofType(DOMLiteralType.Double), havingValueOf("123."))) });
+		parameters.add(new Object[] {"abc", parseLiteral(), fail() });
+		
 		return parameters;
 	}
 	

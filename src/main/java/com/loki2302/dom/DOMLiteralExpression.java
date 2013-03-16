@@ -1,6 +1,5 @@
 package com.loki2302.dom;
 
-
 public class DOMLiteralExpression implements DOMElement {
 	private final DOMLiteralType literalType;
 	private final String stringValue;
