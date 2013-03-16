@@ -4,5 +4,13 @@ public enum DOMBinaryExpressionType {
 	Add,
 	Sub,
 	Mul,
-	Div
+	Div,
+	Less,
+	LessOrEqual,
+	Greater,
+	GreaterOrEqual,
+	NotEqual,
+	Equal,
+	And,
+	Or	
 }

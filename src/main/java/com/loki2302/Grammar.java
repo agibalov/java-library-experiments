@@ -45,13 +45,21 @@ import com.loki2302.dom.DOMLiteralType;
 // TODO: not-equal-expression
 // TODO: and-expression
 // TODO: or-expression
+// +TODO: int-literal-expression
+// +TODO: double-literal-expression
+// +TODO: bool-literal-expression
+// +TODO: add-expression
+// +TODO: sub-expression
+// +TODO: mul-expression
+// +TODO: div-expression
+// +TODO: parentheses-expression
 
 public class Grammar extends BaseParser<DOMElement> {    
     public Rule OPEN_PATENTHESIS = TERMINAL("(");
     public Rule CLOSE_PATENTHESIS = TERMINAL(")");
     
     public Rule expression() {
-        return addSubExpression();
+        return logicExpression();
     }
     
     public Rule parensExpression() {
@@ -59,6 +67,36 @@ public class Grammar extends BaseParser<DOMElement> {
                 OPEN_PATENTHESIS,
                 expression(),
                 CLOSE_PATENTHESIS);
+    }
+    
+    public Rule logicExpression() {
+        StringVar op = new StringVar();
+        return Sequence(
+                comparisonExpression(),
+                ZeroOrMore(
+                        decorateWithOptionalGaps(Sequence(
+                                FirstOf("&&", "||"),
+                                op.set(match()))),                      
+                                comparisonExpression(),
+                        push(Helper.domBinaryExpressionFromString(
+                                op.get(), 
+                                (DOMExpression)pop(1), 
+                                (DOMExpression)pop()))));
+    }
+    
+    public Rule comparisonExpression() {
+        StringVar op = new StringVar();
+        return Sequence(
+                addSubExpression(),
+                ZeroOrMore(
+                        decorateWithOptionalGaps(Sequence(
+                                FirstOf("<", "<=", ">", ">=", "==", "!="),
+                                op.set(match()))),                      
+                        addSubExpression(),
+                        push(Helper.domBinaryExpressionFromString(
+                                op.get(), 
+                                (DOMExpression)pop(1), 
+                                (DOMExpression)pop()))));
     }
     
 	public Rule addSubExpression() {
@@ -164,7 +202,23 @@ public class Grammar extends BaseParser<DOMElement> {
 				expressionType = DOMBinaryExpressionType.Mul;
 			} else if(operation.equals("/")) {
 				expressionType = DOMBinaryExpressionType.Div;
-			}			
+			} else if(operation.equals("<")) {
+			    expressionType = DOMBinaryExpressionType.Less;
+			} else if(operation.equals("<=")) {
+			    expressionType = DOMBinaryExpressionType.LessOrEqual;
+			} else if(operation.equals(">")) {
+			    expressionType = DOMBinaryExpressionType.Greater;
+			} else if(operation.equals(">=")) {
+			    expressionType = DOMBinaryExpressionType.GreaterOrEqual;
+			} else if(operation.equals("!=")) {
+			    expressionType = DOMBinaryExpressionType.NotEqual;
+			} else if(operation.equals("==")) {
+			    expressionType = DOMBinaryExpressionType.Equal;
+			} else if(operation.equals("&&")) {
+                expressionType = DOMBinaryExpressionType.Equal;
+			} else if(operation.equals("||")) {
+                expressionType = DOMBinaryExpressionType.Or;
+            }
 			
 			if(expressionType == null) {
 				throw new RuntimeException(String.format("Unknown operation - %s", operation));

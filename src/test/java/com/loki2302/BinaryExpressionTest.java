@@ -19,6 +19,10 @@ import com.loki2302.expectations.ParseResultExpectation;
 import com.loki2302.parser.ExpressionParser;
 import static com.loki2302.ParserTestDsl.*;
 
+// TODO: add tests for comparison expressions
+// TODO: add tests for logical expression
+// TODO: add test for most complicated expression possible
+
 @RunWith(Parameterized.class)
 public class BinaryExpressionTest {
 	private final String expression;
