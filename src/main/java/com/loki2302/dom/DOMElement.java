@@ -1,4 +1,4 @@
-package com.loki2302;
+package com.loki2302.dom;
 
 public interface DOMElement {    	
 }

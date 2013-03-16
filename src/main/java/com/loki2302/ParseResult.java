@@ -1,5 +1,7 @@
 package com.loki2302;
 
+import com.loki2302.dom.DOMElement;
+
 public class ParseResult {
 	private boolean isOk;
 	private DOMElement domElement;

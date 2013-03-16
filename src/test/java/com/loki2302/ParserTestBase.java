@@ -1,5 +1,6 @@
 package com.loki2302;
 
+import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.expectations.DOMElementExpectation;
 import com.loki2302.expectations.DOMLiteralExpressionExpectation;
 import com.loki2302.expectations.HasDOMLiteralTypeExpectation;
@@ -22,11 +23,11 @@ public abstract class ParserTestBase {
 		return new IsDOMLiteralExpressionExpectation(expectations);
 	}
 	
-	protected static DOMLiteralExpressionExpectation havingTypeOf(DOMLiteralType literalType) {
+	protected static DOMLiteralExpressionExpectation ofType(DOMLiteralType literalType) {
 		return new HasDOMLiteralTypeExpectation(literalType);
 	}
 	
-	protected static DOMLiteralExpressionExpectation havingStringValueOf(String stringValue) {
+	protected static DOMLiteralExpressionExpectation havingValueOf(String stringValue) {
 		return new HasStringValueExpectation(stringValue);
 	}
 }

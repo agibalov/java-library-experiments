@@ -2,8 +2,8 @@ package com.loki2302.expectations;
 
 import static org.junit.Assert.assertEquals;
 
-import com.loki2302.DOMLiteralExpression;
-import com.loki2302.DOMLiteralType;
+import com.loki2302.dom.DOMLiteralExpression;
+import com.loki2302.dom.DOMLiteralType;
 
 
 public class HasDOMLiteralTypeExpectation implements DOMLiteralExpressionExpectation {

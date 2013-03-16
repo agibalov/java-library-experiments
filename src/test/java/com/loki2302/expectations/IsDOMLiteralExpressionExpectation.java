@@ -2,8 +2,8 @@ package com.loki2302.expectations;
 
 import static org.junit.Assert.assertEquals;
 
-import com.loki2302.DOMElement;
-import com.loki2302.DOMLiteralExpression;
+import com.loki2302.dom.DOMElement;
+import com.loki2302.dom.DOMLiteralExpression;
 
 
 public class IsDOMLiteralExpressionExpectation implements DOMElementExpectation {
