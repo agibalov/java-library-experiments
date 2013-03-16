@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 
-
 public class HasDOMLiteralTypeExpectation implements DOMLiteralExpressionExpectation {
 	private final DOMLiteralType literalType;
 	
@@ -16,5 +15,5 @@ public class HasDOMLiteralTypeExpectation implements DOMLiteralExpressionExpecta
 	@Override
 	public void check(DOMLiteralExpression domLiteralExpression) {
 		assertEquals(literalType, domLiteralExpression.getLiteralType());			
-	}		
+	}
 }

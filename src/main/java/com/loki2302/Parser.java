@@ -27,6 +27,14 @@ public class Parser {
 		return parseExpressionWithRule(expression, grammar.literal());
 	}
 	
+	public ParseResult parseMulDiv(String expression) {
+		return parseExpressionWithRule(expression, grammar.mulDivExpression());
+	}
+	
+	public ParseResult parseAddSub(String expression) {
+		return parseExpressionWithRule(expression, grammar.addSubExpression());
+	}
+	
 	private ParseResult parseExpressionWithRule(String expression, Rule rule) {
 		ParseRunner<DOMElement> parseRunner = new RecoveringParseRunner<DOMElement>(rule);
 		ParsingResult<DOMElement> parsingResult = parseRunner.run(expression);
