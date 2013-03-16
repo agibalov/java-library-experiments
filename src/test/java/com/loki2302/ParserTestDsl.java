@@ -85,11 +85,11 @@ public class ParserTestDsl {
 		return new AddSubExpressionParser();
 	}
 	
-	public static BinaryExpressionExpectation havingLeftExpression(ExpressionExpectation... leftExpressionExpectations) {
+	public static BinaryExpressionExpectation withLeftExpression(ExpressionExpectation... leftExpressionExpectations) {
 		return new BinaryExpressionHasSpecificLeftExpressionExpectation(leftExpressionExpectations);
 	}
 	
-	public static BinaryExpressionExpectation havingRightExpression(ExpressionExpectation... rightExpressionExpectations) {
+	public static BinaryExpressionExpectation withRightExpression(ExpressionExpectation... rightExpressionExpectations) {
 		return new BinaryExpressionHasSpecificRightExpressionExpectation(rightExpressionExpectations);
 	}
 }
