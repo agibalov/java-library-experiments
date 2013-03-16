@@ -1,4 +1,7 @@
-package com.loki2302;
+package com.loki2302.parser;
+
+import com.loki2302.ParseResult;
+import com.loki2302.Parser;
 
 public class IntExpressionParser implements ExpressionParser {
 	@Override

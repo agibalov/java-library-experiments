@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 
-public class HasDOMLiteralTypeExpectation implements DOMLiteralExpressionExpectation {
+public class LiteralExpressionHasSpecificTypeExpectation implements LiteralExpressionExpectation {
 	private final DOMLiteralType literalType;
 	
-	public HasDOMLiteralTypeExpectation(DOMLiteralType literalType) {
+	public LiteralExpressionHasSpecificTypeExpectation(DOMLiteralType literalType) {
 		this.literalType = literalType;
 	}
 

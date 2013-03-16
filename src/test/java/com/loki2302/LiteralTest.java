@@ -11,12 +11,14 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.loki2302.dom.DOMLiteralType;
-import com.loki2302.expectations.DOMElementExpectation;
-import com.loki2302.expectations.DOMLiteralExpressionExpectation;
+import com.loki2302.expectations.ElementExpectation;
+import com.loki2302.expectations.LiteralExpressionExpectation;
 import com.loki2302.expectations.ParseResultExpectation;
+import com.loki2302.parser.ExpressionParser;
+import static com.loki2302.ParserTestDsl.*;
 
 @RunWith(Parameterized.class)
-public class LiteralTest extends ParserTestBase {
+public class LiteralTest {
 	private final String expression;
 	private final ExpressionParser parser;	
 	private final ParseResultExpectation parseResultExpectation;
@@ -74,7 +76,7 @@ public class LiteralTest extends ParserTestBase {
 		parseResultExpectation.check(parseResult);
 	}	
 	
-	private static DOMElementExpectation isLiteralExpression(DOMLiteralExpressionExpectation... expectations) {
+	private static ElementExpectation isLiteralExpression(LiteralExpressionExpectation... expectations) {
 		return isExpression(isLiteral(expectations));
 	}
 }

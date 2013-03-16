@@ -4,11 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import com.loki2302.dom.DOMLiteralExpression;
 
-
-public class HasStringValueExpectation implements DOMLiteralExpressionExpectation {
+public class LiteralExpressionHasSpecificValueExpectation implements LiteralExpressionExpectation {
 	private final String stringValue;
 	
-	public HasStringValueExpectation(String stringValue) {
+	public LiteralExpressionHasSpecificValueExpectation(String stringValue) {
 		this.stringValue = stringValue;
 	}
 

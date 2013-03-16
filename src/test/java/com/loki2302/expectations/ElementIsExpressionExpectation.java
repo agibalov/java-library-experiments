@@ -2,18 +2,17 @@ package com.loki2302.expectations;
 
 import static org.junit.Assert.*;
 
-import com.loki2302.DOMExpressionExpectation;
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
 
-public class IsDOMExpressionExpectation implements DOMElementExpectation {
-	private final DOMExpressionExpectation[] expectations;
+public class ElementIsExpressionExpectation implements ElementExpectation {
+	private final ExpressionExpectation[] expectations;
 	
-	public IsDOMExpressionExpectation() {
-		this(new DOMExpressionExpectation[]{});
+	public ElementIsExpressionExpectation() {
+		this(new ExpressionExpectation[]{});
 	}
 	
-	public IsDOMExpressionExpectation(DOMExpressionExpectation[] expectations) {
+	public ElementIsExpressionExpectation(ExpressionExpectation[] expectations) {
 		this.expectations = expectations;
 	}
 	
@@ -21,7 +20,7 @@ public class IsDOMExpressionExpectation implements DOMElementExpectation {
 	public void check(DOMElement domElement) {
 		assertTrue(domElement instanceof DOMExpression);
 		DOMExpression domExpression = (DOMExpression)domElement;
-		for(DOMExpressionExpectation expectation : expectations) {
+		for(ExpressionExpectation expectation : expectations) {
 			expectation.check(domExpression);
 		}
 	}		

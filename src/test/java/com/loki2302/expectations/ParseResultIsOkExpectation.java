@@ -7,9 +7,9 @@ import com.loki2302.dom.DOMElement;
 
 
 public class ParseResultIsOkExpectation implements ParseResultExpectation {
-	private final DOMElementExpectation domElementDescriptor;
+	private final ElementExpectation domElementDescriptor;
 	
-	public ParseResultIsOkExpectation(DOMElementExpectation domElementDescriptor) {
+	public ParseResultIsOkExpectation(ElementExpectation domElementDescriptor) {
 		this.domElementDescriptor = domElementDescriptor;
 	}
 	

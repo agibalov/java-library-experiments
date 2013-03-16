@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import com.loki2302.dom.DOMBinaryExpression;
 import com.loki2302.dom.DOMBinaryExpressionType;
 
-public class HasDOMBinaryExpressionTypeExpectation implements DOMBinaryExpressionExpectation {
+public class BinaryExpressionHasSpecificTypeExpectation implements BinaryExpressionExpectation {
 	private final DOMBinaryExpressionType expressionType;
 	
-	public HasDOMBinaryExpressionTypeExpectation(DOMBinaryExpressionType expressionType) {
+	public BinaryExpressionHasSpecificTypeExpectation(DOMBinaryExpressionType expressionType) {
 		this.expressionType = expressionType;
 	}
 
