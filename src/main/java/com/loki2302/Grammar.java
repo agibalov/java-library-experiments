@@ -11,15 +11,18 @@ import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 
 public class Grammar extends BaseParser<DOMElement> {    
+    public Rule OPEN_PATENTHESIS = TERMINAL("(");
+    public Rule CLOSE_PATENTHESIS = TERMINAL(")");
+    
     public Rule expression() {
         return addSubExpression();
     }
     
     public Rule parensExpression() {
         return Sequence(
-                openParenthesis(),
+                OPEN_PATENTHESIS,
                 expression(),
-                closeParenthesis());
+                CLOSE_PATENTHESIS);
     }
     
 	public Rule addSubExpression() {
@@ -88,15 +91,7 @@ public class Grammar extends BaseParser<DOMElement> {
 						FirstOf("true", "false"),
 						push(new DOMLiteralExpression(DOMLiteralType.Bool, match()))));
 	}
-	
-	public Rule openParenthesis() {
-	    return decorateWithOptionalGaps(String("("));
-	}
-	
-	public Rule closeParenthesis() {
-        return decorateWithOptionalGaps(String(")"));
-    }
-	
+		
 	public Rule gap() {
 		return String(" ");
 	}
@@ -111,6 +106,10 @@ public class Grammar extends BaseParser<DOMElement> {
 	
 	public Rule decorateWithOptionalGaps(Rule rule) {
 		return Sequence(optionalGap(), rule, optionalGap());
+	}
+	
+	public Rule TERMINAL(String s) {
+	    return decorateWithOptionalGaps(String(s));
 	}
 	
 	private static class Helper {
