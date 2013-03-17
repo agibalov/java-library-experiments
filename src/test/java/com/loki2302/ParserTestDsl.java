@@ -2,9 +2,11 @@ package com.loki2302;
 
 import com.loki2302.dom.DOMBinaryExpressionType;
 import com.loki2302.dom.DOMLiteralType;
+import com.loki2302.dom.DOMUnaryExpressionType;
 import com.loki2302.expectations.BinaryExpressionExpectation;
 import com.loki2302.expectations.ElementExpectation;
 import com.loki2302.expectations.ExpressionExpectation;
+import com.loki2302.expectations.ExpressionIsUnaryExpressionExpectation;
 import com.loki2302.expectations.LiteralExpressionExpectation;
 import com.loki2302.expectations.BinaryExpressionHasSpecificTypeExpectation;
 import com.loki2302.expectations.LiteralExpressionHasSpecificTypeExpectation;
@@ -17,6 +19,9 @@ import com.loki2302.expectations.ExpressionIsLiteralExpressionExpectation;
 import com.loki2302.expectations.ParseResultExpectation;
 import com.loki2302.expectations.ParseResultIsBadExpectation;
 import com.loki2302.expectations.ParseResultIsOkExpectation;
+import com.loki2302.expectations.UnaryExpressionExpectation;
+import com.loki2302.expectations.UnaryExpressionHasSpecificInnerExpressionExpectation;
+import com.loki2302.expectations.UnaryExpressionHasSpecificTypeExpectation;
 import com.loki2302.parser.AddSubExpressionParser;
 import com.loki2302.parser.BoolExpressionParser;
 import com.loki2302.parser.DoubleExpressionParser;
@@ -58,6 +63,14 @@ public class ParserTestDsl {
 		return new ExpressionIsBinaryExpressionExpectation(expectations);
 	}
 	
+	public static ExpressionExpectation isUnary(UnaryExpressionExpectation... expectations) {
+	    return new ExpressionIsUnaryExpressionExpectation(expectations);
+	}
+	
+	public static UnaryExpressionExpectation ofType(DOMUnaryExpressionType expressionType) {
+	    return new UnaryExpressionHasSpecificTypeExpectation(expressionType);
+	}
+	
 	public static BinaryExpressionExpectation ofType(DOMBinaryExpressionType expressionType) {
 		return new BinaryExpressionHasSpecificTypeExpectation(expressionType);
 	}
@@ -97,6 +110,10 @@ public class ParserTestDsl {
 	public static BinaryExpressionExpectation withRightExpression(ExpressionExpectation... rightExpressionExpectations) {
 		return new BinaryExpressionHasSpecificRightExpressionExpectation(rightExpressionExpectations);
 	}	
+	
+	public static UnaryExpressionExpectation withInnerExpression(ExpressionExpectation... expectations) {
+	    return new UnaryExpressionHasSpecificInnerExpressionExpectation(expectations);
+	}
 
     public static BinaryExpressionExpectation withIntLiteralAsLeftExpression(String stringValue) {
         return withLeftExpression(isLiteral(ofType(DOMLiteralType.Int), havingValueOf(stringValue)));
@@ -104,5 +121,9 @@ public class ParserTestDsl {
     
     public static BinaryExpressionExpectation withIntLiteralAsRightExpression(String stringValue) {
         return withRightExpression(isLiteral(ofType(DOMLiteralType.Int), havingValueOf(stringValue)));
+    }
+    
+    public static UnaryExpressionExpectation withIntLiteralAsInnerExpression(String stringValue) {
+        return withInnerExpression(isLiteral(ofType(DOMLiteralType.Int), havingValueOf(stringValue)));
     }
 }

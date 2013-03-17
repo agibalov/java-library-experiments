@@ -15,5 +15,5 @@ public class BinaryExpressionHasSpecificTypeExpectation implements BinaryExpress
 	@Override
 	public void check(DOMBinaryExpression domBinaryExpression) {
 		assertEquals(expressionType, domBinaryExpression.getExpressionType());			
-	}		
+	}
 }

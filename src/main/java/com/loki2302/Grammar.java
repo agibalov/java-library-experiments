@@ -186,6 +186,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	            postfixDecrementExpression(),
 	            plusSignExpression(),
 	            minusSignExpression(),
+	            notExpression(),
 	            factor());
 	}
 	

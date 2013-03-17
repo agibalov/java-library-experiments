@@ -16,7 +16,7 @@ public class DOMUnaryExpression implements DOMExpression {
         return expressionType;
     }
     
-    public DOMExpression innerExpression() {
+    public DOMExpression getInnerExpression() {
         return innerExpression;
     }
 }

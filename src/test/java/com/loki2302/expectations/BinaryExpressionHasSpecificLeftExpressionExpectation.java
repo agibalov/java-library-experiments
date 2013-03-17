@@ -16,5 +16,5 @@ public class BinaryExpressionHasSpecificLeftExpressionExpectation implements Bin
 		for(ExpressionExpectation expectation : expectations) {
 			expectation.check(leftExpression);
 		}
-	}		
+	}
 }
