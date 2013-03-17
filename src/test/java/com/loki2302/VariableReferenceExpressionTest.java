@@ -37,6 +37,10 @@ public class VariableReferenceExpressionTest {
                 isExpression(isVariable(withName("abc")))                                
                 ) });
 		
+		parameters.add(new Object[] { " adequateVariableName ", parseExpression(), result(               
+                isExpression(isVariable(withName("adequateVariableName")))                                
+                ) });
+		
 		return parameters;
 	}
 	

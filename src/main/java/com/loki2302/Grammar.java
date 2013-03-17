@@ -22,12 +22,9 @@ import com.loki2302.dom.DOMVariableReferenceExpression;
 // TODO: statement
 // TODO: composite-statement
 // TODO: expression-statement
-// TODO: print-statement
 // TODO: variable-definition-statement
 // TODO: function-definition
-// TODO: function-call-expression
 // TODO: program
-// TODO: variable-reference-expression
 // TODO: if-else-statement
 // TODO: for-statement
 // TODO: while-statement
@@ -36,6 +33,8 @@ import com.loki2302.dom.DOMVariableReferenceExpression;
 // TODO: break-statement
 // TODO: return-statement
 // TODO: explicit-cast-expression
+// +TODO: variable-reference-expression
+// +TODO: function-call-expression
 // +TODO: assignment-expression
 // +TODO: unary-minus-expression
 // +TODO: unary-plus-expression
