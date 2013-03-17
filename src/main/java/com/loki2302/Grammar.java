@@ -9,6 +9,8 @@ import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
+import com.loki2302.dom.DOMUnaryExpression;
+import com.loki2302.dom.DOMUnaryExpressionType;
 
 // TODO: statement
 // TODO: composite-statement
@@ -16,6 +18,7 @@ import com.loki2302.dom.DOMLiteralType;
 // TODO: print-statement
 // TODO: variable-definition-statement
 // TODO: function-definition
+// TODO: function-call-expression
 // TODO: program
 // TODO: assignment-expression
 // TODO: variable-reference-expression
@@ -37,14 +40,14 @@ import com.loki2302.dom.DOMLiteralType;
 // TODO: decrease-and-assign-expression
 // TODO: multiply-and-assign-expression
 // TODO: divide-and-assign-expression
-// TODO: less-expression
-// TODO: less-or-equal-expression
-// TODO: greater-expression
-// TODO: greater-or-equal-expression
-// TODO: equal-expression
-// TODO: not-equal-expression
-// TODO: and-expression
-// TODO: or-expression
+// -TODO: less-expression
+// -TODO: less-or-equal-expression
+// -TODO: greater-expression
+// -TODO: greater-or-equal-expression
+// -TODO: equal-expression
+// -TODO: not-equal-expression
+// -TODO: and-expression
+// -TODO: or-expression
 // +TODO: int-literal-expression
 // +TODO: double-literal-expression
 // +TODO: bool-literal-expression
@@ -59,7 +62,7 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule CLOSE_PATENTHESIS = TERMINAL(")");
     
     public Rule expression() {
-        return logicExpression();
+        return assignmentExpression();
     }
     
     public Rule parensExpression() {
@@ -69,15 +72,60 @@ public class Grammar extends BaseParser<DOMElement> {
                 CLOSE_PATENTHESIS);
     }
     
-    public Rule logicExpression() {
+    public Rule assignmentExpression() {
+        StringVar op = new StringVar();
+        return Sequence(
+                orExpression(),
+                ZeroOrMore(
+                        decorateWithOptionalGaps(Sequence(
+                                FirstOf("=", "+=", "-=", "*=", "/="),
+                                op.set(match()))),                      
+                        orExpression(),
+                        push(Helper.domBinaryExpressionFromString(
+                                op.get(), 
+                                (DOMExpression)pop(1), 
+                                (DOMExpression)pop()))));
+    }
+    
+    public Rule orExpression() {
+        StringVar op = new StringVar();
+        return Sequence(
+                andExpression(),
+                ZeroOrMore(
+                        decorateWithOptionalGaps(Sequence(
+                                "||",
+                                op.set(match()))),                      
+                        andExpression(),
+                        push(Helper.domBinaryExpressionFromString(
+                                op.get(), 
+                                (DOMExpression)pop(1), 
+                                (DOMExpression)pop()))));
+    }
+    
+    public Rule andExpression() {
+        StringVar op = new StringVar();
+        return Sequence(
+                equalityComparisonExpression(),
+                ZeroOrMore(
+                        decorateWithOptionalGaps(Sequence(
+                                "&&",
+                                op.set(match()))),                      
+                        equalityComparisonExpression(),
+                        push(Helper.domBinaryExpressionFromString(
+                                op.get(), 
+                                (DOMExpression)pop(1), 
+                                (DOMExpression)pop()))));
+    }
+    
+    public Rule equalityComparisonExpression() {
         StringVar op = new StringVar();
         return Sequence(
                 comparisonExpression(),
                 ZeroOrMore(
                         decorateWithOptionalGaps(Sequence(
-                                FirstOf("&&", "||"),
+                                FirstOf("==", "!="),
                                 op.set(match()))),                      
-                                comparisonExpression(),
+                        comparisonExpression(),
                         push(Helper.domBinaryExpressionFromString(
                                 op.get(), 
                                 (DOMExpression)pop(1), 
@@ -90,7 +138,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 addSubExpression(),
                 ZeroOrMore(
                         decorateWithOptionalGaps(Sequence(
-                                FirstOf("<", "<=", ">", ">=", "==", "!="),
+                                FirstOf("<=", "<", ">=", ">"),
                                 op.set(match()))),                      
                         addSubExpression(),
                         push(Helper.domBinaryExpressionFromString(
@@ -117,17 +165,77 @@ public class Grammar extends BaseParser<DOMElement> {
 	public Rule mulDivExpression() {
 		StringVar op = new StringVar();
 		return Sequence(
-		        factor(),
+		        unaryExpression(),
 				ZeroOrMore(
 						decorateWithOptionalGaps(Sequence(
 								FirstOf("*", "/"),
 								op.set(match()))),
-						factor(),
+						unaryExpression(),
 						push(Helper.domBinaryExpressionFromString(
 								op.get(), 
 								(DOMExpression)pop(1), 
 								(DOMExpression)pop()))));
 	}
+	
+	public Rule unaryExpression() {
+	    return FirstOf(
+	            prefixIncrementExpression(),
+	            postfixIncrementExpression(),
+	            prefixDecrementExpression(),
+	            postfixDecrementExpression(),
+	            plusSignExpression(),
+	            minusSignExpression(),
+	            factor());
+	}
+	
+	public Rule prefixIncrementExpression() {
+	    return Sequence(
+	            decorateWithOptionalGaps(String("++")), 
+	            factor(),
+	            push(new DOMUnaryExpression(DOMUnaryExpressionType.PrefixIncrement, (DOMExpression)pop())));
+	}
+	
+	public Rule postfixIncrementExpression() {
+	    return Sequence(                 
+                factor(),
+                decorateWithOptionalGaps(String("++")),
+                push(new DOMUnaryExpression(DOMUnaryExpressionType.PostfixIncrement, (DOMExpression)pop())));
+    }
+	
+	public Rule prefixDecrementExpression() {
+	    return Sequence(
+                decorateWithOptionalGaps(String("--")), 
+                factor(),
+                push(new DOMUnaryExpression(DOMUnaryExpressionType.PrefixDecrement, (DOMExpression)pop())));
+    }
+    
+    public Rule postfixDecrementExpression() {
+        return Sequence(                 
+                factor(),
+                decorateWithOptionalGaps(String("--")),
+                push(new DOMUnaryExpression(DOMUnaryExpressionType.PostfixDecrement, (DOMExpression)pop())));
+    }
+    
+    public Rule plusSignExpression() {
+        return Sequence(
+                decorateWithOptionalGaps(String("+")), 
+                factor(),
+                push(new DOMUnaryExpression(DOMUnaryExpressionType.PlusSign, (DOMExpression)pop())));
+    }
+    
+    public Rule minusSignExpression() {
+        return Sequence(
+                decorateWithOptionalGaps(String("-")), 
+                factor(),
+                push(new DOMUnaryExpression(DOMUnaryExpressionType.MinusSign, (DOMExpression)pop())));
+    }
+    
+    public Rule notExpression() {
+        return Sequence(
+                decorateWithOptionalGaps(String("!")), 
+                factor(),
+                push(new DOMUnaryExpression(DOMUnaryExpressionType.Not, (DOMExpression)pop())));
+    }
 	
 	public Rule factor() {
 	    return FirstOf(
@@ -215,11 +323,21 @@ public class Grammar extends BaseParser<DOMElement> {
 			} else if(operation.equals("==")) {
 			    expressionType = DOMBinaryExpressionType.Equal;
 			} else if(operation.equals("&&")) {
-                expressionType = DOMBinaryExpressionType.Equal;
+                expressionType = DOMBinaryExpressionType.And;
 			} else if(operation.equals("||")) {
                 expressionType = DOMBinaryExpressionType.Or;
-            }
-			
+			} else if(operation.equals("=")) {
+			    expressionType = DOMBinaryExpressionType.Assignment;
+			} else if(operation.equals("+=")) {
+                expressionType = DOMBinaryExpressionType.AddAndAssign;
+			} else if(operation.equals("-=")) {
+                expressionType = DOMBinaryExpressionType.SubAndAssign;
+			} else if(operation.equals("*=")) {
+                expressionType = DOMBinaryExpressionType.MulAndAssign;
+			} else if(operation.equals("/=")) {
+                expressionType = DOMBinaryExpressionType.DivAndAssign;
+			}
+                
 			if(expressionType == null) {
 				throw new RuntimeException(String.format("Unknown operation - %s", operation));
 			}

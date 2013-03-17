@@ -12,5 +12,10 @@ public enum DOMBinaryExpressionType {
 	NotEqual,
 	Equal,
 	And,
-	Or	
+	Or,
+	AddAndAssign,
+	SubAndAssign,
+	MulAndAssign,
+	DivAndAssign,
+	Assignment
 }

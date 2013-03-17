@@ -42,46 +42,118 @@ public class BinaryExpressionTest {
 	public static Collection<Object[]> makeTestData() {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
-		parameters.add(new Object[] { "1*2", parseMulDiv(), result(
-				isBinaryMulExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
+		parameters.add(new Object[] { " 1 + 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Add),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
 		
-		parameters.add(new Object[] { " 1 * 2 ", parseMulDiv(), result(
-				isBinaryMulExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
+		parameters.add(new Object[] { " 1 - 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Sub),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
 		
-		parameters.add(new Object[] { "1/2", parseMulDiv(), result(
-				isBinaryDivExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
+		parameters.add(new Object[] { " 1 * 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Mul),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
 		
-		parameters.add(new Object[] { " 1 / 2 ", parseMulDiv(), result(
-				isBinaryDivExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
+		parameters.add(new Object[] { " 1 / 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Div),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
 		
-		parameters.add(new Object[] { "1+2", parseAddSub(), result(
-				isBinaryAddExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
+		parameters.add(new Object[] { " 1 < 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Less),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
 		
-		parameters.add(new Object[] { " 1 + 2 ", parseAddSub(), result(
-				isBinaryAddExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
+		parameters.add(new Object[] { " 1 <= 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.LessOrEqual),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
 		
-		parameters.add(new Object[] { "1-2", parseAddSub(), result(
-				isBinarySubExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
+		parameters.add(new Object[] { " 1 > 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Greater),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
 		
-		parameters.add(new Object[] { " 1 - 2 ", parseAddSub(), result(
-				isBinarySubExpression( 
-						withIntLiteralAsLeftExpression("1"),
-						withIntLiteralAsRightExpression("2"))) });
-				
+		parameters.add(new Object[] { " 1 >= 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.GreaterOrEqual),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 == 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Equal),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 != 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.NotEqual),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 += 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.AddAndAssign),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 -= 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.SubAndAssign),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 *= 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.MulAndAssign),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 /= 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.DivAndAssign),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 && 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.And),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
+		parameters.add(new Object[] { " 1 || 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Or),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
 		parameters.add(new Object[] { " 1 * 2 * 3 ", parseMulDiv(), result(
 				
 				isExpression(isBinary(
@@ -89,16 +161,9 @@ public class BinaryExpressionTest {
 						withLeftExpression(
 								isBinary(
 										ofType(DOMBinaryExpressionType.Mul),
-										withLeftExpression(isLiteral(
-												ofType(DOMLiteralType.Int),
-												havingValueOf("1"))),
-										withRightExpression(isLiteral(
-												ofType(DOMLiteralType.Int),
-												havingValueOf("2"))))),
-						withRightExpression(
-								isLiteral(
-										ofType(DOMLiteralType.Int),
-										havingValueOf("3")))))
+										withIntLiteralAsLeftExpression("1"),
+										withIntLiteralAsRightExpression("2"))),
+						withIntLiteralAsRightExpression("3")))
 				
 				) });
 		
@@ -109,21 +174,13 @@ public class BinaryExpressionTest {
 						withLeftExpression(
 						        isBinary(
 										ofType(DOMBinaryExpressionType.Mul),
-										withLeftExpression(isLiteral(
-												ofType(DOMLiteralType.Int),
-												havingValueOf("1"))),
-										withRightExpression(isLiteral(
-												ofType(DOMLiteralType.Int),
-												havingValueOf("2"))))),
+										withIntLiteralAsLeftExpression("1"),
+										withIntLiteralAsRightExpression("2"))),
 						withRightExpression(
 								isBinary(
 										ofType(DOMBinaryExpressionType.Div),
-										withLeftExpression(isLiteral(
-												ofType(DOMLiteralType.Int),
-												havingValueOf("3"))),
-										withRightExpression(isLiteral(
-												ofType(DOMLiteralType.Int),
-												havingValueOf("4")))))))
+										withIntLiteralAsLeftExpression("3"),
+										withIntLiteralAsRightExpression("4")))))
 												
 				) });
 		
@@ -134,18 +191,11 @@ public class BinaryExpressionTest {
                         withLeftExpression(
                                 isBinary(
                                         ofType(DOMBinaryExpressionType.Add),
-                                        withLeftExpression(isLiteral(
-                                                ofType(DOMLiteralType.Int),
-                                                havingValueOf("1"))),
-                                        withRightExpression(isLiteral(
-                                                ofType(DOMLiteralType.Int),
-                                                havingValueOf("2"))))),
-                        withRightExpression(
-                                isLiteral(
-                                        ofType(DOMLiteralType.Int),
-                                        havingValueOf("3")))))
+                                        withIntLiteralAsLeftExpression("1"),
+                                        withIntLiteralAsRightExpression("2"))),
+                        withIntLiteralAsRightExpression("3")))
                 
-                ) });
+                ) });		
 		
 		return parameters;
 	}
@@ -155,23 +205,7 @@ public class BinaryExpressionTest {
 		ParseResult parseResult = parser.parse(expression);
 		parseResultExpectation.check(parseResult);
 	}	
-	
-	private static ElementExpectation isBinaryMulExpression(BinaryExpressionExpectation... expectations) {		
-		return isBinaryExpression(ArrayUtils.add(expectations, ofType(DOMBinaryExpressionType.Mul)));
-	}
-	
-	private static ElementExpectation isBinaryDivExpression(BinaryExpressionExpectation... expectations) {		
-		return isBinaryExpression(ArrayUtils.add(expectations, ofType(DOMBinaryExpressionType.Div)));
-	}
-	
-	private static ElementExpectation isBinaryAddExpression(BinaryExpressionExpectation... expectations) {		
-		return isBinaryExpression(ArrayUtils.add(expectations, ofType(DOMBinaryExpressionType.Add)));
-	}
-	
-	private static ElementExpectation isBinarySubExpression(BinaryExpressionExpectation... expectations) {		
-		return isBinaryExpression(ArrayUtils.add(expectations, ofType(DOMBinaryExpressionType.Sub)));
-	}
-	
+		
 	private static ElementExpectation isBinaryExpression(BinaryExpressionExpectation... expectations) {
 		return isExpression(isBinary(expectations));
 	}
