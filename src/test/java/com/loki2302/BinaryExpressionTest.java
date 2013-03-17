@@ -146,6 +146,13 @@ public class BinaryExpressionTest {
                         withIntLiteralAsRightExpression("2")))                                
                 ) });		
 		
+		parameters.add(new Object[] { " 1 = 2 ", parseExpression(), result(               
+                isExpression(isBinary(
+                        ofType(DOMBinaryExpressionType.Assignment),
+                        withIntLiteralAsLeftExpression("1"),
+                        withIntLiteralAsRightExpression("2")))                                
+                ) });
+		
 		return parameters;
 	}
 	
