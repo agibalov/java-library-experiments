@@ -1,12 +1,18 @@
 package com.loki2302;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.support.StringVar;
+import org.parboiled.support.Var;
+
 import com.loki2302.dom.DOMBinaryExpression;
 import com.loki2302.dom.DOMBinaryExpressionType;
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
+import com.loki2302.dom.DOMFunctionCallExpression;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.dom.DOMUnaryExpression;
@@ -60,8 +66,9 @@ import com.loki2302.dom.DOMVariableReferenceExpression;
 // +TODO: parentheses-expression
 
 public class Grammar extends BaseParser<DOMElement> {    
-    public Rule OPEN_PATENTHESIS = TERMINAL("(");
-    public Rule CLOSE_PATENTHESIS = TERMINAL(")");
+    public Rule OPEN_PARENTHESIS = TERMINAL("(");
+    public Rule CLOSE_PARENTHESIS = TERMINAL(")");
+    public Rule COMMA = TERMINAL(",");
     
     public Rule expression() {
         return assignmentExpression();
@@ -69,9 +76,9 @@ public class Grammar extends BaseParser<DOMElement> {
     
     public Rule parensExpression() {
         return Sequence(
-                OPEN_PATENTHESIS,
+                OPEN_PARENTHESIS,
                 expression(),
-                CLOSE_PATENTHESIS);
+                CLOSE_PARENTHESIS);
     }
     
     public Rule assignmentExpression() {
@@ -244,6 +251,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	    return FirstOf(
 	            parensExpression(),
 	            literal(),
+	            functionCall(),
 	            variableReference());
 	}
 	
@@ -252,6 +260,27 @@ public class Grammar extends BaseParser<DOMElement> {
 	            Sequence(
 	                    name(),
 	                    push(new DOMVariableReferenceExpression(match()))));
+	}
+	
+	public Rule functionCall() {
+	    Var<FunctionCallBuilder> builder = new Var<FunctionCallBuilder>(new FunctionCallBuilder());	    
+	    return Sequence(
+	            decorateWithOptionalGaps(
+	                    Sequence(
+	                            name(),
+	                            ACTION(builder.get().setFunctionName(match())))),
+	            OPEN_PARENTHESIS,
+	            Optional(
+	                    expression(),
+	                    ACTION(builder.get().appendParameter((DOMExpression)pop())),
+	                    ZeroOrMore(
+	                            Sequence(
+	                                    COMMA,
+	                                    expression(),
+	                                    ACTION(builder.get().appendParameter((DOMExpression)pop())))
+	                            )),
+	            CLOSE_PARENTHESIS,
+	            push(builder.get().build()));
 	}
 	
 	public Rule name() {
@@ -362,5 +391,28 @@ public class Grammar extends BaseParser<DOMElement> {
 			
 			return new DOMBinaryExpression(expressionType, leftExpression, rightExpression);
 		}
+	}
+	
+	public static class FunctionCallBuilder {
+	    private String functionName;
+	    private List<DOMExpression> parameters = new ArrayList<DOMExpression>();
+	    
+	    public boolean setFunctionName(String functionName) {
+	        this.functionName = functionName;
+	        return true;
+	    }
+	    
+	    public boolean appendParameter(DOMExpression parameter) {
+	        parameters.add(parameter);
+	        return true;
+	    }
+	    
+	    public DOMFunctionCallExpression build() {
+	        if(functionName == null || functionName == "") {
+	            throw new RuntimeException("Function name can't be empty");
+	        }
+	        
+	        return new DOMFunctionCallExpression(functionName, parameters);
+	    }
 	}
 }

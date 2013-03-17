@@ -24,5 +24,5 @@ public class ExpressionIsVariableReferenceExpectation implements ExpressionExpec
         for(VariableReferenceExpectation expectation : expectations) {
             expectation.check(domVariableReferenceExpression);
         }            
-    }	    
+    }
 }

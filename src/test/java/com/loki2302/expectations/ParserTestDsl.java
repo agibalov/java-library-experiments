@@ -7,6 +7,7 @@ import com.loki2302.expectations.element.ElementExpectation;
 import com.loki2302.expectations.element.ElementIsExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsBinaryExpressionExpectation;
+import com.loki2302.expectations.element.expression.ExpressionIsFunctionCallExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsLiteralExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsUnaryExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsVariableReferenceExpectation;
@@ -14,6 +15,10 @@ import com.loki2302.expectations.element.expression.binary.BinaryExpressionExpec
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificLeftExpressionExpectation;
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificRightExpressionExpectation;
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificTypeExpectation;
+import com.loki2302.expectations.element.expression.functioncall.FunctionCallExpressionExpectation;
+import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasNParametersExpectation;
+import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasParameterN;
+import com.loki2302.expectations.element.expression.functioncall.FunctionCallIsForSpecificFunctionNameExpectation;
 import com.loki2302.expectations.element.expression.literal.LiteralExpressionExpectation;
 import com.loki2302.expectations.element.expression.literal.LiteralExpressionHasSpecificTypeExpectation;
 import com.loki2302.expectations.element.expression.literal.LiteralExpressionHasSpecificValueExpectation;
@@ -74,8 +79,28 @@ public class ParserTestDsl {
 	    return new ExpressionIsVariableReferenceExpectation(expectations);
 	}
 	
+	public static ExpressionExpectation isFunctionCall(FunctionCallExpressionExpectation... expectations) {
+        return new ExpressionIsFunctionCallExpectation(expectations);
+    }
+	
 	public static VariableReferenceExpectation withName(String name) {
 	    return new VariableHasSpecificNameExpectation(name);
+	}
+	
+	public static FunctionCallExpressionExpectation named(String name) {
+        return new FunctionCallIsForSpecificFunctionNameExpectation(name);
+    }
+	
+	public static FunctionCallExpressionExpectation withParameter(int parameterIndex, ExpressionExpectation... expectations) {
+        return new FunctionCallHasParameterN(parameterIndex, expectations);
+    }
+	
+	public static FunctionCallExpressionExpectation withParameters(int parameterCount) {
+        return new FunctionCallHasNParametersExpectation(parameterCount);
+    }
+	
+	public static FunctionCallExpressionExpectation withNoParameters() {
+	    return new FunctionCallHasNParametersExpectation(0);
 	}
 	
 	public static UnaryExpressionExpectation ofType(DOMUnaryExpressionType expressionType) {
