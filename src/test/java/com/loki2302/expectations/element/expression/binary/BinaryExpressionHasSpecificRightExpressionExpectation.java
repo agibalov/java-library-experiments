@@ -1,7 +1,8 @@
-package com.loki2302.expectations;
+package com.loki2302.expectations.element.expression.binary;
 
 import com.loki2302.dom.DOMBinaryExpression;
 import com.loki2302.dom.DOMExpression;
+import com.loki2302.expectations.element.expression.ExpressionExpectation;
 
 public class BinaryExpressionHasSpecificRightExpressionExpectation implements BinaryExpressionExpectation {
 	private final ExpressionExpectation[] expectations;

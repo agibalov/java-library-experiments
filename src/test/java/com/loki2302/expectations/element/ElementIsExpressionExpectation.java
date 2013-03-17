@@ -1,9 +1,10 @@
-package com.loki2302.expectations;
+package com.loki2302.expectations.element;
 
 import static org.junit.Assert.*;
 
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
+import com.loki2302.expectations.element.expression.ExpressionExpectation;
 
 public class ElementIsExpressionExpectation implements ElementExpectation {
 	private final ExpressionExpectation[] expectations;

@@ -1,4 +1,4 @@
-package com.loki2302.expectations;
+package com.loki2302.expectations.element.expression.unary;
 
 import static org.junit.Assert.assertEquals;
 

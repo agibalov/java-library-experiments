@@ -1,4 +1,4 @@
-package com.loki2302.expectations;
+package com.loki2302.expectations.element.expression.literal;
 
 import com.loki2302.dom.DOMLiteralExpression;
 

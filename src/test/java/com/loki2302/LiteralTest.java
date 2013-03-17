@@ -11,11 +11,11 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.loki2302.dom.DOMLiteralType;
-import com.loki2302.expectations.ElementExpectation;
-import com.loki2302.expectations.LiteralExpressionExpectation;
-import com.loki2302.expectations.ParseResultExpectation;
+import com.loki2302.expectations.element.ElementExpectation;
+import com.loki2302.expectations.element.expression.literal.LiteralExpressionExpectation;
+import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.parser.ExpressionParser;
-import static com.loki2302.ParserTestDsl.*;
+import static com.loki2302.expectations.ParserTestDsl.*;
 
 @RunWith(Parameterized.class)
 public class LiteralTest {

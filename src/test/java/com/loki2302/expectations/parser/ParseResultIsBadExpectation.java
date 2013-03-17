@@ -1,4 +1,4 @@
-package com.loki2302.expectations;
+package com.loki2302.expectations.parser;
 
 import static org.junit.Assert.assertFalse;
 

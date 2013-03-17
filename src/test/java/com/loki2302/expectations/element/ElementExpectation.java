@@ -1,4 +1,4 @@
-package com.loki2302.expectations;
+package com.loki2302.expectations.element;
 
 import com.loki2302.dom.DOMElement;
 
