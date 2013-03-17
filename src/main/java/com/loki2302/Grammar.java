@@ -11,6 +11,7 @@ import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.dom.DOMUnaryExpression;
 import com.loki2302.dom.DOMUnaryExpressionType;
+import com.loki2302.dom.DOMVariableReferenceExpression;
 
 // TODO: statement
 // TODO: composite-statement
@@ -242,7 +243,22 @@ public class Grammar extends BaseParser<DOMElement> {
 	public Rule factor() {
 	    return FirstOf(
 	            parensExpression(),
-	            literal());
+	            literal(),
+	            variableReference());
+	}
+	
+	public Rule variableReference() {
+	    return decorateWithOptionalGaps(
+	            Sequence(
+	                    name(),
+	                    push(new DOMVariableReferenceExpression(match()))));
+	}
+	
+	public Rule name() {
+	    return OneOrMore(
+	            FirstOf(
+	                    CharRange('a', 'z'),
+	                    CharRange('A', 'Z')));
 	}
 	
 	public Rule literal() {

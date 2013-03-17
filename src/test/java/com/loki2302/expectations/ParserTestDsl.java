@@ -9,6 +9,7 @@ import com.loki2302.expectations.element.expression.ExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsBinaryExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsLiteralExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsUnaryExpressionExpectation;
+import com.loki2302.expectations.element.expression.ExpressionIsVariableReferenceExpectation;
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionExpectation;
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificLeftExpressionExpectation;
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificRightExpressionExpectation;
@@ -19,6 +20,8 @@ import com.loki2302.expectations.element.expression.literal.LiteralExpressionHas
 import com.loki2302.expectations.element.expression.unary.UnaryExpressionExpectation;
 import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpecificInnerExpressionExpectation;
 import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpecificTypeExpectation;
+import com.loki2302.expectations.element.expression.variable.VariableHasSpecificNameExpectation;
+import com.loki2302.expectations.element.expression.variable.VariableReferenceExpectation;
 import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.expectations.parser.ParseResultIsBadExpectation;
 import com.loki2302.expectations.parser.ParseResultIsOkExpectation;
@@ -65,6 +68,14 @@ public class ParserTestDsl {
 	
 	public static ExpressionExpectation isUnary(UnaryExpressionExpectation... expectations) {
 	    return new ExpressionIsUnaryExpressionExpectation(expectations);
+	}
+	
+	public static ExpressionExpectation isVariable(VariableReferenceExpectation... expectations) {
+	    return new ExpressionIsVariableReferenceExpectation(expectations);
+	}
+	
+	public static VariableReferenceExpectation withName(String name) {
+	    return new VariableHasSpecificNameExpectation(name);
 	}
 	
 	public static UnaryExpressionExpectation ofType(DOMUnaryExpressionType expressionType) {
