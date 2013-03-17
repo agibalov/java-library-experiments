@@ -96,5 +96,13 @@ public class ParserTestDsl {
 	
 	public static BinaryExpressionExpectation withRightExpression(ExpressionExpectation... rightExpressionExpectations) {
 		return new BinaryExpressionHasSpecificRightExpressionExpectation(rightExpressionExpectations);
-	}
+	}	
+
+    public static BinaryExpressionExpectation withIntLiteralAsLeftExpression(String stringValue) {
+        return withLeftExpression(isLiteral(ofType(DOMLiteralType.Int), havingValueOf(stringValue)));
+    }
+    
+    public static BinaryExpressionExpectation withIntLiteralAsRightExpression(String stringValue) {
+        return withRightExpression(isLiteral(ofType(DOMLiteralType.Int), havingValueOf(stringValue)));
+    }
 }
