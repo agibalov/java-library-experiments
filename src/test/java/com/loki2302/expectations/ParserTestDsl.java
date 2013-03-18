@@ -27,17 +27,17 @@ import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpec
 import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpecificTypeExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableHasSpecificNameExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableReferenceExpectation;
+import com.loki2302.expectations.element.statement.ElementIsStatementExpectation;
+import com.loki2302.expectations.element.statement.ExpressionStatementExpectation;
+import com.loki2302.expectations.element.statement.ExpressionStatementHasSpecificExpressionExpectation;
+import com.loki2302.expectations.element.statement.StatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsExpressionStatementExpectation;
 import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.expectations.parser.ParseResultIsBadExpectation;
 import com.loki2302.expectations.parser.ParseResultIsOkExpectation;
-import com.loki2302.parser.AddSubExpressionParser;
-import com.loki2302.parser.BoolExpressionParser;
-import com.loki2302.parser.DoubleExpressionParser;
 import com.loki2302.parser.ExpressionParser;
-import com.loki2302.parser.IntExpressionParser;
-import com.loki2302.parser.LiteralExpressionParser;
-import com.loki2302.parser.MulDivExpressionParser;
 import com.loki2302.parser.RootExpressionParser;
+import com.loki2302.parser.StatementParser;
 
 public class ParserTestDsl {
 	private ParserTestDsl() {		
@@ -53,6 +53,18 @@ public class ParserTestDsl {
 	
 	public static ElementExpectation isExpression(ExpressionExpectation... expectations) {
 		return new ElementIsExpressionExpectation(expectations);
+	}
+	
+	public static ElementExpectation isStatement(StatementExpectation... expectations) {
+	    return new ElementIsStatementExpectation(expectations);
+	}
+	
+	public static StatementExpectation isExpressionStatement(ExpressionStatementExpectation... expectations) {
+	    return new StatementIsExpressionStatementExpectation(expectations);
+	}
+	
+	public static ExpressionStatementExpectation withExpression(ExpressionExpectation... expectations) {
+	    return new ExpressionStatementHasSpecificExpressionExpectation(expectations);
 	}
 	
 	public static ExpressionExpectation isLiteral(LiteralExpressionExpectation... expectations) {
@@ -111,33 +123,13 @@ public class ParserTestDsl {
 		return new BinaryExpressionHasSpecificTypeExpectation(expressionType);
 	}
 	
-	public static ExpressionParser parseInt() {
-		return new IntExpressionParser();
-	}
-	
-	public static ExpressionParser parseDouble() {
-		return new DoubleExpressionParser();
-	}
-	
-	public static ExpressionParser parseBool() {
-		return new BoolExpressionParser();
-	}
-	
-	public static ExpressionParser parseLiteral() {
-		return new LiteralExpressionParser();
-	}
-	
-	public static ExpressionParser parseMulDiv() {
-		return new MulDivExpressionParser();
-	}
-	
-	public static ExpressionParser parseAddSub() {
-		return new AddSubExpressionParser();
-	}
-	
 	public static ExpressionParser parseExpression() {
 	    return new RootExpressionParser();
 	}
+	
+	public static ExpressionParser parseStatement() {
+        return new StatementParser();
+    }
 	
 	public static BinaryExpressionExpectation withLeftExpression(ExpressionExpectation... leftExpressionExpectations) {
 		return new BinaryExpressionHasSpecificLeftExpressionExpectation(leftExpressionExpectations);

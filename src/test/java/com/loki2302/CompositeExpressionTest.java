@@ -34,7 +34,7 @@ public class CompositeExpressionTest {
 	public static Collection<Object[]> makeTestData() {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
-		parameters.add(new Object[] { " 1 * 2 * 3 ", parseMulDiv(), result(
+		parameters.add(new Object[] { " 1 * 2 * 3 ", parseExpression(), result(
 				
 				isExpression(isBinary(
 						ofType(DOMBinaryExpressionType.Mul),
@@ -47,7 +47,7 @@ public class CompositeExpressionTest {
 				
 				) });
 		
-		parameters.add(new Object[] { " 1 * 2 + 3 / 4 ", parseAddSub(), result(
+		parameters.add(new Object[] { " 1 * 2 + 3 / 4 ", parseExpression(), result(
 				
 				isExpression(isBinary(
 						ofType(DOMBinaryExpressionType.Add),

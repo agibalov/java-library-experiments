@@ -24,5 +24,5 @@ public class ElementIsExpressionExpectation implements ElementExpectation {
 		for(ExpressionExpectation expectation : expectations) {
 			expectation.check(domExpression);
 		}
-	}		
+	}
 }

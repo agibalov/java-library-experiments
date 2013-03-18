@@ -12,6 +12,7 @@ import com.loki2302.dom.DOMBinaryExpression;
 import com.loki2302.dom.DOMBinaryExpressionType;
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
+import com.loki2302.dom.DOMExpressionStatement;
 import com.loki2302.dom.DOMFunctionCallExpression;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
@@ -68,6 +69,16 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule OPEN_PARENTHESIS = TERMINAL("(");
     public Rule CLOSE_PARENTHESIS = TERMINAL(")");
     public Rule COMMA = TERMINAL(",");
+    
+    public Rule statement() {
+        return expressionStatement();
+    }
+    
+    public Rule expressionStatement() {
+        return Sequence(
+                expression(),
+                push(new DOMExpressionStatement((DOMExpression)pop())));
+    }
     
     public Rule expression() {
         return assignmentExpression();

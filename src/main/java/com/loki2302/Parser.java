@@ -9,34 +9,14 @@ import org.parboiled.support.ParsingResult;
 import com.loki2302.dom.DOMElement;
 
 public class Parser {
-	private final Grammar grammar = Parboiled.createParser(Grammar.class);
-	
-	public ParseResult parseIntLiteral(String expression) {
-		return parseExpressionWithRule(expression, grammar.intLiteral());
-	}
-	
-	public ParseResult parseDoubleLiteral(String expression) {
-		return parseExpressionWithRule(expression, grammar.doubleLiteral());
-	}
-	
-	public ParseResult parseBoolLiteral(String expression) {
-		return parseExpressionWithRule(expression, grammar.boolLiteral());
-	}
-	
-	public ParseResult parseLiteral(String expression) {
-		return parseExpressionWithRule(expression, grammar.literal());
-	}
-	
-	public ParseResult parseMulDiv(String expression) {
-		return parseExpressionWithRule(expression, grammar.mulDivExpression());
-	}
-	
-	public ParseResult parseAddSub(String expression) {
-		return parseExpressionWithRule(expression, grammar.addSubExpression());
-	}
+	private final Grammar grammar = Parboiled.createParser(Grammar.class);	
 	
 	public ParseResult parseExpression(String expression) {
         return parseExpressionWithRule(expression, grammar.expression());
+    }
+	
+	public ParseResult parseStatement(String expression) {
+        return parseExpressionWithRule(expression, grammar.statement());
     }
 	
 	private ParseResult parseExpressionWithRule(String expression, Rule rule) {
