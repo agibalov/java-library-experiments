@@ -1,0 +1,27 @@
+package com.loki2302.expectations.element.statement;
+
+import static org.junit.Assert.assertTrue;
+
+import com.loki2302.dom.DOMCompositeStatement;
+import com.loki2302.dom.DOMStatement;
+
+public class StatementIsCompositeStatementExpectation implements StatementExpectation {
+    private final CompositeStatementExpectation[] expectations;
+    
+    public StatementIsCompositeStatementExpectation() {
+        this(new CompositeStatementExpectation[]{});
+    }
+    
+    public StatementIsCompositeStatementExpectation(CompositeStatementExpectation[] expectations) {
+        this.expectations = expectations;
+    }
+    
+    @Override
+    public void check(DOMStatement domStatement) {
+        assertTrue(domStatement instanceof DOMCompositeStatement);
+        DOMCompositeStatement domCompositeStatement = (DOMCompositeStatement)domStatement;
+        for(CompositeStatementExpectation expectation : expectations) {
+            expectation.check(domCompositeStatement);
+        }
+    }
+}

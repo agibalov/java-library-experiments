@@ -15,6 +15,10 @@ public class Parser {
         return parseExpressionWithRule(expression, grammar.expression());
     }
 	
+	public ParseResult parsePureStatement(String expression) {
+        return parseExpressionWithRule(expression, grammar.pureStatement());
+    }
+	
 	public ParseResult parseStatement(String expression) {
         return parseExpressionWithRule(expression, grammar.statement());
     }

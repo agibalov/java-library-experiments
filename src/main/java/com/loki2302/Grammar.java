@@ -10,19 +10,19 @@ import org.parboiled.support.Var;
 
 import com.loki2302.dom.DOMBinaryExpression;
 import com.loki2302.dom.DOMBinaryExpressionType;
+import com.loki2302.dom.DOMCompositeStatement;
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
 import com.loki2302.dom.DOMExpressionStatement;
 import com.loki2302.dom.DOMFunctionCallExpression;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
+import com.loki2302.dom.DOMNullStatement;
+import com.loki2302.dom.DOMStatement;
 import com.loki2302.dom.DOMUnaryExpression;
 import com.loki2302.dom.DOMUnaryExpressionType;
 import com.loki2302.dom.DOMVariableReferenceExpression;
 
-// TODO: statement
-// TODO: composite-statement
-// TODO: expression-statement
 // TODO: variable-definition-statement
 // TODO: function-definition
 // TODO: program
@@ -34,6 +34,10 @@ import com.loki2302.dom.DOMVariableReferenceExpression;
 // TODO: break-statement
 // TODO: return-statement
 // TODO: explicit-cast-expression
+// -TODO: composite-statement
+// -TODO: null-statement
+// +TODO: statement
+// +TODO: expression-statement
 // +TODO: variable-reference-expression
 // +TODO: function-call-expression
 // +TODO: assignment-expression
@@ -69,9 +73,40 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule OPEN_PARENTHESIS = TERMINAL("(");
     public Rule CLOSE_PARENTHESIS = TERMINAL(")");
     public Rule COMMA = TERMINAL(",");
+    public Rule SEMICOLON = TERMINAL(";");
+    public Rule OPEN_BRACE = TERMINAL("{");
+    public Rule CLOSE_BRACE = TERMINAL("}");
+    public Rule NOTHING = TERMINAL("");    
     
     public Rule statement() {
-        return expressionStatement();
+        return FirstOf(
+                compositeStatement(),
+                Sequence(expressionStatement(), SEMICOLON),                
+                Sequence(nullStatement(), SEMICOLON));
+    }
+    
+    public Rule pureStatement() {
+        return FirstOf(
+                compositeStatement(),
+                expressionStatement(),                
+                nullStatement());
+    }
+    
+    public Rule nullStatement() {
+        return Sequence(NOTHING, push(new DOMNullStatement()));
+    }
+    
+    public Rule compositeStatement() {
+        Var<CompositeStatementBuilder> builder = 
+                new Var<CompositeStatementBuilder>(new CompositeStatementBuilder());
+        return Sequence(
+                OPEN_BRACE,                
+                ZeroOrMore(
+                        Sequence(
+                                statement(),
+                                ACTION(builder.get().appendStatement((DOMStatement)pop())))),
+                CLOSE_BRACE,
+                push(builder.get().build()));
     }
     
     public Rule expressionStatement() {
@@ -405,7 +440,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	
 	public static class FunctionCallBuilder {
 	    private String functionName;
-	    private List<DOMExpression> parameters = new ArrayList<DOMExpression>();
+	    private final List<DOMExpression> parameters = new ArrayList<DOMExpression>();
 	    
 	    public boolean setFunctionName(String functionName) {
 	        this.functionName = functionName;
@@ -423,6 +458,19 @@ public class Grammar extends BaseParser<DOMElement> {
 	        }
 	        
 	        return new DOMFunctionCallExpression(functionName, parameters);
+	    }
+	}
+	
+	public static class CompositeStatementBuilder {
+	    private final List<DOMStatement> statements = new ArrayList<DOMStatement>();
+	    
+	    public boolean appendStatement(DOMStatement domStatement) {
+	        statements.add(domStatement);
+	        return true;
+	    }
+	    
+	    public DOMCompositeStatement build() {
+	        return new DOMCompositeStatement(statements);
 	    }
 	}
 }

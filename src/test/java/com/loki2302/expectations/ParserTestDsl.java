@@ -27,16 +27,20 @@ import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpec
 import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpecificTypeExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableHasSpecificNameExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableReferenceExpectation;
+import com.loki2302.expectations.element.statement.CompositeStatementExpectation;
+import com.loki2302.expectations.element.statement.CompositeStatementHasNumberOfChildrenExpectation;
 import com.loki2302.expectations.element.statement.ElementIsStatementExpectation;
 import com.loki2302.expectations.element.statement.ExpressionStatementExpectation;
 import com.loki2302.expectations.element.statement.ExpressionStatementHasSpecificExpressionExpectation;
 import com.loki2302.expectations.element.statement.StatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsCompositeStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsExpressionStatementExpectation;
 import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.expectations.parser.ParseResultIsBadExpectation;
 import com.loki2302.expectations.parser.ParseResultIsOkExpectation;
 import com.loki2302.parser.ExpressionParser;
 import com.loki2302.parser.RootExpressionParser;
+import com.loki2302.parser.PureStatementParser;
 import com.loki2302.parser.StatementParser;
 
 public class ParserTestDsl {
@@ -61,6 +65,14 @@ public class ParserTestDsl {
 	
 	public static StatementExpectation isExpressionStatement(ExpressionStatementExpectation... expectations) {
 	    return new StatementIsExpressionStatementExpectation(expectations);
+	}
+	
+	public static StatementExpectation isCompositeStatement(CompositeStatementExpectation... expectations) {
+        return new StatementIsCompositeStatementExpectation(expectations);
+    }	
+	
+	public static CompositeStatementExpectation withChildren(int childrenCount) {
+	    return new CompositeStatementHasNumberOfChildrenExpectation(childrenCount);
 	}
 	
 	public static ExpressionStatementExpectation withExpression(ExpressionExpectation... expectations) {
@@ -126,6 +138,10 @@ public class ParserTestDsl {
 	public static ExpressionParser parseExpression() {
 	    return new RootExpressionParser();
 	}
+	
+	public static ExpressionParser parsePureStatement() {
+        return new PureStatementParser();
+    }
 	
 	public static ExpressionParser parseStatement() {
         return new StatementParser();

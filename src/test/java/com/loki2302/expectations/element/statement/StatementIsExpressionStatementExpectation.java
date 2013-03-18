@@ -23,5 +23,5 @@ public class StatementIsExpressionStatementExpectation implements StatementExpec
         for(ExpressionStatementExpectation expectation : expectations) {
             expectation.check(domExpressionStatement);
         }
-    }    
+    }
 }

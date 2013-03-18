@@ -10,18 +10,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.parser.ExpressionParser;
 import static com.loki2302.expectations.ParserTestDsl.*;
 
 @RunWith(Parameterized.class)
-public class ExpressionStatementTest {
+public class CompositeStatementTest {
 	private final String expression;
 	private final ExpressionParser parser;	
 	private final ParseResultExpectation parseResultExpectation;
 	
-	public ExpressionStatementTest(			
+	public CompositeStatementTest(			
 			String expression,
 			ExpressionParser parser,
 			ParseResultExpectation parseResultExpectation) {
@@ -34,11 +33,8 @@ public class ExpressionStatementTest {
 	public static Collection<Object[]> makeTestData() {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
-		parameters.add(new Object[] { " 1 ", parsePureStatement(), result(               
-                isStatement(isExpressionStatement(
-                        withExpression(isLiteral(
-                                ofType(DOMLiteralType.Int), 
-                                havingValueOf("1")))))
+		parameters.add(new Object[] { " { 1; 2; } ", parsePureStatement(), result(               
+                isStatement(isCompositeStatement(withChildren(2)))
                 ) });
 		
 		return parameters;
