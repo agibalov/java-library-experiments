@@ -1,4 +1,4 @@
-package com.loki2302.expectations.element.statement;
+package com.loki2302.expectations.element.statement.composite;
 
 import static org.junit.Assert.assertTrue;
 
@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.loki2302.dom.DOMCompositeStatement;
 import com.loki2302.dom.DOMStatement;
+import com.loki2302.expectations.element.statement.StatementExpectation;
 
 public class CompositeStatementHasChildExpectation implements CompositeStatementExpectation {
     private final int childIndex;

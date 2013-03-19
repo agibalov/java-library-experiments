@@ -5,6 +5,7 @@ import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.dom.DOMUnaryExpressionType;
 import com.loki2302.expectations.element.ElementExpectation;
 import com.loki2302.expectations.element.ElementIsExpressionExpectation;
+import com.loki2302.expectations.element.ElementIsStatementExpectation;
 import com.loki2302.expectations.element.expression.ExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsBinaryExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsFunctionCallExpectation;
@@ -27,15 +28,21 @@ import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpec
 import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpecificTypeExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableHasSpecificNameExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableReferenceExpectation;
-import com.loki2302.expectations.element.statement.CompositeStatementExpectation;
-import com.loki2302.expectations.element.statement.CompositeStatementHasChildExpectation;
-import com.loki2302.expectations.element.statement.CompositeStatementHasNumberOfChildrenExpectation;
-import com.loki2302.expectations.element.statement.ElementIsStatementExpectation;
-import com.loki2302.expectations.element.statement.ExpressionStatementExpectation;
-import com.loki2302.expectations.element.statement.ExpressionStatementHasSpecificExpressionExpectation;
 import com.loki2302.expectations.element.statement.StatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsCompositeStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsExpressionStatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsIfStatementExpectation;
+import com.loki2302.expectations.element.statement.composite.CompositeStatementExpectation;
+import com.loki2302.expectations.element.statement.composite.CompositeStatementHasChildExpectation;
+import com.loki2302.expectations.element.statement.composite.CompositeStatementHasNumberOfChildrenExpectation;
+import com.loki2302.expectations.element.statement.expression.ExpressionStatementExpectation;
+import com.loki2302.expectations.element.statement.expression.ExpressionStatementHasSpecificExpressionExpectation;
+import com.loki2302.expectations.element.statement.ifstatement.IfStatementDoesNotHaveFalseBranchExpectation;
+import com.loki2302.expectations.element.statement.ifstatement.IfStatementDoesNotHaveTrueBranchExpectation;
+import com.loki2302.expectations.element.statement.ifstatement.IfStatementExpectation;
+import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasConditionExpressionExpectation;
+import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasFalseBranchExpectation;
+import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasTrueBranchExpectation;
 import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.expectations.parser.ParseResultIsBadExpectation;
 import com.loki2302.expectations.parser.ParseResultIsOkExpectation;
@@ -174,5 +181,30 @@ public class ParserTestDsl {
     
     public static UnaryExpressionExpectation withIntLiteralAsInnerExpression(String stringValue) {
         return withInnerExpression(isLiteral(ofType(DOMLiteralType.Int), havingValueOf(stringValue)));
+    }    
+
+    
+    public static StatementExpectation ifStatement(IfStatementExpectation... expectations) {
+        return new StatementIsIfStatementExpectation(expectations);
+    }
+    
+    public static IfStatementExpectation withCondition(ExpressionExpectation... expectations) {
+        return new IfStatementHasConditionExpressionExpectation(expectations);
+    }
+    
+    public static IfStatementExpectation hasTrueBranch(StatementExpectation... expectations) {
+        return new IfStatementHasTrueBranchExpectation(expectations);
+    }
+    
+    public static IfStatementExpectation hasNoTrueBranch() {
+        return new IfStatementDoesNotHaveTrueBranchExpectation();
+    }
+    
+    public static IfStatementExpectation hasFalseBranch(StatementExpectation... expectations) {
+        return new IfStatementHasFalseBranchExpectation(expectations);
+    }
+    
+    public static IfStatementExpectation hasNoFalseBranch() {
+        return new IfStatementDoesNotHaveFalseBranchExpectation();
     }
 }

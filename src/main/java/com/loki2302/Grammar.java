@@ -15,6 +15,7 @@ import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
 import com.loki2302.dom.DOMExpressionStatement;
 import com.loki2302.dom.DOMFunctionCallExpression;
+import com.loki2302.dom.DOMIfStatement;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.dom.DOMNullStatement;
@@ -34,8 +35,8 @@ import com.loki2302.dom.DOMVariableReferenceExpression;
 // TODO: break-statement
 // TODO: return-statement
 // TODO: explicit-cast-expression
-// -TODO: composite-statement
-// -TODO: null-statement
+// +TODO: composite-statement
+// +TODO: null-statement
 // +TODO: statement
 // +TODO: expression-statement
 // +TODO: variable-reference-expression
@@ -77,10 +78,13 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule OPEN_BRACE = TERMINAL("{");
     public Rule CLOSE_BRACE = TERMINAL("}");
     public Rule NOTHING = TERMINAL("");    
+    public Rule IF = TERMINAL("if");
+    public Rule ELSE = TERMINAL("else");
     
     public Rule statement() {
         return FirstOf(
                 compositeStatement(),
+                ifStatement(),
                 Sequence(expressionStatement(), SEMICOLON),                
                 Sequence(nullStatement(), SEMICOLON));
     }
@@ -88,12 +92,33 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule pureStatement() {
         return FirstOf(
                 compositeStatement(),
+                ifStatement(),
                 expressionStatement(),                
                 nullStatement());
-    }
+    }    
     
     public Rule nullStatement() {
         return Sequence(NOTHING, push(new DOMNullStatement()));
+    }
+    
+    public Rule ifStatement() {
+        Var<IfStatementBuilder> builder = new Var<IfStatementBuilder>(new IfStatementBuilder());
+        return Sequence(
+                IF,
+                OPEN_PARENTHESIS,
+                Sequence(
+                        expression(),
+                        ACTION(builder.get().setConditionExpression((DOMExpression)pop())),
+                CLOSE_PARENTHESIS,
+                Sequence(
+                        statement(),
+                        ACTION(builder.get().setTrueBranch((DOMStatement)pop())),
+                Optional(
+                        ELSE,
+                        Sequence(
+                                statement(),
+                                ACTION(builder.get().setFalseBranch((DOMStatement)pop())))))),
+                push(builder.get().build()));
     }
     
     public Rule compositeStatement() {
@@ -471,6 +496,31 @@ public class Grammar extends BaseParser<DOMElement> {
 	    
 	    public DOMCompositeStatement build() {
 	        return new DOMCompositeStatement(statements);
+	    }
+	}
+	
+	public static class IfStatementBuilder {
+	    private DOMExpression conditionExpression;
+	    private DOMStatement trueBranch;
+	    private DOMStatement falseBranch;
+	    
+	    public boolean setConditionExpression(DOMExpression conditionExpression) {
+	        this.conditionExpression = conditionExpression;
+	        return true;
+	    }
+	    
+	    public boolean setTrueBranch(DOMStatement trueBranch) {
+	        this.trueBranch = trueBranch;
+	        return true;
+	    }
+	    
+	    public boolean setFalseBranch(DOMStatement falseBranch) {
+            this.falseBranch = falseBranch;
+            return true;
+        }
+	    
+	    public DOMIfStatement build() {
+	        return new DOMIfStatement(conditionExpression, trueBranch, falseBranch);
 	    }
 	}
 }

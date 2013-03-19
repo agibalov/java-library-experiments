@@ -1,4 +1,4 @@
-package com.loki2302.expectations.element.statement;
+package com.loki2302.expectations.element.statement.composite;
 
 import com.loki2302.dom.DOMCompositeStatement;
 

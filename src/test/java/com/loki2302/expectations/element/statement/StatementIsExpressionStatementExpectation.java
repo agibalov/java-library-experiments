@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.loki2302.dom.DOMExpressionStatement;
 import com.loki2302.dom.DOMStatement;
+import com.loki2302.expectations.element.statement.expression.ExpressionStatementExpectation;
 
 public class StatementIsExpressionStatementExpectation implements StatementExpectation {
     private final ExpressionStatementExpectation[] expectations;

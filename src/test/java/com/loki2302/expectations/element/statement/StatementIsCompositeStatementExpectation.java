@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.loki2302.dom.DOMCompositeStatement;
 import com.loki2302.dom.DOMStatement;
+import com.loki2302.expectations.element.statement.composite.CompositeStatementExpectation;
 
 public class StatementIsCompositeStatementExpectation implements StatementExpectation {
     private final CompositeStatementExpectation[] expectations;

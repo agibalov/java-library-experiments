@@ -1,10 +1,10 @@
-package com.loki2302.expectations.element.statement;
+package com.loki2302.expectations.element;
 
 import static org.junit.Assert.assertTrue;
 
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMStatement;
-import com.loki2302.expectations.element.ElementExpectation;
+import com.loki2302.expectations.element.statement.StatementExpectation;
 
 public class ElementIsStatementExpectation implements ElementExpectation {
     private final StatementExpectation[] expectations;
