@@ -28,6 +28,7 @@ import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpec
 import com.loki2302.expectations.element.expression.variable.VariableHasSpecificNameExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableReferenceExpectation;
 import com.loki2302.expectations.element.statement.CompositeStatementExpectation;
+import com.loki2302.expectations.element.statement.CompositeStatementHasChildExpectation;
 import com.loki2302.expectations.element.statement.CompositeStatementHasNumberOfChildrenExpectation;
 import com.loki2302.expectations.element.statement.ElementIsStatementExpectation;
 import com.loki2302.expectations.element.statement.ExpressionStatementExpectation;
@@ -73,6 +74,10 @@ public class ParserTestDsl {
 	
 	public static CompositeStatementExpectation withChildren(int childrenCount) {
 	    return new CompositeStatementHasNumberOfChildrenExpectation(childrenCount);
+	}
+	
+	public static CompositeStatementExpectation withChild(int childIndex, StatementExpectation... expectations) {
+	    return new CompositeStatementHasChildExpectation(childIndex, expectations);
 	}
 	
 	public static ExpressionStatementExpectation withExpression(ExpressionExpectation... expectations) {

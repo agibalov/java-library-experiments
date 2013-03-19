@@ -1,6 +1,6 @@
 package com.loki2302.expectations.element.statement;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import com.loki2302.dom.DOMCompositeStatement;
 
@@ -14,5 +14,5 @@ public class CompositeStatementHasNumberOfChildrenExpectation implements Composi
     @Override
     public void check(DOMCompositeStatement domCompositeStatement) {
         assertEquals(childCount, domCompositeStatement.getStatements().size());            
-    }        
+    }
 }

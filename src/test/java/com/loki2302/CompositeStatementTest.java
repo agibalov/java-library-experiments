@@ -34,7 +34,10 @@ public class CompositeStatementTest {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
 		parameters.add(new Object[] { " { 1; 2; } ", parsePureStatement(), result(               
-                isStatement(isCompositeStatement(withChildren(2)))
+                isStatement(isCompositeStatement(
+                        withChildren(2),
+                        withChild(0, isExpressionStatement(withExpression(isLiteral(havingValueOf("1"))))),
+                        withChild(1, isExpressionStatement(withExpression(isLiteral(havingValueOf("2")))))))
                 ) });
 		
 		return parameters;
