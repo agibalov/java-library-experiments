@@ -22,18 +22,24 @@ import com.loki2302.dom.DOMFunctionCallExpression;
 import com.loki2302.dom.DOMIfStatement;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
+import com.loki2302.dom.DOMNamedTypeReference;
 import com.loki2302.dom.DOMNullStatement;
 import com.loki2302.dom.DOMReturnStatement;
 import com.loki2302.dom.DOMStatement;
+import com.loki2302.dom.DOMTypeReference;
 import com.loki2302.dom.DOMUnaryExpression;
 import com.loki2302.dom.DOMUnaryExpressionType;
+import com.loki2302.dom.DOMVariableDefinitionStatement;
 import com.loki2302.dom.DOMVariableReferenceExpression;
 import com.loki2302.dom.DOMWhileStatement;
 
-// TODO: variable-definition-statement
+// TODO: single-line comments
+// TODO: multi-line comments
+// TODO: interpret tabs, spaces and newlines as gaps
 // TODO: function-definition
 // TODO: program
 // TODO: explicit-cast-expression
+// +TODO: variable-definition-statement
 // +TODO: return-statement
 // +TODO: continue-statement
 // +TODO: break-statement
@@ -99,6 +105,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 ifStatement(),
                 forStatement(),
                 whileStatement(),
+                Sequence(variableDefinitionStatement(), SEMICOLON),
                 Sequence(returnStatement(), SEMICOLON),
                 Sequence(continueStatement(), SEMICOLON),
                 Sequence(breakStatement(), SEMICOLON),
@@ -110,6 +117,7 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule pureStatement() {
         return FirstOf(
                 compositeStatement(),
+                variableDefinitionStatement(),
                 returnStatement(),
                 continueStatement(),
                 breakStatement(),
@@ -123,6 +131,34 @@ public class Grammar extends BaseParser<DOMElement> {
     
     public Rule nullStatement() {
         return Sequence(NOTHING, push(new DOMNullStatement()));
+    }
+    
+    public Rule variableDefinitionStatement() {
+        Var<VariableDefinitionStatementBuilder> builder = 
+                new Var<VariableDefinitionStatementBuilder>(new VariableDefinitionStatementBuilder());
+        return Sequence(
+                Sequence(
+                        namedTypeReference(),
+                        ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
+                mandatoryGap(),
+                Sequence(
+                        name(),
+                        ACTION(builder.get().setVariableName(match()))),
+                decorateWithOptionalGaps(String("=")),
+                Sequence(
+                        expression(),
+                        ACTION(builder.get().setExpression((DOMExpression)pop()))),
+                push(builder.get().build()));
+    }
+    
+    public Rule namedTypeReference() {
+        StringVar typeName = new StringVar();
+        return Sequence(
+                optionalGap(),
+                Sequence(
+                        name(),
+                        typeName.set(match())),
+                push(new DOMNamedTypeReference(typeName.get())));
     }
     
     public Rule returnStatement() {
@@ -712,4 +748,32 @@ public class Grammar extends BaseParser<DOMElement> {
             return new DOMReturnStatement(expression);
         }
     }
+	
+	public static class VariableDefinitionStatementBuilder {
+	    private DOMTypeReference typeReference;
+	    private String variableName;
+	    private DOMExpression expression;
+	    
+	    public boolean setTypeReference(DOMTypeReference typeReference) {
+	        this.typeReference = typeReference;
+	        return true;
+	    }
+	    
+	    public boolean setVariableName(String variableName) {
+	        this.variableName = variableName;
+	        return true;
+	    }
+	    
+	    public boolean setExpression(DOMExpression expression) {
+	        this.expression = expression;
+	        return true;
+	    }
+	    
+	    public DOMVariableDefinitionStatement build() {
+	        return new DOMVariableDefinitionStatement(
+	                typeReference, 
+	                variableName, 
+	                expression);
+	    }
+	}
 }

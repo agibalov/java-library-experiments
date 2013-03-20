@@ -2,7 +2,6 @@ package com.loki2302.dom;
 
 import java.util.List;
 
-
 public class DOMFunctionDefinition implements DOMElement {
     private final String functionName; 
     private final DOMTypeReference returnType;

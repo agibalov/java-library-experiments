@@ -1,6 +1,5 @@
 package com.loki2302.dom;
 
-
 public class DOMParameterDefinition implements DOMElement {
     private final String name;
     private final DOMTypeReference type;

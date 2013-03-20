@@ -38,6 +38,7 @@ import com.loki2302.expectations.element.statement.StatementIsForStatementExpect
 import com.loki2302.expectations.element.statement.StatementIsIfStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsNullStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsReturnStatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsVariableDefinitionStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsWhileStatementExpectation;
 import com.loki2302.expectations.element.statement.composite.CompositeStatementExpectation;
 import com.loki2302.expectations.element.statement.composite.CompositeStatementHasChildExpectation;
@@ -62,9 +63,17 @@ import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasTru
 import com.loki2302.expectations.element.statement.returnstatement.ReturnStatementExpectation;
 import com.loki2302.expectations.element.statement.returnstatement.ReturnStatementHasExpressionExpectation;
 import com.loki2302.expectations.element.statement.returnstatement.ReturnStatementHasNoExpressionExpectation;
+import com.loki2302.expectations.element.statement.variabledefinition.VariableDefinitionHasExpressionExpectation;
+import com.loki2302.expectations.element.statement.variabledefinition.VariableDefinitionHasTypeReferenceExpectation;
+import com.loki2302.expectations.element.statement.variabledefinition.VariableDefinitionHasVariableNameExpectation;
+import com.loki2302.expectations.element.statement.variabledefinition.VariableDefinitionStatementExpectation;
 import com.loki2302.expectations.element.statement.whilestatement.WhileStatementExpectation;
 import com.loki2302.expectations.element.statement.whilestatement.WhileStatementHasBodyStatementExpectation;
 import com.loki2302.expectations.element.statement.whilestatement.WhileStatementHasConditionExpressionExpectation;
+import com.loki2302.expectations.element.typereference.NamedTypeReferenceExpectation;
+import com.loki2302.expectations.element.typereference.NamedTypeReferenceHasTypeNameExpectation;
+import com.loki2302.expectations.element.typereference.TypeReferenceExpectation;
+import com.loki2302.expectations.element.typereference.TypeReferenceIsNamedTypeExpectation;
 import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.expectations.parser.ParseResultIsBadExpectation;
 import com.loki2302.expectations.parser.ParseResultIsOkExpectation;
@@ -299,6 +308,30 @@ public class ParserTestDsl {
     
     public static DoWhileStatementExpectation doWhileHasBody(StatementExpectation... expectations) {
         return new DoWhileStatementHasBodyStatementExpectation(expectations);
+    }
+    
+    public static StatementExpectation isVariableDefinition(VariableDefinitionStatementExpectation... expectations) {
+        return new StatementIsVariableDefinitionStatementExpectation(expectations);
+    }
+    
+    public static VariableDefinitionStatementExpectation hasTypeReference(TypeReferenceExpectation... expectations) {
+        return new VariableDefinitionHasTypeReferenceExpectation(expectations);
+    }
+    
+    public static VariableDefinitionStatementExpectation hasVariableName(String variableName) {
+        return new VariableDefinitionHasVariableNameExpectation(variableName);
+    } 
+    
+    public static VariableDefinitionStatementExpectation hasInitializerExpression(ExpressionExpectation... expectations) {
+        return new VariableDefinitionHasExpressionExpectation(expectations);
+    }
+    
+    public static TypeReferenceExpectation isNamedTypeReference(NamedTypeReferenceExpectation... expectations) {
+        return new TypeReferenceIsNamedTypeExpectation(expectations);
+    }
+    
+    public static NamedTypeReferenceExpectation withTypeName(String typeName) {
+        return new NamedTypeReferenceHasTypeNameExpectation(typeName);
     }
     
     public static ExpressionExpectation isIntLiteralWithValueOf(String value) {

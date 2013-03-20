@@ -1,4 +1,4 @@
 package com.loki2302.dom;
 
-public interface DOMTypeReference {        
+public interface DOMTypeReference extends DOMElement {        
 }
