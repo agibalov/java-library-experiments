@@ -10,7 +10,9 @@ import org.parboiled.support.Var;
 
 import com.loki2302.dom.DOMBinaryExpression;
 import com.loki2302.dom.DOMBinaryExpressionType;
+import com.loki2302.dom.DOMBreakStatement;
 import com.loki2302.dom.DOMCompositeStatement;
+import com.loki2302.dom.DOMContinueStatement;
 import com.loki2302.dom.DOMDoWhileStatement;
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
@@ -30,13 +32,13 @@ import com.loki2302.dom.DOMWhileStatement;
 // TODO: variable-definition-statement
 // TODO: function-definition
 // TODO: program
-// TODO: continue-statement
-// TODO: break-statement
 // TODO: return-statement
 // TODO: explicit-cast-expression
-// -TODO: for-statement
-// -TODO: while-statement
-// -TODO: do-while-statement
+// +TODO: continue-statement
+// +TODO: break-statement
+// +TODO: for-statement
+// +TODO: while-statement
+// +TODO: do-while-statement
 // +TODO: if-else-statement
 // +TODO: composite-statement
 // +TODO: null-statement
@@ -86,6 +88,8 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule FOR = TERMINAL("for");
     public Rule WHILE = TERMINAL("while");
     public Rule DO = TERMINAL("do");
+    public Rule CONTINUE = TERMINAL("continue");
+    public Rule BREAK = TERMINAL("break");
     
     public Rule statement() {
         return FirstOf(
@@ -93,6 +97,8 @@ public class Grammar extends BaseParser<DOMElement> {
                 ifStatement(),
                 forStatement(),
                 whileStatement(),
+                Sequence(continueStatement(), SEMICOLON),
+                Sequence(breakStatement(), SEMICOLON),
                 Sequence(doWhileStatement(), SEMICOLON),
                 Sequence(expressionStatement(), SEMICOLON),                
                 Sequence(nullStatement(), SEMICOLON));
@@ -101,6 +107,8 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule pureStatement() {
         return FirstOf(
                 compositeStatement(),
+                continueStatement(),
+                breakStatement(),
                 ifStatement(),
                 forStatement(),
                 whileStatement(),
@@ -111,6 +119,14 @@ public class Grammar extends BaseParser<DOMElement> {
     
     public Rule nullStatement() {
         return Sequence(NOTHING, push(new DOMNullStatement()));
+    }
+    
+    public Rule continueStatement() {
+        return Sequence(CONTINUE, push(new DOMContinueStatement()));
+    }
+    
+    public Rule breakStatement() {
+        return Sequence(BREAK, push(new DOMBreakStatement()));
     }
     
     public Rule forStatement() {

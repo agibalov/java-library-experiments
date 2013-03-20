@@ -1,4 +1,4 @@
 package com.loki2302.dom;
 
-public class DOMNullStatement implements DOMStatement {        
+public class DOMNullStatement implements DOMStatement {
 }
