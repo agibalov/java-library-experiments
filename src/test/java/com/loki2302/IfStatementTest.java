@@ -34,7 +34,7 @@ public class IfStatementTest {
 	public static Collection<Object[]> makeTestData() {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
-		parameters.add(new Object[] { " if(1) 2; ", parsePureStatement(), result(               
+		parameters.add(new Object[] { " if ( 1 ) 2 ; ", parsePureStatement(), result(               
                 isStatement(ifStatement(
                         withCondition(isLiteral(
                                 ofType(DOMLiteralType.Int), 
@@ -45,7 +45,7 @@ public class IfStatementTest {
                         hasNoFalseBranch()))
                 ) });
 		
-		parameters.add(new Object[] { " if(1) 2; else 3; ", parsePureStatement(), result(               
+		parameters.add(new Object[] { " if ( 1 ) 2 ; else 3 ; ", parsePureStatement(), result(               
                 isStatement(ifStatement(
                         withCondition(isLiteral(
                                 ofType(DOMLiteralType.Int), 

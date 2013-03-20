@@ -11,9 +11,11 @@ import org.parboiled.support.Var;
 import com.loki2302.dom.DOMBinaryExpression;
 import com.loki2302.dom.DOMBinaryExpressionType;
 import com.loki2302.dom.DOMCompositeStatement;
+import com.loki2302.dom.DOMDoWhileStatement;
 import com.loki2302.dom.DOMElement;
 import com.loki2302.dom.DOMExpression;
 import com.loki2302.dom.DOMExpressionStatement;
+import com.loki2302.dom.DOMForStatement;
 import com.loki2302.dom.DOMFunctionCallExpression;
 import com.loki2302.dom.DOMIfStatement;
 import com.loki2302.dom.DOMLiteralExpression;
@@ -23,17 +25,18 @@ import com.loki2302.dom.DOMStatement;
 import com.loki2302.dom.DOMUnaryExpression;
 import com.loki2302.dom.DOMUnaryExpressionType;
 import com.loki2302.dom.DOMVariableReferenceExpression;
+import com.loki2302.dom.DOMWhileStatement;
 
 // TODO: variable-definition-statement
 // TODO: function-definition
 // TODO: program
-// TODO: for-statement
-// TODO: while-statement
-// TODO: do-while-statement
 // TODO: continue-statement
 // TODO: break-statement
 // TODO: return-statement
 // TODO: explicit-cast-expression
+// -TODO: for-statement
+// -TODO: while-statement
+// -TODO: do-while-statement
 // +TODO: if-else-statement
 // +TODO: composite-statement
 // +TODO: null-statement
@@ -80,11 +83,17 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule NOTHING = TERMINAL("");    
     public Rule IF = TERMINAL("if");
     public Rule ELSE = TERMINAL("else");
+    public Rule FOR = TERMINAL("for");
+    public Rule WHILE = TERMINAL("while");
+    public Rule DO = TERMINAL("do");
     
     public Rule statement() {
         return FirstOf(
                 compositeStatement(),
                 ifStatement(),
+                forStatement(),
+                whileStatement(),
+                Sequence(doWhileStatement(), SEMICOLON),
                 Sequence(expressionStatement(), SEMICOLON),                
                 Sequence(nullStatement(), SEMICOLON));
     }
@@ -93,12 +102,72 @@ public class Grammar extends BaseParser<DOMElement> {
         return FirstOf(
                 compositeStatement(),
                 ifStatement(),
+                forStatement(),
+                whileStatement(),
+                doWhileStatement(),
                 expressionStatement(),                
                 nullStatement());
     }    
     
     public Rule nullStatement() {
         return Sequence(NOTHING, push(new DOMNullStatement()));
+    }
+    
+    public Rule forStatement() {
+        Var<ForStatementBuilder> builder = new Var<ForStatementBuilder>(new ForStatementBuilder());
+        return Sequence(
+                FOR,
+                OPEN_PARENTHESIS,
+                Optional(
+                        Sequence(
+                                pureStatement(),
+                                ACTION(builder.get().setInitializerStatement((DOMStatement)pop())))),
+                SEMICOLON,
+                Optional(
+                        Sequence(
+                                expression(),
+                                ACTION(builder.get().setConditionExpression((DOMExpression)pop())))),
+                SEMICOLON,
+                Optional(
+                        Sequence(
+                                pureStatement(),
+                                ACTION(builder.get().setStepStatement((DOMStatement)pop())))),
+                CLOSE_PARENTHESIS,
+                Sequence(
+                        statement(),
+                        ACTION(builder.get().setBodyStatement((DOMStatement)pop()))),
+                push(builder.get().build()));
+    }
+    
+    public Rule whileStatement() {
+        Var<WhileStatementBuilder> builder = new Var<WhileStatementBuilder>(new WhileStatementBuilder());
+        return Sequence(
+                WHILE,
+                OPEN_PARENTHESIS,
+                Sequence(
+                        expression(),
+                        ACTION(builder.get().setConditionExpression((DOMExpression)pop()))),
+                CLOSE_PARENTHESIS,
+                Sequence(
+                        statement(),
+                        ACTION(builder.get().setBodyStatement((DOMStatement)pop()))),
+                push(builder.get().build()));
+    }
+    
+    public Rule doWhileStatement() {
+        Var<DoWhileStatementBuilder> builder = new Var<DoWhileStatementBuilder>(new DoWhileStatementBuilder());
+        return Sequence(
+                DO,
+                Sequence(
+                        statement(),
+                        ACTION(builder.get().setBodyStatement((DOMStatement)pop()))),
+                WHILE,
+                OPEN_PARENTHESIS,
+                Sequence(
+                        expression(),
+                        ACTION(builder.get().setConditionExpression((DOMExpression)pop()))),
+                CLOSE_PARENTHESIS,
+                push(builder.get().build()));
     }
     
     public Rule ifStatement() {
@@ -523,4 +592,81 @@ public class Grammar extends BaseParser<DOMElement> {
 	        return new DOMIfStatement(conditionExpression, trueBranch, falseBranch);
 	    }
 	}
+	
+	public static class ForStatementBuilder {
+	    private DOMStatement initializerStatement;
+	    private DOMExpression conditionExpression;
+	    private DOMStatement stepStatement;
+	    private DOMStatement bodyStatement;
+	    
+	    public boolean setInitializerStatement(DOMStatement initializerStatement) {
+	        this.initializerStatement = initializerStatement;
+	        return true;
+	    }
+	    
+	    public boolean setConditionExpression(DOMExpression conditionExpression) {
+            this.conditionExpression = conditionExpression;
+            return true;
+        }
+	    
+	    public boolean setStepStatement(DOMStatement stepStatement) {
+            this.stepStatement = stepStatement;
+            return true;
+        }
+	    
+	    public boolean setBodyStatement(DOMStatement bodyStatement) {
+            this.bodyStatement = bodyStatement;
+            return true;
+        }
+	    
+	    public DOMForStatement build() {
+	        return new DOMForStatement(
+	                initializerStatement, 
+	                conditionExpression, 
+	                stepStatement, 
+	                bodyStatement);
+	    }
+	}
+	
+	public static class WhileStatementBuilder {
+        private DOMExpression conditionExpression;
+        private DOMStatement bodyStatement;
+               
+        public boolean setConditionExpression(DOMExpression conditionExpression) {
+            this.conditionExpression = conditionExpression;
+            return true;
+        }
+        
+        public boolean setBodyStatement(DOMStatement bodyStatement) {
+            this.bodyStatement = bodyStatement;
+            return true;
+        }
+        
+        public DOMWhileStatement build() {
+            return new DOMWhileStatement(
+                    conditionExpression, 
+                    bodyStatement);
+        }
+    }
+	
+	public static class DoWhileStatementBuilder {
+        private DOMExpression conditionExpression;
+        private DOMStatement bodyStatement;
+               
+        public boolean setConditionExpression(DOMExpression conditionExpression) {
+            this.conditionExpression = conditionExpression;
+            return true;
+        }
+        
+        public boolean setBodyStatement(DOMStatement bodyStatement) {
+            this.bodyStatement = bodyStatement;
+            return true;
+        }
+        
+        public DOMDoWhileStatement build() {
+            return new DOMDoWhileStatement(
+                    conditionExpression, 
+                    bodyStatement);
+        }
+    }
 }
