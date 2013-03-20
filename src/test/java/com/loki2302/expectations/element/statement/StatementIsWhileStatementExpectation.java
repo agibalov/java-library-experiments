@@ -20,5 +20,5 @@ public class StatementIsWhileStatementExpectation implements StatementExpectatio
         for(WhileStatementExpectation expectation : expectations) {
             expectation.check(domWhileStatement);
         }
-    }        
+    }
 }
