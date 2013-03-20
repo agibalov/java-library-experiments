@@ -38,7 +38,7 @@ import com.loki2302.dom.DOMWhileStatement;
 // TODO: interpret tabs, spaces and newlines as gaps
 // TODO: function-definition
 // TODO: program
-// TODO: explicit-cast-expression
+// -TODO: explicit-cast-expression
 // +TODO: variable-definition-statement
 // +TODO: return-statement
 // +TODO: continue-statement
