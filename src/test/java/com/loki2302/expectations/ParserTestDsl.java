@@ -30,19 +30,36 @@ import com.loki2302.expectations.element.expression.variable.VariableHasSpecific
 import com.loki2302.expectations.element.expression.variable.VariableReferenceExpectation;
 import com.loki2302.expectations.element.statement.StatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsCompositeStatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsDoWhileStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsExpressionStatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsForStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsIfStatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsWhileStatementExpectation;
 import com.loki2302.expectations.element.statement.composite.CompositeStatementExpectation;
 import com.loki2302.expectations.element.statement.composite.CompositeStatementHasChildExpectation;
 import com.loki2302.expectations.element.statement.composite.CompositeStatementHasNumberOfChildrenExpectation;
+import com.loki2302.expectations.element.statement.dowhile.DoWhileStatementExpectation;
+import com.loki2302.expectations.element.statement.dowhile.DoWhileStatementHasBodyStatementExpectation;
+import com.loki2302.expectations.element.statement.dowhile.DoWhileStatementHasConditionExpressionExpectation;
 import com.loki2302.expectations.element.statement.expression.ExpressionStatementExpectation;
 import com.loki2302.expectations.element.statement.expression.ExpressionStatementHasSpecificExpressionExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementHasBodyStatementExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementHasConditionExpressionExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementHasInitializerStatementExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementHasNoConditionExpressionExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementHasNoInitializerStatementExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementHasNoStepStatementExpectation;
+import com.loki2302.expectations.element.statement.forstatement.ForStatementHasStepStatementExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementDoesNotHaveFalseBranchExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementDoesNotHaveTrueBranchExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasConditionExpressionExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasFalseBranchExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasTrueBranchExpectation;
+import com.loki2302.expectations.element.statement.whilestatement.WhileStatementExpectation;
+import com.loki2302.expectations.element.statement.whilestatement.WhileStatementHasBodyStatementExpectation;
+import com.loki2302.expectations.element.statement.whilestatement.WhileStatementHasConditionExpressionExpectation;
 import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.expectations.parser.ParseResultIsBadExpectation;
 import com.loki2302.expectations.parser.ParseResultIsOkExpectation;
@@ -181,8 +198,7 @@ public class ParserTestDsl {
     
     public static UnaryExpressionExpectation withIntLiteralAsInnerExpression(String stringValue) {
         return withInnerExpression(isLiteral(ofType(DOMLiteralType.Int), havingValueOf(stringValue)));
-    }    
-
+    }
     
     public static StatementExpectation ifStatement(IfStatementExpectation... expectations) {
         return new StatementIsIfStatementExpectation(expectations);
@@ -206,5 +222,61 @@ public class ParserTestDsl {
     
     public static IfStatementExpectation hasNoFalseBranch() {
         return new IfStatementDoesNotHaveFalseBranchExpectation();
+    }
+    
+    public static StatementExpectation isForStatement(ForStatementExpectation... expectations) {
+        return new StatementIsForStatementExpectation(expectations);
+    }
+    
+    public static StatementExpectation isWhileStatement(WhileStatementExpectation... expectations) {
+        return new StatementIsWhileStatementExpectation(expectations);
+    }
+    
+    public static StatementExpectation isDoWhileStatement(DoWhileStatementExpectation... expectations) {
+        return new StatementIsDoWhileStatementExpectation(expectations);
+    }
+    
+    public static ForStatementExpectation hasInitializerStatement(StatementExpectation... expectations) {        
+        return new ForStatementHasInitializerStatementExpectation(expectations);
+    }
+    
+    public static ForStatementExpectation hasNoInitializerStatement() {
+        return new ForStatementHasNoInitializerStatementExpectation();
+    }
+    
+    public static ForStatementExpectation forHasConditionExpression(ExpressionExpectation... expectations) {
+        return new ForStatementHasConditionExpressionExpectation(expectations);
+    }
+    
+    public static ForStatementExpectation forHasNoConditionExpression() {
+        return new ForStatementHasNoConditionExpressionExpectation();
+    }
+    
+    public static ForStatementExpectation hasNextStatement(StatementExpectation... expectations) {
+        return new ForStatementHasStepStatementExpectation(expectations);
+    }
+    
+    public static ForStatementExpectation hasNoNextStatement() {
+        return new ForStatementHasNoStepStatementExpectation();
+    }
+    
+    public static ForStatementExpectation hasBody(StatementExpectation... expectations) {
+        return new ForStatementHasBodyStatementExpectation(expectations);
+    }
+    
+    public static WhileStatementExpectation whileHasConditionExpression(ExpressionExpectation... expectations) {
+        return new WhileStatementHasConditionExpressionExpectation(expectations);
+    }
+    
+    public static WhileStatementExpectation whileHasBody(StatementExpectation... expectations) {
+        return new WhileStatementHasBodyStatementExpectation(expectations);
+    }
+    
+    public static DoWhileStatementExpectation doWhileHasConditionExpression(ExpressionExpectation... expectations) {
+        return new DoWhileStatementHasConditionExpressionExpectation(expectations);
+    }
+    
+    public static DoWhileStatementExpectation doWhileHasBody(StatementExpectation... expectations) {
+        return new DoWhileStatementHasBodyStatementExpectation(expectations);
     }
 }

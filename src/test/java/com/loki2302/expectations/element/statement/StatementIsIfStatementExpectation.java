@@ -1,6 +1,6 @@
 package com.loki2302.expectations.element.statement;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import com.loki2302.dom.DOMIfStatement;
 import com.loki2302.dom.DOMStatement;
@@ -20,5 +20,5 @@ public class StatementIsIfStatementExpectation implements StatementExpectation {
         for(IfStatementExpectation expectation : expectations) {
             expectation.check(domIfStatement);
         }            
-    }        
+    }
 }
