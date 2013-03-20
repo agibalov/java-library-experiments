@@ -23,6 +23,7 @@ import com.loki2302.dom.DOMIfStatement;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.dom.DOMNullStatement;
+import com.loki2302.dom.DOMReturnStatement;
 import com.loki2302.dom.DOMStatement;
 import com.loki2302.dom.DOMUnaryExpression;
 import com.loki2302.dom.DOMUnaryExpressionType;
@@ -32,8 +33,8 @@ import com.loki2302.dom.DOMWhileStatement;
 // TODO: variable-definition-statement
 // TODO: function-definition
 // TODO: program
-// TODO: return-statement
 // TODO: explicit-cast-expression
+// +TODO: return-statement
 // +TODO: continue-statement
 // +TODO: break-statement
 // +TODO: for-statement
@@ -90,13 +91,15 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule DO = TERMINAL("do");
     public Rule CONTINUE = TERMINAL("continue");
     public Rule BREAK = TERMINAL("break");
+    public Rule RETURN = TERMINAL("return");
     
     public Rule statement() {
         return FirstOf(
-                compositeStatement(),
+                compositeStatement(),                
                 ifStatement(),
                 forStatement(),
                 whileStatement(),
+                Sequence(returnStatement(), SEMICOLON),
                 Sequence(continueStatement(), SEMICOLON),
                 Sequence(breakStatement(), SEMICOLON),
                 Sequence(doWhileStatement(), SEMICOLON),
@@ -107,6 +110,7 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule pureStatement() {
         return FirstOf(
                 compositeStatement(),
+                returnStatement(),
                 continueStatement(),
                 breakStatement(),
                 ifStatement(),
@@ -119,6 +123,16 @@ public class Grammar extends BaseParser<DOMElement> {
     
     public Rule nullStatement() {
         return Sequence(NOTHING, push(new DOMNullStatement()));
+    }
+    
+    public Rule returnStatement() {
+        Var<ReturnStatementBuilder> builder = new Var<ReturnStatementBuilder>(new ReturnStatementBuilder());
+        return Sequence(
+                RETURN,
+                Optional(Sequence(
+                        expression(),
+                        ACTION(builder.get().setExpression((DOMExpression)pop())))),
+                push(builder.get().build()));
     }
     
     public Rule continueStatement() {
@@ -683,6 +697,19 @@ public class Grammar extends BaseParser<DOMElement> {
             return new DOMDoWhileStatement(
                     conditionExpression, 
                     bodyStatement);
+        }
+    }
+	
+	public static class ReturnStatementBuilder {
+        private DOMExpression expression;
+               
+        public boolean setExpression(DOMExpression conditionExpression) {
+            this.expression = conditionExpression;
+            return true;
+        }
+        
+        public DOMReturnStatement build() {
+            return new DOMReturnStatement(expression);
         }
     }
 }

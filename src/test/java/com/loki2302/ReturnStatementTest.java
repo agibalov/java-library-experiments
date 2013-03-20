@@ -15,12 +15,12 @@ import com.loki2302.parser.ExpressionParser;
 import static com.loki2302.expectations.ParserTestDsl.*;
 
 @RunWith(Parameterized.class)
-public class IfStatementTest {
+public class ReturnStatementTest {
 	private final String expression;
 	private final ExpressionParser parser;	
 	private final ParseResultExpectation parseResultExpectation;
 	
-	public IfStatementTest(			
+	public ReturnStatementTest(			
 			String expression,
 			ExpressionParser parser,
 			ParseResultExpectation parseResultExpectation) {
@@ -33,18 +33,12 @@ public class IfStatementTest {
 	public static Collection<Object[]> makeTestData() {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
-		parameters.add(new Object[] { " if ( 1 ) 2 ; ", parsePureStatement(), result(               
-                isStatement(ifStatement(
-                        withCondition(isIntLiteralWithValueOf("1")),
-                        hasTrueBranch(isExpressionStatement(withExpression(isIntLiteralWithValueOf("2")))),
-                        hasNoFalseBranch()))
+		parameters.add(new Object[] { " return ", parsePureStatement(), result(               
+                isStatement(isReturn(hasNoExpression()))
                 ) });
 		
-		parameters.add(new Object[] { " if ( 1 ) 2 ; else 3 ; ", parsePureStatement(), result(               
-                isStatement(ifStatement(
-                        withCondition(isIntLiteralWithValueOf("1")),
-                        hasTrueBranch(isExpressionStatement(withExpression(isIntLiteralWithValueOf("2")))),
-                        hasFalseBranch(isExpressionStatement(withExpression(isIntLiteralWithValueOf("3"))))))
+		parameters.add(new Object[] { " return 1 ", parsePureStatement(), result(               
+                isStatement(isReturn(hasExpression(isIntLiteralWithValueOf("1"))))
                 ) });
 		
 		return parameters;

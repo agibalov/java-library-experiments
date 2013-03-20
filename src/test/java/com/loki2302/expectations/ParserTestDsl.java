@@ -37,6 +37,7 @@ import com.loki2302.expectations.element.statement.StatementIsExpressionStatemen
 import com.loki2302.expectations.element.statement.StatementIsForStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsIfStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsNullStatementExpectation;
+import com.loki2302.expectations.element.statement.StatementIsReturnStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsWhileStatementExpectation;
 import com.loki2302.expectations.element.statement.composite.CompositeStatementExpectation;
 import com.loki2302.expectations.element.statement.composite.CompositeStatementHasChildExpectation;
@@ -58,6 +59,9 @@ import com.loki2302.expectations.element.statement.ifstatement.IfStatementExpect
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasConditionExpressionExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasFalseBranchExpectation;
 import com.loki2302.expectations.element.statement.ifstatement.IfStatementHasTrueBranchExpectation;
+import com.loki2302.expectations.element.statement.returnstatement.ReturnStatementExpectation;
+import com.loki2302.expectations.element.statement.returnstatement.ReturnStatementHasExpressionExpectation;
+import com.loki2302.expectations.element.statement.returnstatement.ReturnStatementHasNoExpressionExpectation;
 import com.loki2302.expectations.element.statement.whilestatement.WhileStatementExpectation;
 import com.loki2302.expectations.element.statement.whilestatement.WhileStatementHasBodyStatementExpectation;
 import com.loki2302.expectations.element.statement.whilestatement.WhileStatementHasConditionExpressionExpectation;
@@ -96,6 +100,18 @@ public class ParserTestDsl {
 	public static StatementExpectation isCompositeStatement(CompositeStatementExpectation... expectations) {
         return new StatementIsCompositeStatementExpectation(expectations);
     }	
+	
+	public static StatementExpectation isReturn(ReturnStatementExpectation... expectations) {
+        return new StatementIsReturnStatementExpectation(expectations);
+    }
+    
+    public static ReturnStatementExpectation hasExpression(ExpressionExpectation... expectations) {
+        return new ReturnStatementHasExpressionExpectation(expectations);
+    }
+    
+    public static ReturnStatementExpectation hasNoExpression() {
+        return new ReturnStatementHasNoExpressionExpectation();
+    }
 	
 	public static StatementExpectation isContinue() {
         return new StatementIsContinueStatementExpectation();
