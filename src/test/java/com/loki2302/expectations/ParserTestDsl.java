@@ -274,4 +274,8 @@ public class ParserTestDsl {
     public static DoWhileStatementExpectation doWhileHasBody(StatementExpectation... expectations) {
         return new DoWhileStatementHasBodyStatementExpectation(expectations);
     }
+    
+    public static ExpressionExpectation isIntLiteralWithValueOf(String value) {
+        return isLiteral(ofType(DOMLiteralType.Int), havingValueOf(value));
+    }
 }

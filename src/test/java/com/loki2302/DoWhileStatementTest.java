@@ -33,8 +33,10 @@ public class DoWhileStatementTest {
 	public static Collection<Object[]> makeTestData() {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
-		parameters.add(new Object[] { " do 1 ; while ( 1 ) ; ", parsePureStatement(), result(               
-                isStatement()
+		parameters.add(new Object[] { " do 1 ; while ( 2 ) ; ", parsePureStatement(), result(               
+		        isStatement(isDoWhileStatement(
+                        doWhileHasConditionExpression(isIntLiteralWithValueOf("2")),
+                        doWhileHasBody(isExpressionStatement(withExpression(isIntLiteralWithValueOf("1"))))))
                 ) });
 		
 		return parameters;

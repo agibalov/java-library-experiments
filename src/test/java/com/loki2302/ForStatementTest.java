@@ -46,7 +46,7 @@ public class ForStatementTest {
 		
 		parameters.add(new Object[] { " for ( 1 ; ; ) ; ", parsePureStatement(), result(               
 		        isStatement(isFor(
-                        hasInitializer(),
+                        hasInitializer(isExpressionStatement(withExpression(isIntLiteralWithValueOf("1")))),
                         hasNoCondition(),
                         hasNoStep(),
                         hasNoBody()))
@@ -55,7 +55,7 @@ public class ForStatementTest {
 		parameters.add(new Object[] { " for ( ; 1 ; ) ; ", parsePureStatement(), result(               
 		        isStatement(isFor(
                         hasNoInitializer(),
-                        hasCondition(),
+                        hasCondition(isIntLiteralWithValueOf("1")),
                         hasNoStep(),
                         hasNoBody()))
                 ) });
@@ -64,7 +64,7 @@ public class ForStatementTest {
 		        isStatement(isFor(
                         hasNoInitializer(),
                         hasNoCondition(),
-                        hasStep(),
+                        hasStep(isExpressionStatement(withExpression(isIntLiteralWithValueOf("1")))),
                         hasNoBody()))
                 ) });
 		
@@ -73,15 +73,15 @@ public class ForStatementTest {
                         hasNoInitializer(),
                         hasNoCondition(),
                         hasNoStep(),
-                        hasBody()))
+                        hasBody(isExpressionStatement(withExpression(isIntLiteralWithValueOf("1"))))))
                 ) });
 		
-		parameters.add(new Object[] { " for ( 1 ; 1 ; 1 ) 1 ; ", parsePureStatement(), result(               
+		parameters.add(new Object[] { " for ( 1 ; 2 ; 3 ) 4 ; ", parsePureStatement(), result(               
 		        isStatement(isFor(
-		                hasInitializer(),
-                        hasCondition(),
-                        hasStep(),
-                        hasBody()))
+		                hasInitializer(isExpressionStatement(withExpression(isIntLiteralWithValueOf("1")))),
+                        hasCondition(isIntLiteralWithValueOf("2")),
+                        hasStep(isExpressionStatement(withExpression(isIntLiteralWithValueOf("3")))),
+                        hasBody(isExpressionStatement(withExpression(isIntLiteralWithValueOf("4"))))))
                 ) });
 		
 		return parameters;

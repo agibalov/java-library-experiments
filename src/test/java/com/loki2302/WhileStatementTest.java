@@ -33,8 +33,10 @@ public class WhileStatementTest {
 	public static Collection<Object[]> makeTestData() {
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		
-		parameters.add(new Object[] { " while ( 1 ) 1; ", parsePureStatement(), result(               
-                isStatement()
+		parameters.add(new Object[] { " while ( 1 ) 2; ", parsePureStatement(), result(               
+                isStatement(isWhileStatement(
+                        whileHasConditionExpression(isIntLiteralWithValueOf("1")),
+                        whileHasBody(isExpressionStatement(withExpression(isIntLiteralWithValueOf("2"))))))
                 ) });
 		
 		return parameters;
