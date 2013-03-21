@@ -8,6 +8,7 @@ import com.loki2302.expectations.element.ElementIsExpressionExpectation;
 import com.loki2302.expectations.element.ElementIsStatementExpectation;
 import com.loki2302.expectations.element.expression.ExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsBinaryExpressionExpectation;
+import com.loki2302.expectations.element.expression.ExpressionIsExplicitCastExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsFunctionCallExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsLiteralExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsUnaryExpressionExpectation;
@@ -16,6 +17,9 @@ import com.loki2302.expectations.element.expression.binary.BinaryExpressionExpec
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificLeftExpressionExpectation;
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificRightExpressionExpectation;
 import com.loki2302.expectations.element.expression.binary.BinaryExpressionHasSpecificTypeExpectation;
+import com.loki2302.expectations.element.expression.cast.ExplicitCastExpressionExpectation;
+import com.loki2302.expectations.element.expression.cast.ExplicitCastExpressionHasInnerExpressionExpectation;
+import com.loki2302.expectations.element.expression.cast.ExplicitCastExpressionHasTypeReferenceExpectation;
 import com.loki2302.expectations.element.expression.functioncall.FunctionCallExpressionExpectation;
 import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasNParametersExpectation;
 import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasParameterN;
@@ -336,5 +340,21 @@ public class ParserTestDsl {
     
     public static ExpressionExpectation isIntLiteralWithValueOf(String value) {
         return isLiteral(ofType(DOMLiteralType.Int), havingValueOf(value));
+    }
+    
+    public static ExpressionExpectation isDoubleLiteralWithValueOf(String value) {
+        return isLiteral(ofType(DOMLiteralType.Double), havingValueOf(value));
+    }
+    
+    public static ExpressionExpectation IsExplicitCastExpression(ExplicitCastExpressionExpectation... expectations) {
+        return new ExpressionIsExplicitCastExpressionExpectation(expectations);
+    }
+    
+    public static ExplicitCastExpressionExpectation withTypeReference(TypeReferenceExpectation... expectations) {
+        return new ExplicitCastExpressionHasTypeReferenceExpectation(expectations);
+    }
+    
+    public static ExplicitCastExpressionExpectation explicitCastExpressionHasInnerExpression(ExpressionExpectation... expectations) {
+        return new ExplicitCastExpressionHasInnerExpressionExpectation(expectations);
     }
 }

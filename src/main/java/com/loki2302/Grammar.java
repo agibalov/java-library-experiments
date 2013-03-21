@@ -15,6 +15,7 @@ import com.loki2302.dom.DOMCompositeStatement;
 import com.loki2302.dom.DOMContinueStatement;
 import com.loki2302.dom.DOMDoWhileStatement;
 import com.loki2302.dom.DOMElement;
+import com.loki2302.dom.DOMExplicitCastExpression;
 import com.loki2302.dom.DOMExpression;
 import com.loki2302.dom.DOMExpressionStatement;
 import com.loki2302.dom.DOMForStatement;
@@ -453,10 +454,26 @@ public class Grammar extends BaseParser<DOMElement> {
 	
 	public Rule factor() {
 	    return FirstOf(
+	            explicitCastExpression(),
 	            parensExpression(),
 	            literal(),
 	            functionCall(),
 	            variableReference());
+	}
+	
+	public Rule explicitCastExpression() {
+	    Var<DOMTypeReference> typeReference = new Var<DOMTypeReference>(); 
+	    Var<DOMExpression> expression = new Var<DOMExpression>();
+	    return Sequence(
+	            OPEN_PARENTHESIS,
+	            Sequence(
+	                    namedTypeReference(),
+	                    ACTION(typeReference.set((DOMTypeReference)pop()))),
+	            CLOSE_PARENTHESIS,
+	            Sequence(
+	                    expression(),
+	                    ACTION(expression.set((DOMExpression)pop()))),
+	            push(new DOMExplicitCastExpression(typeReference.get(), expression.get())));
 	}
 	
 	public Rule variableReference() {
