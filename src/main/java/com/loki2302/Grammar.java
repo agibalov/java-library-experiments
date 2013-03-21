@@ -41,7 +41,7 @@ import com.loki2302.dom.DOMWhileStatement;
 // TODO: multi-line comments
 // TODO: interpret tabs, spaces and newlines as gaps
 // -TODO: program
-// -TODO: function-definition
+// +TODO: function-definition
 // +TODO: explicit-cast-expression
 // +TODO: variable-definition-statement
 // +TODO: return-statement
@@ -116,15 +116,22 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule functionDefinition() {
         Var<FunctionDefinitionBuilder> builder = new Var<FunctionDefinitionBuilder>(new FunctionDefinitionBuilder()); 
         return Sequence(
-                Sequence(namedTypeReference(), ACTION(builder.get().setResultType((DOMTypeReference)pop()))),
+                Sequence(
+                        namedTypeReference(), 
+                        ACTION(builder.get().setResultType((DOMTypeReference)pop()))),
                 decorateWithOptionalGaps(Sequence(
                         name(),
                         ACTION(builder.get().setFunctionName(match())))),
                 OPEN_PARENTHESIS,
-                ZeroOrMore(
+                Optional(
                         Sequence(
                                 parameterDefinition(),
-                                ACTION(builder.get().appendParameterDefinition((DOMParameterDefinition)pop())))),
+                                ACTION(builder.get().appendParameterDefinition((DOMParameterDefinition)pop())),
+                        ZeroOrMore(
+                                COMMA,
+                                Sequence(
+                                    parameterDefinition(),
+                                    ACTION(builder.get().appendParameterDefinition((DOMParameterDefinition)pop())))))),
                 CLOSE_PARENTHESIS,
                 Sequence(
                         statement(),
@@ -133,9 +140,11 @@ public class Grammar extends BaseParser<DOMElement> {
     }
     
     public Rule parameterDefinition() {
-        Var<ParameterDefinitionBuilder> builder = new Var<ParameterDefinitionBuilder>(); 
+        Var<ParameterDefinitionBuilder> builder = new Var<ParameterDefinitionBuilder>(new ParameterDefinitionBuilder()); 
         return Sequence(
-                Sequence(namedTypeReference(), ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
+                Sequence(
+                        namedTypeReference(), 
+                        ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
                 decorateWithOptionalGaps(Sequence(
                         name(),
                         ACTION(builder.get().setParameterName(match())))),
@@ -199,7 +208,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 decorateWithOptionalGaps(
                         Sequence(
                                 name(),
-                                typeName.set(match()))),
+                                ACTION(typeName.set(match())))),
                 push(new DOMNamedTypeReference(typeName.get())));
     }
     

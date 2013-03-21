@@ -23,6 +23,14 @@ public class Parser {
         return parseExpressionWithRule(expression, grammar.statement());
     }
 	
+	public ParseResult parseFunction(String expression) {
+	    return parseExpressionWithRule(expression, grammar.functionDefinition());
+	}
+	
+	public ParseResult parseProgram(String expression) {
+        return parseExpressionWithRule(expression, grammar.program());
+    }
+	
 	private ParseResult parseExpressionWithRule(String expression, Rule rule) {
 		ParseRunner<DOMElement> parseRunner = new RecoveringParseRunner<DOMElement>(rule);
 		ParsingResult<DOMElement> parsingResult = parseRunner.run(expression);

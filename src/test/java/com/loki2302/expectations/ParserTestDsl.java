@@ -5,6 +5,8 @@ import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.dom.DOMUnaryExpressionType;
 import com.loki2302.expectations.element.ElementExpectation;
 import com.loki2302.expectations.element.ElementIsExpressionExpectation;
+import com.loki2302.expectations.element.ElementIsFunctionDefinitionExpectation;
+import com.loki2302.expectations.element.ElementIsProgramExpectation;
 import com.loki2302.expectations.element.ElementIsStatementExpectation;
 import com.loki2302.expectations.element.expression.ExpressionExpectation;
 import com.loki2302.expectations.element.expression.ExpressionIsBinaryExpressionExpectation;
@@ -32,6 +34,16 @@ import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpec
 import com.loki2302.expectations.element.expression.unary.UnaryExpressionHasSpecificTypeExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableHasSpecificNameExpectation;
 import com.loki2302.expectations.element.expression.variable.VariableReferenceExpectation;
+import com.loki2302.expectations.element.function.FunctionDefinitionExpectation;
+import com.loki2302.expectations.element.function.FunctionDefinitionHasBodyExpectation;
+import com.loki2302.expectations.element.function.FunctionDefinitionHasParameterExpectation;
+import com.loki2302.expectations.element.function.FunctionDefinitionHasReturnTypeExpectation;
+import com.loki2302.expectations.element.function.FunctionDefinitionHasSpecificNumberOfParametersExpectation;
+import com.loki2302.expectations.element.function.FunctionDefinitionHasSpeicifcFunctioNameExpectation;
+import com.loki2302.expectations.element.parameter.ParameterDefinitionExpectation;
+import com.loki2302.expectations.element.parameter.ParameterDefinitionHasNameExpectation;
+import com.loki2302.expectations.element.parameter.ParameterDefinitionHasTypeExpectation;
+import com.loki2302.expectations.element.program.ProgramExpectation;
 import com.loki2302.expectations.element.statement.StatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsBreakStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsCompositeStatementExpectation;
@@ -82,13 +94,15 @@ import com.loki2302.expectations.parser.ParseResultExpectation;
 import com.loki2302.expectations.parser.ParseResultIsBadExpectation;
 import com.loki2302.expectations.parser.ParseResultIsOkExpectation;
 import com.loki2302.parser.ExpressionParser;
+import com.loki2302.parser.FunctionDefinitionParser;
+import com.loki2302.parser.ProgramParser;
 import com.loki2302.parser.RootExpressionParser;
 import com.loki2302.parser.PureStatementParser;
 import com.loki2302.parser.StatementParser;
 
 public class ParserTestDsl {
 	private ParserTestDsl() {		
-	}
+	}	
 	
 	public static ParseResultExpectation result(ElementExpectation domElementDescriptor) {
 		return new ParseResultIsOkExpectation(domElementDescriptor);
@@ -105,6 +119,14 @@ public class ParserTestDsl {
 	public static ElementExpectation isStatement(StatementExpectation... expectations) {
 	    return new ElementIsStatementExpectation(expectations);
 	}
+	
+	public static ElementExpectation isFunction(FunctionDefinitionExpectation... expectations) {
+        return new ElementIsFunctionDefinitionExpectation(expectations);
+    }
+    
+    public static ElementExpectation isProgram(ProgramExpectation... expectations) {
+        return new ElementIsProgramExpectation(expectations);
+    }
 	
 	public static StatementExpectation isExpressionStatement(ExpressionStatementExpectation... expectations) {
 	    return new StatementIsExpressionStatementExpectation(expectations);
@@ -212,6 +234,14 @@ public class ParserTestDsl {
 	
 	public static ExpressionParser parseStatement() {
         return new StatementParser();
+    }
+	
+	public static ExpressionParser parseFunction() {
+        return new FunctionDefinitionParser();
+    }
+	
+	public static ExpressionParser parseProgram() {
+        return new ProgramParser();
     }
 	
 	public static BinaryExpressionExpectation withLeftExpression(ExpressionExpectation... leftExpressionExpectations) {
@@ -356,5 +386,37 @@ public class ParserTestDsl {
     
     public static ExplicitCastExpressionExpectation explicitCastExpressionHasInnerExpression(ExpressionExpectation... expectations) {
         return new ExplicitCastExpressionHasInnerExpressionExpectation(expectations);
+    }
+    
+    public static FunctionDefinitionExpectation hasReturnType(TypeReferenceExpectation... expectations) {
+        return new FunctionDefinitionHasReturnTypeExpectation(expectations);
+    }
+    
+    public static FunctionDefinitionExpectation functionHasName(String functionName) {
+        return new FunctionDefinitionHasSpeicifcFunctioNameExpectation(functionName);
+    }
+    
+    public static FunctionDefinitionExpectation functionHasNoParameters() {
+        return hasParameters(0);
+    }
+    
+    public static FunctionDefinitionExpectation functionHasParameter(int parameterIndex, ParameterDefinitionExpectation... expectations) {
+        return new FunctionDefinitionHasParameterExpectation(parameterIndex, expectations);
+    }
+    
+    public static ParameterDefinitionExpectation parameterHasType(TypeReferenceExpectation... expectations) {
+        return new ParameterDefinitionHasTypeExpectation(expectations);
+    }
+    
+    public static ParameterDefinitionExpectation parameterHasName(String parameterName) {
+        return new ParameterDefinitionHasNameExpectation(parameterName);
+    }
+    
+    public static FunctionDefinitionExpectation hasParameters(int parameterCount) {
+        return new FunctionDefinitionHasSpecificNumberOfParametersExpectation(parameterCount);
+    }
+    
+    public static FunctionDefinitionExpectation hasBody(StatementExpectation... expectations) {
+        return new FunctionDefinitionHasBodyExpectation(expectations);
     }
 }
