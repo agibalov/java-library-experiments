@@ -20,11 +20,14 @@ import com.loki2302.dom.DOMExpression;
 import com.loki2302.dom.DOMExpressionStatement;
 import com.loki2302.dom.DOMForStatement;
 import com.loki2302.dom.DOMFunctionCallExpression;
+import com.loki2302.dom.DOMFunctionDefinition;
 import com.loki2302.dom.DOMIfStatement;
 import com.loki2302.dom.DOMLiteralExpression;
 import com.loki2302.dom.DOMLiteralType;
 import com.loki2302.dom.DOMNamedTypeReference;
 import com.loki2302.dom.DOMNullStatement;
+import com.loki2302.dom.DOMParameterDefinition;
+import com.loki2302.dom.DOMProgram;
 import com.loki2302.dom.DOMReturnStatement;
 import com.loki2302.dom.DOMStatement;
 import com.loki2302.dom.DOMTypeReference;
@@ -37,8 +40,8 @@ import com.loki2302.dom.DOMWhileStatement;
 // TODO: single-line comments
 // TODO: multi-line comments
 // TODO: interpret tabs, spaces and newlines as gaps
-// TODO: program
-// TODO: function-definition
+// -TODO: program
+// -TODO: function-definition
 // +TODO: explicit-cast-expression
 // +TODO: variable-definition-statement
 // +TODO: return-statement
@@ -99,6 +102,45 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule CONTINUE = TERMINAL("continue");
     public Rule BREAK = TERMINAL("break");
     public Rule RETURN = TERMINAL("return");
+    
+    public Rule program() {
+        Var<ProgramBuilder> builder = new Var<ProgramBuilder>(new ProgramBuilder());
+        return Sequence(
+                OneOrMore(
+                        Sequence(
+                                functionDefinition(),
+                                ACTION(builder.get().appendFunctionDefinition((DOMFunctionDefinition)pop())))),
+                push(builder.get().build()));
+    }
+    
+    public Rule functionDefinition() {
+        Var<FunctionDefinitionBuilder> builder = new Var<FunctionDefinitionBuilder>(new FunctionDefinitionBuilder()); 
+        return Sequence(
+                Sequence(namedTypeReference(), ACTION(builder.get().setResultType((DOMTypeReference)pop()))),
+                decorateWithOptionalGaps(Sequence(
+                        name(),
+                        ACTION(builder.get().setFunctionName(match())))),
+                OPEN_PARENTHESIS,
+                ZeroOrMore(
+                        Sequence(
+                                parameterDefinition(),
+                                ACTION(builder.get().appendParameterDefinition((DOMParameterDefinition)pop())))),
+                CLOSE_PARENTHESIS,
+                Sequence(
+                        statement(),
+                        ACTION(builder.get().setBody((DOMStatement)pop()))),
+                push(builder.get().build()));
+    }
+    
+    public Rule parameterDefinition() {
+        Var<ParameterDefinitionBuilder> builder = new Var<ParameterDefinitionBuilder>(); 
+        return Sequence(
+                Sequence(namedTypeReference(), ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
+                decorateWithOptionalGaps(Sequence(
+                        name(),
+                        ACTION(builder.get().setParameterName(match())))),
+                push(builder.get().build()));
+    }
     
     public Rule statement() {
         return FirstOf(
@@ -790,6 +832,69 @@ public class Grammar extends BaseParser<DOMElement> {
 	                typeReference, 
 	                variableName, 
 	                expression);
+	    }
+	}
+	
+	public static class ParameterDefinitionBuilder {
+	    private DOMTypeReference typeReference;
+	    private String parameterName;
+	    
+	    public boolean setTypeReference(DOMTypeReference typeReference) {
+	        this.typeReference = typeReference;
+	        return true;
+	    }
+	    
+	    public boolean setParameterName(String parameterName) {
+	        this.parameterName = parameterName;
+	        return true;
+	    }
+	    
+	    public DOMParameterDefinition build() {
+	        return new DOMParameterDefinition(parameterName, typeReference);
+	    }
+	}
+	
+	public static class FunctionDefinitionBuilder {
+	    private DOMTypeReference resultType;
+	    private String functionName;
+	    private List<DOMParameterDefinition> parameterDefinitions = new ArrayList<DOMParameterDefinition>();
+	    private DOMStatement body;
+	    
+	    public boolean setResultType(DOMTypeReference typeReference) {
+	        this.resultType = typeReference;
+	        return true;
+	    }
+	    
+	    public boolean setFunctionName(String functionName) {
+	        this.functionName = functionName;
+	        return true;
+	    }
+	    
+	    public boolean appendParameterDefinition(DOMParameterDefinition parameterDefinition) {
+	        parameterDefinitions.add(parameterDefinition);
+	        return true;
+	    }
+	    
+	    public boolean setBody(DOMStatement body) {
+	        this.body = body;
+	        return true;
+	    }
+	    
+	    public DOMFunctionDefinition build() {
+	        return new DOMFunctionDefinition(functionName, resultType, parameterDefinitions, body);
+	    }
+	}
+	
+	public static class ProgramBuilder {
+	    private final List<DOMFunctionDefinition> functionDefinitions = new ArrayList<DOMFunctionDefinition>();
+	    
+	    public boolean appendFunctionDefinition(DOMFunctionDefinition domFunctionDefinition) {
+	        functionDefinitions.add(domFunctionDefinition);
+	        return true;
+	    }
+	    
+	    public DOMProgram build() {
+	        return new DOMProgram(functionDefinitions);
 	    }
 	}
 }
