@@ -6,7 +6,6 @@ import com.loki2302.ParseResult;
 import com.loki2302.dom.DOMElement;
 import com.loki2302.expectations.element.ElementExpectation;
 
-
 public class ParseResultIsOkExpectation implements ParseResultExpectation {
 	private final ElementExpectation domElementDescriptor;
 	

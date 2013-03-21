@@ -37,9 +37,9 @@ import com.loki2302.dom.DOMVariableDefinitionStatement;
 import com.loki2302.dom.DOMVariableReferenceExpression;
 import com.loki2302.dom.DOMWhileStatement;
 
-// TODO: single-line comments
-// TODO: multi-line comments
-// TODO: interpret tabs, spaces and newlines as gaps
+// +TODO: single-line comments
+// +TODO: multi-line comments
+// +TODO: interpret tabs, spaces and newlines as gaps
 // +TODO: program
 // +TODO: function-definition
 // +TODO: explicit-cast-expression
@@ -110,6 +110,7 @@ public class Grammar extends BaseParser<DOMElement> {
                         Sequence(
                                 functionDefinition(),
                                 ACTION(builder.get().appendFunctionDefinition((DOMFunctionDefinition)pop())))),
+                EOI,
                 push(builder.get().build()));
     }
     
@@ -119,7 +120,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 Sequence(
                         namedTypeReference(), 
                         ACTION(builder.get().setResultType((DOMTypeReference)pop()))),
-                decorateWithOptionalGaps(Sequence(
+                allowSpaces(Sequence(
                         name(),
                         ACTION(builder.get().setFunctionName(match())))),
                 OPEN_PARENTHESIS,
@@ -145,7 +146,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 Sequence(
                         namedTypeReference(), 
                         ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
-                decorateWithOptionalGaps(Sequence(
+                allowSpaces(Sequence(
                         name(),
                         ACTION(builder.get().setParameterName(match())))),
                 push(builder.get().build()));
@@ -195,7 +196,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 Sequence(
                         name(),
                         ACTION(builder.get().setVariableName(match()))),
-                decorateWithOptionalGaps(String("=")),
+                allowSpaces(String("=")),
                 Sequence(
                         expression(),
                         ACTION(builder.get().setExpression((DOMExpression)pop()))),
@@ -205,7 +206,7 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule namedTypeReference() {
         StringVar typeName = new StringVar();
         return Sequence(
-                decorateWithOptionalGaps(
+                allowSpaces(
                         Sequence(
                                 name(),
                                 ACTION(typeName.set(match())))),
@@ -342,7 +343,7 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 orExpression(),
                 ZeroOrMore(
-                        decorateWithOptionalGaps(Sequence(
+                        allowSpaces(Sequence(
                                 FirstOf("=", "+=", "-=", "*=", "/="),
                                 op.set(match()))),                      
                         orExpression(),
@@ -357,7 +358,7 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 andExpression(),
                 ZeroOrMore(
-                        decorateWithOptionalGaps(Sequence(
+                        allowSpaces(Sequence(
                                 "||",
                                 op.set(match()))),                      
                         andExpression(),
@@ -372,7 +373,7 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 equalityComparisonExpression(),
                 ZeroOrMore(
-                        decorateWithOptionalGaps(Sequence(
+                        allowSpaces(Sequence(
                                 "&&",
                                 op.set(match()))),                      
                         equalityComparisonExpression(),
@@ -387,7 +388,7 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 comparisonExpression(),
                 ZeroOrMore(
-                        decorateWithOptionalGaps(Sequence(
+                        allowSpaces(Sequence(
                                 FirstOf("==", "!="),
                                 op.set(match()))),                      
                         comparisonExpression(),
@@ -402,7 +403,7 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 addSubExpression(),
                 ZeroOrMore(
-                        decorateWithOptionalGaps(Sequence(
+                        allowSpaces(Sequence(
                                 FirstOf("<=", "<", ">=", ">"),
                                 op.set(match()))),                      
                         addSubExpression(),
@@ -417,7 +418,7 @@ public class Grammar extends BaseParser<DOMElement> {
 		return Sequence(
 				mulDivExpression(),
 				ZeroOrMore(
-						decorateWithOptionalGaps(Sequence(
+						allowSpaces(Sequence(
 								FirstOf("+", "-"),
 								op.set(match()))),						
 						mulDivExpression(),
@@ -432,7 +433,7 @@ public class Grammar extends BaseParser<DOMElement> {
 		return Sequence(
 		        unaryExpression(),
 				ZeroOrMore(
-						decorateWithOptionalGaps(Sequence(
+						allowSpaces(Sequence(
 								FirstOf("*", "/"),
 								op.set(match()))),
 						unaryExpression(),
@@ -456,7 +457,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	
 	public Rule prefixIncrementExpression() {
 	    return Sequence(
-	            decorateWithOptionalGaps(String("++")), 
+	            allowSpaces(String("++")), 
 	            factor(),
 	            push(new DOMUnaryExpression(DOMUnaryExpressionType.PrefixIncrement, (DOMExpression)pop())));
 	}
@@ -464,13 +465,13 @@ public class Grammar extends BaseParser<DOMElement> {
 	public Rule postfixIncrementExpression() {
 	    return Sequence(                 
                 factor(),
-                decorateWithOptionalGaps(String("++")),
+                allowSpaces(String("++")),
                 push(new DOMUnaryExpression(DOMUnaryExpressionType.PostfixIncrement, (DOMExpression)pop())));
     }
 	
 	public Rule prefixDecrementExpression() {
 	    return Sequence(
-                decorateWithOptionalGaps(String("--")), 
+                allowSpaces(String("--")), 
                 factor(),
                 push(new DOMUnaryExpression(DOMUnaryExpressionType.PrefixDecrement, (DOMExpression)pop())));
     }
@@ -478,27 +479,27 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule postfixDecrementExpression() {
         return Sequence(                 
                 factor(),
-                decorateWithOptionalGaps(String("--")),
+                allowSpaces(String("--")),
                 push(new DOMUnaryExpression(DOMUnaryExpressionType.PostfixDecrement, (DOMExpression)pop())));
     }
     
     public Rule plusSignExpression() {
         return Sequence(
-                decorateWithOptionalGaps(String("+")), 
+                allowSpaces(String("+")), 
                 factor(),
                 push(new DOMUnaryExpression(DOMUnaryExpressionType.PlusSign, (DOMExpression)pop())));
     }
     
     public Rule minusSignExpression() {
         return Sequence(
-                decorateWithOptionalGaps(String("-")), 
+                allowSpaces(String("-")), 
                 factor(),
                 push(new DOMUnaryExpression(DOMUnaryExpressionType.MinusSign, (DOMExpression)pop())));
     }
     
     public Rule notExpression() {
         return Sequence(
-                decorateWithOptionalGaps(String("!")), 
+                allowSpaces(String("!")), 
                 factor(),
                 push(new DOMUnaryExpression(DOMUnaryExpressionType.Not, (DOMExpression)pop())));
     }
@@ -528,7 +529,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	}
 	
 	public Rule variableReference() {
-	    return decorateWithOptionalGaps(
+	    return allowSpaces(
 	            Sequence(
 	                    name(),
 	                    push(new DOMVariableReferenceExpression(match()))));
@@ -537,7 +538,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	public Rule functionCall() {
 	    Var<FunctionCallBuilder> builder = new Var<FunctionCallBuilder>(new FunctionCallBuilder());	    
 	    return Sequence(
-	            decorateWithOptionalGaps(
+	            allowSpaces(
 	                    Sequence(
 	                            name(),
 	                            ACTION(builder.get().setFunctionName(match())))),
@@ -570,14 +571,14 @@ public class Grammar extends BaseParser<DOMElement> {
 	}
 	
 	public Rule intLiteral() {
-		return decorateWithOptionalGaps(
+		return allowSpaces(
 				Sequence(
 						OneOrMore(CharRange('0', '9')),
 						push(new DOMLiteralExpression(DOMLiteralType.Int, match()))));
 	}
 	
 	public Rule doubleLiteral() {
-		return decorateWithOptionalGaps(
+		return allowSpaces(
 				Sequence(
 						FirstOf(
 								Sequence(".", OneOrMore(CharRange('0', '9'))),
@@ -587,30 +588,40 @@ public class Grammar extends BaseParser<DOMElement> {
 	}
 	
 	public Rule boolLiteral() {
-		return decorateWithOptionalGaps(
+		return allowSpaces(
 				Sequence(
 						FirstOf("true", "false"),
 						push(new DOMLiteralExpression(DOMLiteralType.Bool, match()))));
 	}
 		
-	public Rule gap() {
-		return String(" ");
+	public Rule space() {
+		return ZeroOrMore(
+		        FirstOf(
+		                singleLineComment(),
+		                multilineComment(),
+		                AnyOf(" \t\n")));
 	}
 	
-	public Rule optionalGap() {
-		return ZeroOrMore(gap());
+	public Rule singleLineComment() {
+	    return Sequence(
+	            "//", 
+	            ZeroOrMore(TestNot(AnyOf("\r\n")), ANY), 
+	            FirstOf("\r\n", '\r', '\n', EOI));
 	}
 	
-	public Rule mandatoryGap() {
-		return OneOrMore(gap());
+	public Rule multilineComment() {
+	    return Sequence(
+	            "/*", 
+	            ZeroOrMore(TestNot("*/"), ANY), 
+	            "*/");
 	}
 	
-	public Rule decorateWithOptionalGaps(Rule rule) {
-		return Sequence(optionalGap(), rule, optionalGap());
+	public Rule allowSpaces(Rule rule) {
+		return Sequence(space(), rule, space());
 	}
 	
 	public Rule TERMINAL(String s) {
-	    return decorateWithOptionalGaps(String(s));
+	    return allowSpaces(String(s));
 	}
 	
 	private static class Helper {
