@@ -23,8 +23,8 @@ import com.loki2302.expectations.element.expression.cast.ExplicitCastExpressionE
 import com.loki2302.expectations.element.expression.cast.ExplicitCastExpressionHasInnerExpressionExpectation;
 import com.loki2302.expectations.element.expression.cast.ExplicitCastExpressionHasTypeReferenceExpectation;
 import com.loki2302.expectations.element.expression.functioncall.FunctionCallExpressionExpectation;
-import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasNParametersExpectation;
-import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasParameterN;
+import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasArgumentsExpectation;
+import com.loki2302.expectations.element.expression.functioncall.FunctionCallHasArgument;
 import com.loki2302.expectations.element.expression.functioncall.FunctionCallIsForSpecificFunctionNameExpectation;
 import com.loki2302.expectations.element.expression.literal.LiteralExpressionExpectation;
 import com.loki2302.expectations.element.expression.literal.LiteralExpressionHasSpecificTypeExpectation;
@@ -206,16 +206,16 @@ public class ParserTestDsl {
         return new FunctionCallIsForSpecificFunctionNameExpectation(name);
     }
 	
-	public static FunctionCallExpressionExpectation withParameter(int parameterIndex, ExpressionExpectation... expectations) {
-        return new FunctionCallHasParameterN(parameterIndex, expectations);
+	public static FunctionCallExpressionExpectation withArgument(int argumentIndex, ExpressionExpectation... expectations) {
+        return new FunctionCallHasArgument(argumentIndex, expectations);
     }
 	
-	public static FunctionCallExpressionExpectation withParameters(int parameterCount) {
-        return new FunctionCallHasNParametersExpectation(parameterCount);
+	public static FunctionCallExpressionExpectation withArguments(int argumentCount) {
+        return new FunctionCallHasArgumentsExpectation(argumentCount);
     }
 	
-	public static FunctionCallExpressionExpectation withNoParameters() {
-	    return new FunctionCallHasNParametersExpectation(0);
+	public static FunctionCallExpressionExpectation withNoArguments() {
+	    return new FunctionCallHasArgumentsExpectation(0);
 	}
 	
 	public static UnaryExpressionExpectation ofType(DOMUnaryExpressionType expressionType) {

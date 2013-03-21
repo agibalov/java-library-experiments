@@ -37,14 +37,14 @@ public class FunctionCallExpressionTest {
 		parameters.add(new Object[] { " print ( ) ", parseExpression(), result(               
                 isExpression(isFunctionCall(
                         named("print"),
-                        withNoParameters()))                                
+                        withNoArguments()))                                
                 ) });
 		
 		parameters.add(new Object[] { " print ( 1 ) ", parseExpression(), result(               
                 isExpression(isFunctionCall(
                         named("print"),
-                        withParameters(1),
-                        withParameter(0, isLiteral(
+                        withArguments(1),
+                        withArgument(0, isLiteral(
                                 ofType(DOMLiteralType.Int), 
                                 havingValueOf("1")))))                                
                 ) });
@@ -52,11 +52,11 @@ public class FunctionCallExpressionTest {
 		parameters.add(new Object[] { " print ( 1 , 2 ) ", parseExpression(), result(               
                 isExpression(isFunctionCall(
                         named("print"),
-                        withParameters(2),
-                        withParameter(0, isLiteral(
+                        withArguments(2),
+                        withArgument(0, isLiteral(
                                 ofType(DOMLiteralType.Int), 
                                 havingValueOf("1"))),
-                        withParameter(1, isLiteral(
+                        withArgument(1, isLiteral(
                                 ofType(DOMLiteralType.Int), 
                                 havingValueOf("2")))))                                
                 ) });
