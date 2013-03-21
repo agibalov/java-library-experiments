@@ -140,7 +140,6 @@ public class Grammar extends BaseParser<DOMElement> {
                 Sequence(
                         namedTypeReference(),
                         ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
-                mandatoryGap(),
                 Sequence(
                         name(),
                         ACTION(builder.get().setVariableName(match()))),
@@ -154,10 +153,10 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule namedTypeReference() {
         StringVar typeName = new StringVar();
         return Sequence(
-                optionalGap(),
-                Sequence(
-                        name(),
-                        typeName.set(match())),
+                decorateWithOptionalGaps(
+                        Sequence(
+                                name(),
+                                typeName.set(match()))),
                 push(new DOMNamedTypeReference(typeName.get())));
     }
     
