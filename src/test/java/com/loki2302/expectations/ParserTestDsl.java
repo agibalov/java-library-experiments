@@ -44,6 +44,8 @@ import com.loki2302.expectations.element.parameter.ParameterDefinitionExpectatio
 import com.loki2302.expectations.element.parameter.ParameterDefinitionHasNameExpectation;
 import com.loki2302.expectations.element.parameter.ParameterDefinitionHasTypeExpectation;
 import com.loki2302.expectations.element.program.ProgramExpectation;
+import com.loki2302.expectations.element.program.ProgramHasFunctionDefinitionExpectation;
+import com.loki2302.expectations.element.program.ProgramHasSpecificNumberOfFunctionsExpectation;
 import com.loki2302.expectations.element.statement.StatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsBreakStatementExpectation;
 import com.loki2302.expectations.element.statement.StatementIsCompositeStatementExpectation;
@@ -418,5 +420,13 @@ public class ParserTestDsl {
     
     public static FunctionDefinitionExpectation hasBody(StatementExpectation... expectations) {
         return new FunctionDefinitionHasBodyExpectation(expectations);
+    }
+    
+    public static ProgramExpectation programHasFunctions(int functionCount) {
+        return new ProgramHasSpecificNumberOfFunctionsExpectation(functionCount);
+    }
+    
+    public static ProgramExpectation programHasFunction(int functionIndex, FunctionDefinitionExpectation... expectations) {
+        return new ProgramHasFunctionDefinitionExpectation(functionIndex, expectations);
     }
 }
