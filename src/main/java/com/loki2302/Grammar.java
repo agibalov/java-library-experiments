@@ -40,7 +40,7 @@ import com.loki2302.dom.DOMWhileStatement;
 // TODO: single-line comments
 // TODO: multi-line comments
 // TODO: interpret tabs, spaces and newlines as gaps
-// -TODO: program
+// +TODO: program
 // +TODO: function-definition
 // +TODO: explicit-cast-expression
 // +TODO: variable-definition-statement
