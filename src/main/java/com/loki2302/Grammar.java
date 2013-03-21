@@ -37,55 +37,6 @@ import com.loki2302.dom.DOMVariableDefinitionStatement;
 import com.loki2302.dom.DOMVariableReferenceExpression;
 import com.loki2302.dom.DOMWhileStatement;
 
-// +TODO: single-line comments
-// +TODO: multi-line comments
-// +TODO: interpret tabs, spaces and newlines as gaps
-// +TODO: program
-// +TODO: function-definition
-// +TODO: explicit-cast-expression
-// +TODO: variable-definition-statement
-// +TODO: return-statement
-// +TODO: continue-statement
-// +TODO: break-statement
-// +TODO: for-statement
-// +TODO: while-statement
-// +TODO: do-while-statement
-// +TODO: if-else-statement
-// +TODO: composite-statement
-// +TODO: null-statement
-// +TODO: statement
-// +TODO: expression-statement
-// +TODO: variable-reference-expression
-// +TODO: function-call-expression
-// +TODO: assignment-expression
-// +TODO: unary-minus-expression
-// +TODO: unary-plus-expression
-// +TODO: unary-not-expression
-// +TODO: prefix-increment-expression
-// +TODO: postfix-increment-expression
-// +TODO: prefix-decrement-expression
-// +TODO: postfix-decrement-expression
-// +TODO: increase-and-assign-expression
-// +TODO: decrease-and-assign-expression
-// +TODO: multiply-and-assign-expression
-// +TODO: divide-and-assign-expression
-// +TODO: less-expression
-// +TODO: less-or-equal-expression
-// +TODO: greater-expression
-// +TODO: greater-or-equal-expression
-// +TODO: equal-expression
-// +TODO: not-equal-expression
-// +TODO: and-expression
-// +TODO: or-expression
-// +TODO: int-literal-expression
-// +TODO: double-literal-expression
-// +TODO: bool-literal-expression
-// +TODO: add-expression
-// +TODO: sub-expression
-// +TODO: mul-expression
-// +TODO: div-expression
-// +TODO: parentheses-expression
-
 public class Grammar extends BaseParser<DOMElement> {    
     public Rule OPEN_PARENTHESIS = TERMINAL("(");
     public Rule CLOSE_PARENTHESIS = TERMINAL(")");
@@ -509,7 +460,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	            explicitCastExpression(),
 	            parensExpression(),
 	            literal(),
-	            functionCall(),
+	            functionCallExpression(),
 	            variableReference());
 	}
 	
@@ -535,7 +486,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	                    push(new DOMVariableReferenceExpression(match()))));
 	}
 	
-	public Rule functionCall() {
+	public Rule functionCallExpression() {
 	    Var<FunctionCallBuilder> builder = new Var<FunctionCallBuilder>(new FunctionCallBuilder());	    
 	    return Sequence(
 	            allowSpaces(
@@ -545,12 +496,12 @@ public class Grammar extends BaseParser<DOMElement> {
 	            OPEN_PARENTHESIS,
 	            Optional(
 	                    expression(),
-	                    ACTION(builder.get().appendParameter((DOMExpression)pop())),
+	                    ACTION(builder.get().appendArgument((DOMExpression)pop())),
 	                    ZeroOrMore(
 	                            Sequence(
 	                                    COMMA,
 	                                    expression(),
-	                                    ACTION(builder.get().appendParameter((DOMExpression)pop())))
+	                                    ACTION(builder.get().appendArgument((DOMExpression)pop())))
 	                            )),
 	            CLOSE_PARENTHESIS,
 	            push(builder.get().build()));
@@ -678,15 +629,15 @@ public class Grammar extends BaseParser<DOMElement> {
 	
 	public static class FunctionCallBuilder {
 	    private String functionName;
-	    private final List<DOMExpression> parameters = new ArrayList<DOMExpression>();
+	    private final List<DOMExpression> arguments = new ArrayList<DOMExpression>();
 	    
 	    public boolean setFunctionName(String functionName) {
 	        this.functionName = functionName;
 	        return true;
 	    }
 	    
-	    public boolean appendParameter(DOMExpression parameter) {
-	        parameters.add(parameter);
+	    public boolean appendArgument(DOMExpression argument) {
+	        arguments.add(argument);
 	        return true;
 	    }
 	    
@@ -695,7 +646,7 @@ public class Grammar extends BaseParser<DOMElement> {
 	            throw new RuntimeException("Function name can't be empty");
 	        }
 	        
-	        return new DOMFunctionCallExpression(functionName, parameters);
+	        return new DOMFunctionCallExpression(functionName, arguments);
 	    }
 	}
 	
