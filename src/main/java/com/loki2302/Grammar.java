@@ -52,7 +52,7 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule DO = TERMINAL("do");
     public Rule CONTINUE = TERMINAL("continue");
     public Rule BREAK = TERMINAL("break");
-    public Rule RETURN = TERMINAL("return");
+    public Rule RETURN = TERMINAL("return");    
     
     public Rule program() {
         Var<ProgramBuilder> builder = new Var<ProgramBuilder>(new ProgramBuilder());
@@ -60,7 +60,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 OneOrMore(
                         Sequence(
                                 functionDefinition(),
-                                ACTION(builder.get().appendFunctionDefinition((DOMFunctionDefinition)pop())))),
+                                ACTION(builder.get().appendFunctionDefinition(popFunctionDefinition())))),
                 EOI,
                 push(builder.get().build()));
     }
@@ -70,7 +70,7 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 Sequence(
                         namedTypeReference(), 
-                        ACTION(builder.get().setResultType((DOMTypeReference)pop()))),
+                        ACTION(builder.get().setResultType(popTypeReference()))),
                 allowSpaces(Sequence(
                         name(),
                         ACTION(builder.get().setFunctionName(match())))),
@@ -78,16 +78,16 @@ public class Grammar extends BaseParser<DOMElement> {
                 Optional(
                         Sequence(
                                 parameterDefinition(),
-                                ACTION(builder.get().appendParameterDefinition((DOMParameterDefinition)pop())),
+                                ACTION(builder.get().appendParameterDefinition(popParameterDefinition())),
                         ZeroOrMore(
                                 COMMA,
                                 Sequence(
                                     parameterDefinition(),
-                                    ACTION(builder.get().appendParameterDefinition((DOMParameterDefinition)pop())))))),
+                                    ACTION(builder.get().appendParameterDefinition(popParameterDefinition())))))),
                 CLOSE_PARENTHESIS,
                 Sequence(
                         statement(),
-                        ACTION(builder.get().setBody((DOMStatement)pop()))),
+                        ACTION(builder.get().setBody(popStatement()))),
                 push(builder.get().build()));
     }
     
@@ -96,7 +96,7 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 Sequence(
                         namedTypeReference(), 
-                        ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
+                        ACTION(builder.get().setTypeReference(popTypeReference()))),
                 allowSpaces(Sequence(
                         name(),
                         ACTION(builder.get().setParameterName(match())))),
@@ -143,14 +143,14 @@ public class Grammar extends BaseParser<DOMElement> {
         return Sequence(
                 Sequence(
                         namedTypeReference(),
-                        ACTION(builder.get().setTypeReference((DOMTypeReference)pop()))),
+                        ACTION(builder.get().setTypeReference(popTypeReference()))),
                 Sequence(
                         name(),
                         ACTION(builder.get().setVariableName(match()))),
                 allowSpaces(String("=")),
                 Sequence(
                         expression(),
-                        ACTION(builder.get().setExpression((DOMExpression)pop()))),
+                        ACTION(builder.get().setExpression(popExpression()))),
                 push(builder.get().build()));
     }
     
@@ -170,7 +170,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 RETURN,
                 Optional(Sequence(
                         expression(),
-                        ACTION(builder.get().setExpression((DOMExpression)pop())))),
+                        ACTION(builder.get().setExpression(popExpression())))),
                 push(builder.get().build()));
     }
     
@@ -190,21 +190,21 @@ public class Grammar extends BaseParser<DOMElement> {
                 Optional(
                         Sequence(
                                 pureStatement(),
-                                ACTION(builder.get().setInitializerStatement((DOMStatement)pop())))),
+                                ACTION(builder.get().setInitializerStatement(popStatement())))),
                 SEMICOLON,
                 Optional(
                         Sequence(
                                 expression(),
-                                ACTION(builder.get().setConditionExpression((DOMExpression)pop())))),
+                                ACTION(builder.get().setConditionExpression(popExpression())))),
                 SEMICOLON,
                 Optional(
                         Sequence(
                                 pureStatement(),
-                                ACTION(builder.get().setStepStatement((DOMStatement)pop())))),
+                                ACTION(builder.get().setStepStatement(popStatement())))),
                 CLOSE_PARENTHESIS,
                 Sequence(
                         statement(),
-                        ACTION(builder.get().setBodyStatement((DOMStatement)pop()))),
+                        ACTION(builder.get().setBodyStatement(popStatement()))),
                 push(builder.get().build()));
     }
     
@@ -215,11 +215,11 @@ public class Grammar extends BaseParser<DOMElement> {
                 OPEN_PARENTHESIS,
                 Sequence(
                         expression(),
-                        ACTION(builder.get().setConditionExpression((DOMExpression)pop()))),
+                        ACTION(builder.get().setConditionExpression(popExpression()))),
                 CLOSE_PARENTHESIS,
                 Sequence(
                         statement(),
-                        ACTION(builder.get().setBodyStatement((DOMStatement)pop()))),
+                        ACTION(builder.get().setBodyStatement(popStatement()))),
                 push(builder.get().build()));
     }
     
@@ -229,12 +229,12 @@ public class Grammar extends BaseParser<DOMElement> {
                 DO,
                 Sequence(
                         statement(),
-                        ACTION(builder.get().setBodyStatement((DOMStatement)pop()))),
+                        ACTION(builder.get().setBodyStatement(popStatement()))),
                 WHILE,
                 OPEN_PARENTHESIS,
                 Sequence(
                         expression(),
-                        ACTION(builder.get().setConditionExpression((DOMExpression)pop()))),
+                        ACTION(builder.get().setConditionExpression(popExpression()))),
                 CLOSE_PARENTHESIS,
                 push(builder.get().build()));
     }
@@ -246,16 +246,16 @@ public class Grammar extends BaseParser<DOMElement> {
                 OPEN_PARENTHESIS,
                 Sequence(
                         expression(),
-                        ACTION(builder.get().setConditionExpression((DOMExpression)pop())),
+                        ACTION(builder.get().setConditionExpression(popExpression())),
                 CLOSE_PARENTHESIS,
                 Sequence(
                         statement(),
-                        ACTION(builder.get().setTrueBranch((DOMStatement)pop())),
+                        ACTION(builder.get().setTrueBranch(popStatement())),
                 Optional(
                         ELSE,
                         Sequence(
                                 statement(),
-                                ACTION(builder.get().setFalseBranch((DOMStatement)pop())))))),
+                                ACTION(builder.get().setFalseBranch(popStatement())))))),
                 push(builder.get().build()));
     }
     
@@ -267,7 +267,7 @@ public class Grammar extends BaseParser<DOMElement> {
                 ZeroOrMore(
                         Sequence(
                                 statement(),
-                                ACTION(builder.get().appendStatement((DOMStatement)pop())))),
+                                ACTION(builder.get().appendStatement(popStatement())))),
                 CLOSE_BRACE,
                 push(builder.get().build()));
     }
@@ -275,7 +275,7 @@ public class Grammar extends BaseParser<DOMElement> {
     public Rule expressionStatement() {
         return Sequence(
                 expression(),
-                push(new DOMExpressionStatement((DOMExpression)pop())));
+                push(new DOMExpressionStatement(popExpression())));
     }
     
     public Rule expression() {
@@ -471,11 +471,11 @@ public class Grammar extends BaseParser<DOMElement> {
 	            OPEN_PARENTHESIS,
 	            Sequence(
 	                    namedTypeReference(),
-	                    ACTION(typeReference.set((DOMTypeReference)pop()))),
+	                    ACTION(typeReference.set(popTypeReference()))),
 	            CLOSE_PARENTHESIS,
 	            Sequence(
 	                    expression(),
-	                    ACTION(expression.set((DOMExpression)pop()))),
+	                    ACTION(expression.set(popExpression()))),
 	            push(new DOMExplicitCastExpression(typeReference.get(), expression.get())));
 	}
 	
@@ -496,12 +496,12 @@ public class Grammar extends BaseParser<DOMElement> {
 	            OPEN_PARENTHESIS,
 	            Optional(
 	                    expression(),
-	                    ACTION(builder.get().appendArgument((DOMExpression)pop())),
+	                    ACTION(builder.get().appendArgument(popExpression())),
 	                    ZeroOrMore(
 	                            Sequence(
 	                                    COMMA,
 	                                    expression(),
-	                                    ACTION(builder.get().appendArgument((DOMExpression)pop())))
+	                                    ACTION(builder.get().appendArgument(popExpression())))
 	                            )),
 	            CLOSE_PARENTHESIS,
 	            push(builder.get().build()));
@@ -626,6 +626,26 @@ public class Grammar extends BaseParser<DOMElement> {
 			return new DOMBinaryExpression(expressionType, leftExpression, rightExpression);
 		}
 	}
+	
+	DOMFunctionDefinition popFunctionDefinition() {
+        return (DOMFunctionDefinition)pop();
+    }
+    
+    DOMTypeReference popTypeReference() {
+        return (DOMTypeReference)pop();
+    }
+    
+    DOMParameterDefinition popParameterDefinition() {
+        return (DOMParameterDefinition)pop();
+    }
+    
+    DOMStatement popStatement() {
+        return (DOMStatement)pop();
+    }
+    
+    DOMExpression popExpression() {
+        return (DOMExpression)pop();
+    }
 	
 	public static class FunctionCallBuilder {
 	    private String functionName;
