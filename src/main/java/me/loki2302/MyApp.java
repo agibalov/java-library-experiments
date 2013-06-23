@@ -3,6 +3,8 @@ package me.loki2302;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.Gson;
+
 import spark.Request;
 import spark.Response;
 import spark.servlet.SparkApplication;
@@ -42,6 +44,49 @@ public class MyApp implements SparkApplication {
 				return modelAndView(model, "add.ftl");
 			}			
 		});
+		
+		get(new JsonRoute("/api/hello/:name") {
+			@Override
+			protected Object process(Request request, Response response) {
+				UserModel userModel = new UserModel();
+				userModel.setName(request.params(":name"));
+				return userModel;
+			}			
+		});
+		
+		get(new FreeMarkerTemplateViewRoute("/angular") {
+			@Override
+			protected ModelAndView process(Request request, Response response) {
+				return view("angular.ftl");
+			}			
+		});
+		
+		get(new JsonRoute("/api/addNumbersGet") {
+			@Override
+			protected Object process(Request request, Response response) {
+				AddNumbersResponse addNumbersResponse = new AddNumbersResponse();
+				addNumbersResponse.a = Integer.parseInt(request.queryParams("a"));
+				addNumbersResponse.b = Integer.parseInt(request.queryParams("b"));
+				addNumbersResponse.result = addNumbersResponse.a + addNumbersResponse.b; 
+				return addNumbersResponse;
+			}			
+		});
+		
+		post(new JsonRoute("/api/addNumbersPost") {
+			@Override
+			protected Object process(Request request, Response response) {
+				Gson gson = new Gson();
+				
+				AddNumbersRequest addNumbersRequest = 
+						gson.fromJson(request.body(), AddNumbersRequest.class);
+				
+				AddNumbersResponse addNumbersResponse = new AddNumbersResponse();
+				addNumbersResponse.a = addNumbersRequest.a;
+				addNumbersResponse.b = addNumbersRequest.b;
+				addNumbersResponse.result = addNumbersResponse.a + addNumbersResponse.b; 
+				return addNumbersResponse;
+			}			
+		});
 	}	
 	
 	public static class UserModel {
@@ -54,5 +99,16 @@ public class MyApp implements SparkApplication {
 		public void setName(String name) {
 			this.name = name;
 		}
+	}
+	
+	public static class AddNumbersRequest {
+		public int a;
+		public int b;		
+	}
+	
+	public static class AddNumbersResponse {
+		public int a;
+		public int b;
+		public int result;
 	}
 }
