@@ -1,0 +1,25 @@
+<#macro do title>
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<title>${title}</title>
+		<link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+		<script type="text/javascript" src="/assets/js/angular.min.js"></script>
+		<script type="text/javascript" src="/assets/js/app.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<ul class="nav nav-pills">
+				<li><a href="/">Index</a></li>				
+				<li><a href="/angular">Hello Angular</a></li>
+			</ul>
+			<div class="page-header">
+				<h2>Hello World <small>again</small></h2>
+			</div>
+			<#nested />
+			<hr/>
+			&copy; <a href="http://loki2302.me" target="_blank">loki2302</a>
+		</div>
+	</body>
+</html>
+</#macro>
