@@ -1,41 +1,36 @@
 package me.loki2302;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 import spark.servlet.SparkApplication;
 import static spark.Spark.*;
+import static me.loki2302.ModelAndView.*;
 
 public class MyApp implements SparkApplication {
 	@Override
 	public void init() {
-		get(new Route("/") {
+		get(new FreeMarkerTemplateViewRoute("/") {
 			@Override
-			public Object handle(Request request, Response response) {
+			protected ModelAndView process(Request request, Response response) {
 				UserModel model = new UserModel();
 				model.setName("loki2302");
-				return render("index.ftl", model);
+				return modelAndView(model, "index.ftl");
 			}			
 		});
 		
-		get(new Route("/second") {
+		get(new FreeMarkerTemplateViewRoute("/second") {
 			@Override
-			public Object handle(Request request, Response response) {
-				return render("second.ftl");
+			public ModelAndView process(Request request, Response response) {
+				return view("second.ftl");
 			}			
 		});
 		
-		get(new Route("/add/:a/:b") {
+		get(new FreeMarkerTemplateViewRoute("/add/:a/:b") {
 			@Override
-			public Object handle(Request request, Response response) {
+			public ModelAndView process(Request request, Response response) {
 				int a = Integer.parseInt(request.params(":a"));
 				int b = Integer.parseInt(request.params(":b"));
 				
@@ -44,31 +39,10 @@ public class MyApp implements SparkApplication {
 				model.put("b", b);
 				model.put("result", a + b);
 				
-				return render("add.ftl", model);
+				return modelAndView(model, "add.ftl");
 			}			
 		});
-	}
-	
-	private String render(String viewName, Object model) {
-		Configuration configuration = new Configuration();
-		configuration.setClassForTemplateLoading(MyApp.class, "/freemarker/"); 
-		try {
-			Template template = configuration.getTemplate(viewName);
-			StringWriter stringWriter = new StringWriter();					
-	    	template.process(model, stringWriter);
-	    	return stringWriter.toString();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (TemplateException e) {
-			e.printStackTrace();
-		}
-		
-		throw new RuntimeException("failed to render template for some reason");
-	}
-	
-	private String render(String viewName) {
-		return render(viewName, null);
-	}
+	}	
 	
 	public static class UserModel {
 		private String name;
