@@ -22,7 +22,7 @@ public class ImplementingServiceWithJavaScriptTest {
 
     @Before
     public void initImplementation() throws IOException {
-        context = new JavaScriptContext();
+        context = new JavaScriptContext();        
         context.extendWithResource("calculator-service.js");
         JavaScriptService javaScriptService = context.getService("calculatorService");
         calculatorService = new JavaScriptCalculatorService(javaScriptService);
@@ -38,16 +38,13 @@ public class ImplementingServiceWithJavaScriptTest {
         assertEquals(3, calculatorService.addNumbers(1, 2));
         assertEquals(-1, calculatorService.subNumbers(1, 2));
         assertEquals(2, calculatorService.mulNumbers(1, 2));
-        assertEquals(0, calculatorService.divNumbers(1, 2));
+        assertEquals(0, calculatorService.divNumbers(1, 2));        
     }
 
     public static interface CalculatorService {
         int addNumbers(int a, int b);
-
         int subNumbers(int a, int b);
-
         int mulNumbers(int a, int b);
-
         int divNumbers(int a, int b);
     }
 
@@ -102,7 +99,7 @@ public class ImplementingServiceWithJavaScriptTest {
         private Scriptable scope;
 
         public JavaScriptContext() {
-            context = Context.enter();
+            context = Context.enter();            
             scope = context.initStandardObjects();
         }
 
