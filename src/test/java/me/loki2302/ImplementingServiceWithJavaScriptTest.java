@@ -77,19 +77,14 @@ public class ImplementingServiceWithJavaScriptTest {
     }
 
     public static class JavaScriptService {
-        private final Context context;
-        private final Scriptable scope;
         private final Scriptable serviceScriptable;
 
-        public JavaScriptService(Context context, Scriptable scope, Scriptable serviceScriptable) {
-            this.context = context;
-            this.scope = scope;
+        public JavaScriptService(Scriptable serviceScriptable) {
             this.serviceScriptable = serviceScriptable;
         }
 
         public <T> T invoke(String functionName, Class<T> returningClass, Object... args) {
-            Function function = (Function) ScriptableObject.getProperty(serviceScriptable, functionName);
-            Object result = function.call(context, scope, serviceScriptable, args);
+            Object result = ScriptableObject.callMethod(serviceScriptable, functionName, args);
             return (T) Context.jsToJava(result, returningClass);
         }
     }
@@ -115,12 +110,7 @@ public class ImplementingServiceWithJavaScriptTest {
 
         public JavaScriptService getService(String serviceName) {
             Scriptable serviceScriptable = (Scriptable) scope.get(serviceName, scope);
-
-            JavaScriptService javaScriptService = new JavaScriptService(
-                    context, 
-                    scope, 
-                    serviceScriptable);
-
+            JavaScriptService javaScriptService = new JavaScriptService(serviceScriptable);
             return javaScriptService;
         }
     }
