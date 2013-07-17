@@ -45,4 +45,20 @@ public class JadeTest {
         String result = configuration.renderTemplate(jadeTemplate, model);
         assertEquals("<obj><p>hi <em>there</em> &lt;&gt;</p></obj>", result);
     }
+    
+    @Test
+    public void canUseCustomFilter() throws JadeException, IOException {
+        JadeConfiguration configuration = new JadeConfiguration();
+        configuration.setTemplateLoader(new TemplateNameIsTemplateItselfTemplateLoader());
+        configuration.setMode(Mode.XML);
+        configuration.setFilter("decorate", new MyDecoratingFilter());        
+                
+        JadeTemplate jadeTemplate = configuration.getTemplate(
+                "obj\n" + 
+                "  :decorate\n" +
+                "    loki2302");
+        Map<String, Object> model = new HashMap<String, Object>();
+        String result = configuration.renderTemplate(jadeTemplate, model);
+        assertEquals("<obj>|loki2302|</obj>", result);
+    }
 }
