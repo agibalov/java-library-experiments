@@ -55,4 +55,18 @@ public class RythmTest {
         String s = Rythm.render("/layouted-greetings.html", person);
         assertEquals("Hello, loki2302!Your id is 123", s);        
     }
+    
+    @Test
+    public void canUseTransformer() {
+        Rythm.engine().registerTransformer("test", "", MyDecoratingTransformer.class);
+        
+        Person person = new Person();
+        person.id = 123;
+        person.name = "loki2302";
+        String s = Rythm.render(
+                "@args me.loki2302.Person person\n" +
+                "Hello, @person.name.test_decorate()!", 
+                person);
+        assertEquals("Hello, |loki2302|!", s);
+    }
 }
