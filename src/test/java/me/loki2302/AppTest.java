@@ -16,7 +16,9 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 public class AppTest {
     @Test
-    public void test() throws IOException, ShutdownSignalException, ConsumerCancelledException, InterruptedException {
+    public void singleThreadTest() throws IOException, ShutdownSignalException, ConsumerCancelledException, InterruptedException {
+        final String queueName = "hello-queue";
+        
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost(TestConfiguration.RabbitMQHostName);
         
@@ -29,11 +31,11 @@ public class AppTest {
             Channel channel = null;
             try {
                 channel = connection.createChannel();
-                channel.queueDeclare("HelloQueue", false, false, false, null);
-                channel.basicPublish("", "HelloQueue", null, "hello there!".getBytes());
+                channel.queueDeclare(queueName, false, false, false, null);
+                channel.basicPublish("", queueName, null, "hello there!".getBytes());
                 
-                QueueingConsumer consumer = new QueueingConsumer(channel);
-                channel.basicConsume("HelloQueue", true, consumer);
+                QueueingConsumer consumer = new QueueingConsumer(channel);                
+                channel.basicConsume(queueName, true, consumer);
                 
                 Delivery delivery = consumer.nextDelivery();
                 String m = new String(delivery.getBody());
@@ -53,5 +55,5 @@ public class AppTest {
         if(!receivedMessage) {
             fail();
         }
-    }    
+    }
 }
