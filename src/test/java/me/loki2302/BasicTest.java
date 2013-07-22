@@ -13,7 +13,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 
-public class AppTest {    
+public class BasicTest {    
     @Test
     public void defaultExchangeTest() {
         withChannel(new ChannelFunc() {
@@ -158,7 +158,7 @@ public class AppTest {
     private static void withChannel(ChannelFunc func) {
         try {
             ConnectionFactory connectionFactory = new ConnectionFactory();
-            connectionFactory.setHost(TestConfiguration.RabbitMQHostName);
+            connectionFactory.setHost(TestConfiguration.RabbitHostName);
                     
             Connection connection = null;
             try {
