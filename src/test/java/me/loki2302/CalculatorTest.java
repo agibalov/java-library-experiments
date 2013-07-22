@@ -19,6 +19,8 @@ public class CalculatorTest {
         Channel channel = connection.createChannel();
         channel.queueDeclare(Calculator.CALCULATOR_RPC_QUEUE, false, false, false, null);
         channel.queuePurge(Calculator.CALCULATOR_RPC_QUEUE);
+        channel.close();
+        connection.close();
         
         CalculatorServer calculatorServer = CalculatorServer.make(TestConfiguration.RabbitHostName);
         CalculatorClient calculatorClient = CalculatorClient.make(TestConfiguration.RabbitHostName);        
