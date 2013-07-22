@@ -2,8 +2,11 @@ package me.loki2302;
 
 import static org.junit.Assert.*;
 
+import java.util.UUID;
+
 import org.junit.Test;
 
+import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -111,6 +114,43 @@ public class AppTest {
                 Delivery badNewsDelivery = badNewsConsumer.nextDelivery();
                 String badNewsMessage = new String(badNewsDelivery.getBody());
                 assertEquals("bad news", badNewsMessage);
+            }            
+        });
+    }
+    
+    @Test
+    public void rpcPatternTest() {
+        withChannel(new ChannelFunc() {
+            @Override
+            public void run(Channel channel) throws Exception {
+                channel.queueDeclare("rpc-requests-q", false, false, false, null);
+                channel.queuePurge("rpc-requests-q");
+                
+                String replyQueueName = channel.queueDeclare().getQueue();
+                String requestCorrelationId = UUID.randomUUID().toString();
+                BasicProperties requestProperties = new BasicProperties()
+                    .builder()
+                    .correlationId(requestCorrelationId)
+                    .replyTo(replyQueueName)
+                    .build();
+                channel.basicPublish("", "rpc-requests-q", requestProperties, "loki2302".getBytes());
+                
+                QueueingConsumer requestConsumer = new QueueingConsumer(channel);
+                channel.basicConsume("rpc-requests-q", requestConsumer);
+                Delivery requestDelivery = requestConsumer.nextDelivery();
+                String name = new String(requestDelivery.getBody());
+                String responseText = String.format("hello %s", name);
+                BasicProperties responseProperties = new BasicProperties()
+                    .builder()
+                    .correlationId(requestDelivery.getProperties().getCorrelationId())
+                    .build();
+                channel.basicPublish("", requestDelivery.getProperties().getReplyTo(), responseProperties, responseText.getBytes());
+                
+                QueueingConsumer responseConsumer = new QueueingConsumer(channel);
+                channel.basicConsume(replyQueueName, responseConsumer);
+                Delivery responseDelivery = responseConsumer.nextDelivery();
+                assertEquals(requestCorrelationId, responseDelivery.getProperties().getCorrelationId());
+                assertEquals("hello loki2302", new String(responseDelivery.getBody()));
             }            
         });
     }
