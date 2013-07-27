@@ -15,23 +15,29 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.junit.Test;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
 
 public class AppTest {
     @Test
     public void dummyTest() throws Exception {
         Server server = new Server(8080);
         server.setHandler(new AbstractHandler() {
-            public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException {
+            @Override
+            public void handle(
+                    String target, 
+                    Request baseRequest, 
+                    HttpServletRequest request, 
+                    HttpServletResponse response) throws IOException, ServletException {
+                
                 response.setContentType("text/plain");
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().println("hello there");
                 ((Request)request).setHandled(true);
                 
-                System.out.printf("request from %s, URL=%s\n", request.getRemoteAddr(), request.getRequestURI());
+                System.out.printf("request from %s, URL=%s\n", request.getRemoteAddr(), request.getRequestURI());                
             }
         });
         server.start();
