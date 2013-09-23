@@ -12,7 +12,7 @@ public class App {
                 new Person(10, "john"));
         
         QPerson $ = QPerson.person;
-        List<Person> filteredPeople = from($, people).where($.name.contains("i")).list($);
-        System.out.println(filteredPeople.size());
+        List<Integer> filteredPeople = from($, people).where($.name.contains("i")).list($.id);
+        System.out.println(filteredPeople);
     } 
 }
