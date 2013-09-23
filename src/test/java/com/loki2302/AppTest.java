@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.junit.Test;
 
+
+
+
 public class AppTest {
     @Test
     public void canExtractProperty() {
@@ -54,5 +57,56 @@ public class AppTest {
         assertEquals(2, filteredPersons.size());
         assertEquals(people.get(0), filteredPersons.get(0));
         assertEquals(people.get(1), filteredPersons.get(1));
+    }
+    
+    @Test
+    public void canConvert() {
+        List<Person> people = Arrays.asList(
+                new Person(1, "loki2302"), 
+                new Person(3, "jsmith"), 
+                new Person(10, "john"));
+        
+        QPerson $ = QPerson.person;
+        
+        List<CustomPerson> customPeople = from($, people).list(QCustomPerson.create($.id, $.name)); 
+        assertEquals(3, customPeople.size());
+        assertEquals(1, customPeople.get(0).getId());
+        assertEquals("loki2302", customPeople.get(0).getName());
+        assertEquals(3, customPeople.get(1).getId());
+        assertEquals("jsmith", customPeople.get(1).getName());
+        assertEquals(10, customPeople.get(2).getId());
+        assertEquals("john", customPeople.get(2).getName());
+    }
+    
+    @Test
+    public void canJoin() {
+        List<Person> people = Arrays.asList(
+                new Person(1, "loki2302"), 
+                new Person(3, "jsmith"), 
+                new Person(10, "john"));
+        
+        List<Article> articles = Arrays.asList(
+                new Article(1, "article1", 3),
+                new Article(2, "article2", 3),
+                new Article(3, "article3", 1),
+                new Article(4, "article4", 10));
+        
+        QArticle article = QArticle.article;
+        QPerson person = QPerson.person;
+        List<CompleteArticle> completeArticles = 
+                from(article, articles)
+                .from(person, people)
+                .where(article.authorId.eq(person.id))
+                .list(QCompleteArticle.create(article.id, article.title, person));
+        
+        assertEquals(4, completeArticles.size());
+        assertEquals(1, completeArticles.get(0).getId());
+        assertEquals(people.get(1), completeArticles.get(0).getAuthor());
+        assertEquals(2, completeArticles.get(1).getId());
+        assertEquals(people.get(1), completeArticles.get(1).getAuthor());
+        assertEquals(3, completeArticles.get(2).getId());
+        assertEquals(people.get(0), completeArticles.get(2).getAuthor());
+        assertEquals(4, completeArticles.get(3).getId());
+        assertEquals(people.get(2), completeArticles.get(3).getAuthor());
     }
 }
