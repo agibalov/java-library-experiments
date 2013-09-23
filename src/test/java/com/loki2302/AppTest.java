@@ -24,4 +24,19 @@ public class AppTest {
         Person personByName = from($, people).where($.name.eq("loki2302")).singleResult($);
         assertEquals(people.get(0), personByName);
     }
+    
+    @Test
+    public void canFilterItems() {
+        List<Person> people = Arrays.asList(
+                new Person(1, "loki2302"), 
+                new Person(3, "jsmith"), 
+                new Person(10, "john"));
+        
+        QPerson $ = QPerson.person;
+        
+        List<Person> filteredPersons = from($, people).where($.name.contains("i")).list($);
+        assertEquals(2, filteredPersons.size());
+        assertEquals(people.get(0), filteredPersons.get(0));
+        assertEquals(people.get(1), filteredPersons.get(1));
+    }
 }
