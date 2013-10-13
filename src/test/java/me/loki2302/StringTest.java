@@ -30,4 +30,10 @@ public class StringTest extends AbstractJedisTest {
         assertEquals("hello", jedis.getSet("x", "world"));
         assertEquals("world", jedis.get("x"));
     } 
+    
+    @Test
+    public void canGetStringLength() {
+        jedis.set("x", "hello");
+        assertEquals(5, (long)jedis.strlen("x"));
+    }
 }

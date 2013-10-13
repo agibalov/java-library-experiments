@@ -68,4 +68,29 @@ public class CommonTest extends AbstractJedisTest {
         assertFalse(jedis.exists("x"));
         assertEquals("1", jedis.get("y"));
     }
+    
+    @Test
+    public void canGetType() {
+        assertEquals("none", jedis.type("x"));
+        
+        jedis.del("x");
+        jedis.set("x", "hello");
+        assertEquals("string", jedis.type("x"));
+        
+        jedis.del("x");
+        jedis.rpush("x", "1");
+        assertEquals("list", jedis.type("x"));
+        
+        jedis.del("x");
+        jedis.hset("x", "name", "loki2302");
+        assertEquals("hash", jedis.type("x"));
+        
+        jedis.del("x");
+        jedis.sadd("x", "loki2302");
+        assertEquals("set", jedis.type("x"));
+        
+        jedis.del("x");
+        jedis.zadd("x", 1.0, "hello");
+        assertEquals("zset", jedis.type("x"));
+    }
 }
