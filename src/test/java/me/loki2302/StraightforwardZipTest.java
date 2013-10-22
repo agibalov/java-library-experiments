@@ -15,7 +15,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-public class AppTest {
+public class StraightforwardZipTest {
     @Test
     public void canWriteZipFile() throws IOException {
         File zipFile = new File("1.zip");
