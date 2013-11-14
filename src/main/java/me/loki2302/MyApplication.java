@@ -11,7 +11,10 @@ public class MyApplication extends Application {
     @Override
     public Set<Object> getSingletons() {
         Set<Object> services = new HashSet<Object>();
+        
         services.add(new CalculatorApiImpl());
+        services.add(new PersonResource());
+        
         return services;
-    }        
+    } 
 }
