@@ -9,7 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/person")
@@ -36,9 +35,7 @@ public class PersonResource {
             }
         }
         
-        // TODO: how do I throw 404?
-        
-        return null;
+        throw new PersonNotFoundException(id);
     }
     
     private static Person makePerson(int id, String name) {

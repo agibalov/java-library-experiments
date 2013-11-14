@@ -4,7 +4,7 @@
 		<title>app</title>
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	</head>
-	<body>
+	<body ng-controller="AppController">
 		<nav class="navbar navbar-default">
 			<div class="container">
 				<div class="navbar-header">
@@ -29,10 +29,21 @@
 						templateUrl: 'persons.html',
 						controller: 'PersonsController',
 						resolve: {
-							persons: function($http) {
-								return $http.get('/api/person').then(function(response) {
-									return response.data;
+							persons: function($q, $http) {
+								var defer = $q.defer();
+
+								$http.get('/api/person')
+								.success(function(data, status) {
+									defer.resolve(data);
+								})
+								.error(function(data, status) {
+									defer.reject({
+										status: status,
+										details: data
+									});
 								});
+
+								return defer.promise;
 							}
 						}
 					})
@@ -40,17 +51,35 @@
 						templateUrl: 'person.html',
 						controller: 'PersonController',
 						resolve: {
-							person: function($http, $route) {
+							person: function($q, $http, $route) {
 								var id = $route.current.params.id;
-								return $http.get('/api/person/' + id).then(function(response) {
-									return response.data;
+
+								var defer = $q.defer();
+
+								$http.get('/api/person/' + id)
+								.success(function(data, status) {
+									defer.resolve(data);
+								})
+								.error(function(data, status) {
+									defer.reject({
+										status: status,
+										details: data
+									});
 								});
+
+								return defer.promise;
 							}
 						}
 					})
 					.otherwise({
 						redirectTo: '/person'
 					});
+			});
+
+			app.controller("AppController", function($rootScope) {
+				$rootScope.$on("$routeChangeError", function(event, current, previous, rejection) {
+					console.log("route change error", rejection.status, rejection.details);
+				});
 			});
 
 			app.controller("PersonsController", function($scope, persons) {
@@ -73,6 +102,7 @@
 		<script type="text/ng-template" id="persons.html">
 			<h1>Persons</h1>
 			<ul>
+				<li><a href="#/person/999">The person does not exist</a></li>
 				<li ng-repeat="person in model.persons"><a href="#/person/{{person.id}}">{{person.name}}</a></li>
 			</ul>
 		</script>

@@ -14,6 +14,7 @@ public class MyApplication extends Application {
         
         services.add(new CalculatorApiImpl());
         services.add(new PersonResource());
+        services.add(new PersonNotFoundExceptionMapper());
         
         return services;
     } 
