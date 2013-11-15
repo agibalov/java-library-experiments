@@ -29,21 +29,8 @@
 						templateUrl: 'persons.html',
 						controller: 'PersonsController',
 						resolve: {
-							persons: function($q, $http) {
-								var defer = $q.defer();
-
-								$http.get('/api/person')
-								.success(function(data, status) {
-									defer.resolve(data);
-								})
-								.error(function(data, status) {
-									defer.reject({
-										status: status,
-										details: data
-									});
-								});
-
-								return defer.promise;
+							persons: function(Api) {
+								return Api.getPersons();
 							}
 						}
 					})
@@ -51,23 +38,9 @@
 						templateUrl: 'person.html',
 						controller: 'PersonController',
 						resolve: {
-							person: function($q, $http, $route) {
+							person: function(Api, $route) {
 								var id = $route.current.params.id;
-
-								var defer = $q.defer();
-
-								$http.get('/api/person/' + id)
-								.success(function(data, status) {
-									defer.resolve(data);
-								})
-								.error(function(data, status) {
-									defer.reject({
-										status: status,
-										details: data
-									});
-								});
-
-								return defer.promise;
+								return Api.getPerson(id);
 							}
 						}
 					})
@@ -76,6 +49,44 @@
 					});
 			});
 
+			app.factory("Api", function($q, $http) {
+				return {
+					getPersons: function() {
+						var defer = $q.defer();
+
+						$http.get('/api/person')
+						.success(function(data, status) {
+							defer.resolve(data);
+						})
+						.error(function(data, status) {
+							defer.reject({
+								status: status,
+								details: data
+							});
+						});
+
+						return defer.promise;
+					},
+
+					getPerson: function(id) {
+						var defer = $q.defer();
+
+						$http.get('/api/person/' + id)
+						.success(function(data, status) {
+							defer.resolve(data);
+						})
+						.error(function(data, status) {
+							defer.reject({
+								status: status,
+								details: data
+							});
+						});
+
+						return defer.promise;
+					}
+				};
+			});
+			
 			app.controller("AppController", function($rootScope) {
 				$rootScope.$on("$routeChangeError", function(event, current, previous, rejection) {
 					console.log("route change error", rejection.status, rejection.details);
