@@ -9,8 +9,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import net.glxn.qrgen.QRCode;
 import net.glxn.qrgen.image.ImageType;
@@ -19,6 +21,9 @@ import net.glxn.qrgen.image.ImageType;
 @Produces("application/json")
 @Path("/person")
 public class PersonResource {
+    @Context
+    UriInfo uriInfo;
+    
     private List<Person> people = new ArrayList<Person>();
     
     public PersonResource() {
@@ -35,19 +40,14 @@ public class PersonResource {
     @GET
     @Path("/{id}")
     public Person getOne(@PathParam("id") int id) {
-        for(Person person : people) {
-            if(person.id == id) {
-                return person;
-            }
-        }
-        
-        throw new PersonNotFoundException(id);
+        Person person = getPersonById(id);        
+        return person;
     }
     
     @GET
     @Path("/{id}/image")
     public Response getImage(@PathParam("id") int id) {
-        Person person = getOne(id);
+        Person person = getPersonById(id);
         
         File imageFile = QRCode
             .from(person.name)
@@ -58,16 +58,30 @@ public class PersonResource {
         return Response.ok(imageFile, MediaType.APPLICATION_OCTET_STREAM_TYPE).build();        
     }
     
+    private Person getPersonById(int id) {
+        for(Person person : people) {
+            if(person.id == id) {
+                
+                String imageUrl = uriInfo
+                        .getBaseUriBuilder()
+                        .path(PersonResource.class)
+                        .path(PersonResource.class, "getImage")
+                        .build(id)
+                        .toString();
+                
+                person.imageUrl = imageUrl;
+                
+                return person;
+            }
+        }
+        
+        throw new PersonNotFoundException(id);
+    }
+    
     private static Person makePerson(int id, String name) {
         Person person = new Person();
         person.id = id;
         person.name = name;
-        person.imageUrl = makeImageUrl(id);
         return person;
-    }
-    
-    // TODO: understand how to generate links to related resources properly
-    private static String makeImageUrl(int id) {
-        return String.format("/api/person/%d/image", id);
     }    
 }
