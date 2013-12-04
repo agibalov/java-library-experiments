@@ -12,20 +12,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.ElementList;
-import org.simpleframework.xml.ElementListUnion;
-import org.simpleframework.xml.ElementUnion;
-import org.simpleframework.xml.Root;
+import me.loki2302.uidom.BoxContainerUiElement;
+import me.loki2302.uidom.ButtonUiElement;
+import me.loki2302.uidom.InputUiElement;
+import me.loki2302.uidom.LabelUiElement;
+import me.loki2302.uidom.UiDefinition;
+import me.loki2302.uidom.UiElement;
+import me.loki2302.uidom.UiElementVisitor;
+import me.loki2302.uidom.WindowContainerUiElement;
+
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-public class LayoutFromXmlApp {
+public class LayoutFromXmlApp {	
 	public static void main(String[] args) {
 		/*
 
@@ -147,95 +149,4 @@ public class LayoutFromXmlApp {
             throw new RuntimeException(e);
         }
     }
-	
-    @Root(name = "ui")
-    public static class UiDefinition {
-    	@ElementUnion({
-        	@Element(name = "window", type = WindowContainerUiElement.class),
-        	@Element(name = "box", type = BoxContainerUiElement.class),
-        	@Element(name = "label", type = LabelUiElement.class),
-        	@Element(name = "input", type = InputUiElement.class),
-        	@Element(name = "button", type = ButtonUiElement.class),
-        })
-    	public UiElement rootElement;
-    }
-    
-    @Root    
-	public static abstract class UiElement {
-		@Attribute(name = "id", required = false)
-		public String id;
-		
-		public abstract <TResult> TResult accept(UiElementVisitor<TResult> visitor);		
-	}
-    
-    public static interface UiElementVisitor<TResult> {
-		TResult visit(WindowContainerUiElement e);
-		TResult visit(BoxContainerUiElement e);
-		TResult visit(LabelUiElement e);
-		TResult visit(InputUiElement e);
-		TResult visit(ButtonUiElement e);
-	}
-	
-	public static abstract class ContainerUiElement extends UiElement {
-		@Attribute(name = "orientation")
-		public String orientation; // TODO: how do i use enum here?
-		
-		// TODO: how do i get rid of this duplication?
-		@ElementListUnion({
-			@ElementList(entry = "box", inline = true, type = BoxContainerUiElement.class),
-			@ElementList(entry = "label", inline = true, type = LabelUiElement.class),
-			@ElementList(entry = "input", inline = true, type = InputUiElement.class),
-			@ElementList(entry = "button", inline = true, type = ButtonUiElement.class),
-		})
-		public List<UiElement> children;
-	}
-	
-	@Root(name = "window")
-	public static class WindowContainerUiElement extends ContainerUiElement {
-		@Attribute(name = "title")
-		public String title;
-
-		@Override
-		public <TResult> TResult accept(UiElementVisitor<TResult> visitor) {
-			return visitor.visit(this);
-		}
-	}
-	
-	@Root(name = "label")
-	public static class LabelUiElement extends UiElement {
-		@Attribute(name = "text", required = false)
-		public String text;
-
-		@Override
-		public <TResult> TResult accept(UiElementVisitor<TResult> visitor) {
-			return visitor.visit(this);
-		}
-	}
-	
-	@Root(name = "input")
-	public static class InputUiElement extends UiElement {
-		@Override
-		public <TResult> TResult accept(UiElementVisitor<TResult> visitor) {
-			return visitor.visit(this);
-		}
-	}
-	
-	@Root(name = "button")
-	public static class ButtonUiElement extends UiElement {
-		@Attribute(name = "text")
-		public String text;
-
-		@Override
-		public <TResult> TResult accept(UiElementVisitor<TResult> visitor) {
-			return visitor.visit(this);
-		}
-	}
-	
-	@Root(name = "box")
-	public static class BoxContainerUiElement extends ContainerUiElement {
-		@Override
-		public <TResult> TResult accept(UiElementVisitor<TResult> visitor) {
-			return visitor.visit(this);
-		}		
-	}
 }
