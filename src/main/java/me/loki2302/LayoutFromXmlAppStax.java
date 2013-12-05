@@ -1,8 +1,10 @@
 package me.loki2302;
 
+import java.awt.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -14,6 +16,12 @@ import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.events.Attribute;
 
 public class LayoutFromXmlAppStax {
+	
+	public static interface UiElementReader {
+		String getTagName();
+		Component read(Map<String, String> attributes);
+	}
+	
 	public static void main(String[] args) {
 		XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 		InputStream inputStream = LayoutFromXmlApp.class.getResourceAsStream("/calculator_view.xml");
