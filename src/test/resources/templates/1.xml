@@ -1,0 +1,3 @@
+<doc>
+    <name th:text="${message}">Dummy Value here</name>
+</doc>
