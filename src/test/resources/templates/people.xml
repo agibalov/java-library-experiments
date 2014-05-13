@@ -1,0 +1,5 @@
+<doc th:remove="all-but-first">
+    <person th:each="person : ${people}" th:attr="id=${person.id}" th:text="${person.name}">loki2302</person>
+    <person id="123">Test person 1</person>
+    <person id="456">Test person 2</person>
+</doc>
