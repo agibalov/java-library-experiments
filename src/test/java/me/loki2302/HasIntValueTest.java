@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class AppTest {
+public class HasIntValueTest {
     private ObjectMapper objectMapper;
 
     @Before
