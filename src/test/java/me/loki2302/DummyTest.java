@@ -9,12 +9,14 @@ import org.msgpack.unpacker.Unpacker;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class DummyTest {
     @Test
-    public void canWriteAndReadAMessage() throws IOException {
+    public void canWriteAndReadADummyMessage() throws IOException {
         DummyMessage dummyMessage = makeDummyMessage(0);
 
         MessagePack messagePack = new MessagePack();
@@ -25,7 +27,7 @@ public class DummyTest {
     }
 
     @Test
-    public void canWriteAndReadManyMessages() throws IOException {
+    public void canWriteAndReadManyDummyMessages() throws IOException {
         DummyMessage message1 = makeDummyMessage(0);
         DummyMessage message2 = makeDummyMessage(1);
         DummyMessage message3 = makeDummyMessage(2);
@@ -54,22 +56,24 @@ public class DummyTest {
         DummyMessage dummyMessage = new DummyMessage();
         dummyMessage.stringValue = "hello there" + seed;
         dummyMessage.doubleValue = 3.14 + seed;
+
+        float[] floatArray = new float[65536 * 64 - 1]; // this size is the best it can do
+        Arrays.fill(floatArray, seed);
+        dummyMessage.floatArray = floatArray;
+
         return dummyMessage;
     }
 
     private static void assertDummyMessageEquals(DummyMessage expected, DummyMessage actual) {
         assertEquals(expected.stringValue, actual.stringValue);
         assertEquals(expected.doubleValue, actual.doubleValue, 0.001);
+        assertArrayEquals(expected.floatArray, actual.floatArray, 0.001f);
     }
 
     @Message
     public static class DummyMessage {
         public String stringValue;
         public double doubleValue;
-
-        @Override
-        public String toString() {
-            return String.format("Message{%s,%f}", stringValue, doubleValue);
-        }
+        public float[] floatArray;
     }
 }
