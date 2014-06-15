@@ -11,8 +11,13 @@ public class DummyTest {
         myServer.start();
         try {
             MyClient myClient = new MyClient();
-            int result = myClient.addNumbers(123, 1);
-            assertEquals(124, result);
+            myClient.start();
+            try {
+                int result = myClient.addNumbers(123, 1);
+                assertEquals(124, result);
+            } finally {
+                myClient.stop();
+            }
         } finally {
             myServer.stop();
         }

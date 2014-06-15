@@ -13,39 +13,41 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.concurrent.Exchanger;
 
 public class MyClient {
+    private EventLoopGroup group;
+    private Channel channel;
+    private MyClientHandler myClientHandler = new MyClientHandler();
+
+    public void start() throws InterruptedException {
+        group = new NioEventLoopGroup();
+
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap
+                .group(group)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(myClientHandler);
+                    }
+                });
+
+        channel = bootstrap.connect("localhost", 2302).sync().channel();
+    }
+
+    public void stop() {
+        channel.close();
+        group.shutdownGracefully();
+    }
+
     public int addNumbers(int x, int y) throws InterruptedException {
-        EventLoopGroup group = new NioEventLoopGroup();
-        try {
-            final Exchanger<Integer> resultExchanger = new Exchanger<Integer>();
+        Exchanger<Integer> resultExchange = new Exchanger<Integer>();
+        myClientHandler.setResultExchanger(resultExchange);
 
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap
-                    .group(group)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new MyClientHandler(resultExchanger));
-                        }
-                    });
+        ByteBuf byteBuf = Unpooled.buffer(8);
+        byteBuf.writeInt(x);
+        byteBuf.writeInt(y);
+        channel.writeAndFlush(byteBuf).sync();
 
-            Channel channel = bootstrap.connect("localhost", 2302).sync().channel();
-
-            ByteBuf byteBuf = Unpooled.buffer(8);
-            byteBuf.writeInt(x);
-            byteBuf.writeInt(y);
-            channel.writeAndFlush(byteBuf).sync();
-
-            System.out.println("sent");
-
-            int result = resultExchanger.exchange(0);
-            System.out.printf("Got result: %d\n", result);
-
-            channel.close();
-
-            return result;
-        } finally {
-            group.shutdownGracefully();
-        }
+        return resultExchange.exchange(0);
     }
 }
