@@ -40,14 +40,14 @@ public class MyClient {
     }
 
     public int addNumbers(int x, int y) throws InterruptedException {
-        Exchanger<Integer> resultExchange = new Exchanger<Integer>();
-        myClientHandler.setResultExchanger(resultExchange);
+        Exchanger<Integer> resultExchanger = new Exchanger<Integer>();
+        myClientHandler.setResultExchanger(resultExchanger);
 
         ByteBuf byteBuf = Unpooled.buffer(8);
         byteBuf.writeInt(x);
         byteBuf.writeInt(y);
         channel.writeAndFlush(byteBuf).sync();
 
-        return resultExchange.exchange(0);
+        return resultExchanger.exchange(0);
     }
 }
