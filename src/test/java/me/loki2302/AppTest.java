@@ -11,11 +11,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.Test;
 
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +27,50 @@ import static org.junit.Assert.assertNotNull;
 
 public class AppTest {
     @Test
+    public void testWebAppContextHandler() throws Exception {
+        WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setContextPath("/");
+        webAppContext.setResourceBase(".");
+        webAppContext.addEventListener(new ServletContextListener() {
+            @Override
+            public void contextInitialized(ServletContextEvent servletContextEvent) {
+                ServletContext servletContext = servletContextEvent.getServletContext();
+                ServletRegistration.Dynamic servletRegistration =
+                        servletContext.addServlet("MyDummyServlet1", new DummyServlet("helloDynamicRegistration"));
+                servletRegistration.addMapping("/1");
+            }
+
+            @Override
+            public void contextDestroyed(ServletContextEvent servletContextEvent) {
+            }
+        });
+
+        Server server = new Server(8080);
+        server.setHandler(webAppContext);
+        server.start();
+        try {
+            assertEquals("helloDynamicRegistration", getAsString("http://localhost:8080/1"));
+        } finally {
+            server.stop();
+        }
+    }
+
+    public static class DummyServlet extends HttpServlet {
+        private final String message;
+
+        public DummyServlet(String message) {
+            this.message = message;
+        }
+
+        @Override
+        protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            PrintWriter printWriter = resp.getWriter();
+            printWriter.print(message);
+            printWriter.close();
+        }
+    }
+
+    @Test
     public void testServletContextHandler() throws Exception {
         ServletContextHandler servletContextHandler = new ServletContextHandler();
         servletContextHandler.setContextPath("/");
@@ -35,7 +78,7 @@ public class AppTest {
             @Override
             public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
                 PrintWriter printWriter = res.getWriter();
-                printWriter.println("hello");
+                printWriter.print("hello");
                 printWriter.close();
             }
         }), "/*");
@@ -46,7 +89,7 @@ public class AppTest {
 
         try {
             String responseString = getAsString("http://localhost:8080/");
-            assertEquals("hello\n", responseString);
+            assertEquals("hello", responseString);
         } finally {
             server.stop();
         }
@@ -65,7 +108,7 @@ public class AppTest {
                 
                 response.setContentType("text/plain");
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().println("hello there");
+                response.getWriter().print("hello there");
                 ((Request)request).setHandled(true);
             }
         });
@@ -73,7 +116,7 @@ public class AppTest {
                 
         try {
             String responseString = getAsString("http://localhost:8080/");
-            assertEquals("hello there\n", responseString);
+            assertEquals("hello there", responseString);
         } finally {
             server.stop();            
         }       
@@ -82,7 +125,7 @@ public class AppTest {
     private static String getAsString(String url) throws IOException {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         try {
-            HttpGet httpGet = new HttpGet("http://localhost:8080/");
+            HttpGet httpGet = new HttpGet(url);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             HttpEntity responseEntity = httpResponse.getEntity();
             assertNotNull(responseEntity);
