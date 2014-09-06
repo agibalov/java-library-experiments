@@ -4,9 +4,11 @@ import fi.evident.dalesbred.Database;
 import fi.evident.dalesbred.instantiation.DefaultInstantiatorRegistry;
 import fi.evident.dalesbred.results.ReflectionResultSetProcessor;
 import fi.evident.dalesbred.results.ResultSetProcessor;
+import fi.evident.dalesbred.results.RowMapper;
 import fi.evident.dalesbred.results.UniqueResultSetProcessor;
 
-import java.util.ArrayList;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,11 +26,8 @@ public class DalesbredUserService implements UserService {
                 "insert into Users(name) values(?)",
                 name);
 
-		UserRow userRow = database.findUnique(
-				UserRow.class,
-				"select id, name from Users where id = ?",
-				userId);
-		return userDtoFromUserRow(userRow);
+        UserDTO userDto = database.findUnique(new UserDTOMapper(), "select id, name from Users where id = ?", userId);
+        return userDto;
 	}
 
     private ResultSetProcessor<Integer> makeSingleIdResultSetProcessor() {
@@ -39,16 +38,12 @@ public class DalesbredUserService implements UserService {
     }
 
 	public UserDTO getUser(int userId) {
-		UserRow userRow = database.findUnique(
-				UserRow.class, 
-				"select id, name from Users where id = ?", 
-				userId);
-		return userDtoFromUserRow(userRow); 
+		return database.findUnique(new UserDTOMapper(), "select id, name from Users where id = ?", userId);
 	}
 
 	public UserDTO updateUser(int userId, String userName) {
 		database.update("update Users set name = ? where id = ?", userName, userId);
-		return getUser(userId);		
+		return getUser(userId);
 	}
 
 	public void deleteUser(int userId) {
@@ -56,10 +51,9 @@ public class DalesbredUserService implements UserService {
 	}
 
 	public List<UserDTO> getAllUsers() {
-		List<UserRow> userRows = database.findAll(
-				UserRow.class, 
+		return database.findAll(
+				new UserDTOMapper(),
 				"select id, name from Users");
-		return userDtosFromUserRows(userRows);
 	}
 
 	public PageDTO<UserDTO> getUsers(int itemsPerPage, int page) {
@@ -71,43 +65,23 @@ public class DalesbredUserService implements UserService {
 			throw new RuntimeException();
 		}
 		
-		List<UserRow> userRows = 
-				database.findAll(
-						UserRow.class, "select limit ? ? id, name from Users", 
-						firstRow, 
-						itemsPerPage);
-		
-		List<UserDTO> userDtos = userDtosFromUserRows(userRows);
+		List<UserDTO> userDtos = database.findAll(
+                new UserDTOMapper(), "select limit ? ? id, name from Users", firstRow, itemsPerPage);
+
 		PageDTO<UserDTO> pageDto = new PageDTO<UserDTO>();
 		pageDto.totalItems = rowCount;
 		pageDto.pageNumber = page;
 		pageDto.items = userDtos;    			
 		return pageDto;
 	}
-	
-	private static UserDTO userDtoFromUserRow(UserRow userRow) {
-		UserDTO userDto = new UserDTO();
-		userDto.userId = userRow.userId;
-		userDto.userName = userRow.userName;
-		return userDto;
-	}
-	
-	private static List<UserDTO> userDtosFromUserRows(List<UserRow> userRows) {
-		List<UserDTO> userDtos = new ArrayList<UserDTO>();
-		for(UserRow userRow : userRows) {
-			UserDTO userDto = userDtoFromUserRow(userRow);
-			userDtos.add(userDto);
-		}
-		return userDtos;
-	}
-	
-	public static class UserRow {
-		private final int userId;
-		private final String userName;
-		
-		public UserRow(int userId, String userName) {
-			this.userId = userId;
-			this.userName = userName;
-		}
-	}
+
+    private static class UserDTOMapper implements RowMapper<UserDTO> {
+        @Override
+        public UserDTO mapRow(ResultSet resultSet) throws SQLException {
+            UserDTO userDto = new UserDTO();
+            userDto.userId = resultSet.getInt("id");
+            userDto.userName = resultSet.getString("name");
+            return userDto;
+        }
+    }
 }
