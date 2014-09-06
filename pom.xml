@@ -31,7 +31,12 @@
 			<artifactId>dalesbred</artifactId>
 			<version>0.7.0</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
+            <version>1.6</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

@@ -2,7 +2,6 @@ package me.loki2302;
 
 import java.util.List;
 
-
 public interface UserService {
 	UserDTO createUser(String name);
 	UserDTO getUser(int userId);
