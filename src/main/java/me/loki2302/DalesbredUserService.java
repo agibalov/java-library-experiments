@@ -1,16 +1,14 @@
 package me.loki2302;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import fi.evident.dalesbred.Database;
 import fi.evident.dalesbred.instantiation.DefaultInstantiatorRegistry;
 import fi.evident.dalesbred.results.ReflectionResultSetProcessor;
 import fi.evident.dalesbred.results.ResultSetProcessor;
 import fi.evident.dalesbred.results.UniqueResultSetProcessor;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DalesbredUserService implements UserService {
 	private final Database database;
