@@ -1,9 +1,16 @@
 package me.loki2302;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import fi.evident.dalesbred.Database;
+import fi.evident.dalesbred.instantiation.DefaultInstantiatorRegistry;
+import fi.evident.dalesbred.results.ReflectionResultSetProcessor;
+import fi.evident.dalesbred.results.ResultSetProcessor;
+import fi.evident.dalesbred.results.UniqueResultSetProcessor;
 
 public class DalesbredUserService implements UserService {
 	private final Database database;
@@ -12,14 +19,26 @@ public class DalesbredUserService implements UserService {
 		this.database = database;
 	}	
 	
-	public UserDTO createUser(String name) {		
-		database.update("insert into Users(name) values(?)", name);
+	public UserDTO createUser(String name) {
+        int userId = database.updateAndProcessGeneratedKeys(
+                makeSingleIdResultSetProcessor(),
+                Collections.<String>emptyList(),
+                "insert into Users(name) values(?)",
+                name);
+
 		UserRow userRow = database.findUnique(
-				UserRow.class, 
-				"select id, name from Users where name = ?", 
-				name);		
+				UserRow.class,
+				"select id, name from Users where id = ?",
+				userId);
 		return userDtoFromUserRow(userRow);
 	}
+
+    private ResultSetProcessor<Integer> makeSingleIdResultSetProcessor() {
+        return UniqueResultSetProcessor.unique(
+                new ReflectionResultSetProcessor<Integer>(
+                        Integer.class,
+                        (DefaultInstantiatorRegistry)database.getInstantiatorRegistry()));
+    }
 
 	public UserDTO getUser(int userId) {
 		UserRow userRow = database.findUnique(
