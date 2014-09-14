@@ -65,6 +65,22 @@ public class OptionalAndMandatoryTest {
         assertEquals("hello", childInjector.getInstance(ServiceWithOptionalMessage.class).message);
     }
 
+    // https://github.com/google/guice/issues/847 workaround?
+    @Test
+    public void optionalIsInjectedWhenThereIsBindingInChildInjectorAndTargetIsRegistered() {
+        Injector injector = Guice.createInjector();
+        Injector childInjector = injector.createChildInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(String.class)
+                        .annotatedWith(Names.named("message"))
+                        .toInstance("hello");
+                bind(ServiceWithOptionalMessage.class); // !!!
+            }
+        });
+        assertEquals("hello", childInjector.getInstance(ServiceWithOptionalMessage.class).message);
+    }
+
     @Test(expected = ConfigurationException.class)
     public void mandatoryThrowsWhenThereIsNoBinding() {
         Injector injector = Guice.createInjector();
