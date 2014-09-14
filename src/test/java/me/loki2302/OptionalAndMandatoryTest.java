@@ -54,7 +54,7 @@ public class OptionalAndMandatoryTest {
     }
 
     @Test
-    @Ignore("Doesn't work for some reason")
+    @Ignore("https://github.com/google/guice/issues/847")
     public void optionalIsInjectedWhenThereIsBindingInChildInjector() {
         Injector injector = Guice.createInjector();
         Injector childInjector = injector.createChildInjector(new AbstractModule() {
