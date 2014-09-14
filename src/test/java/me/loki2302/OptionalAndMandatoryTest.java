@@ -1,9 +1,6 @@
 package me.loki2302;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
+import com.google.inject.*;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import org.junit.Ignore;
@@ -68,7 +65,7 @@ public class OptionalAndMandatoryTest {
         assertEquals("hello", childInjector.getInstance(ServiceWithOptionalMessage.class).message);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = ConfigurationException.class)
     public void mandatoryThrowsWhenThereIsNoBinding() {
         Injector injector = Guice.createInjector();
         assertNull(injector.getInstance(ServiceWithMandatoryMessage.class).message);
@@ -87,7 +84,7 @@ public class OptionalAndMandatoryTest {
         assertEquals("hello", injector.getInstance(ServiceWithMandatoryMessage.class).message);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = ConfigurationException.class)
     public void mandatoryThrowsWhenThereIsNoBindingAndUsingChildInjector() {
         Injector injector = Guice.createInjector();
         Injector childInjector = injector.createChildInjector();
