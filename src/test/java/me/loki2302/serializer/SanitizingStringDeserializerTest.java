@@ -1,7 +1,9 @@
-package me.loki2302;
+package me.loki2302.serializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import me.loki2302.serializer.SanitizingStringDeserializer;
+import me.loki2302.serializer.Trim;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

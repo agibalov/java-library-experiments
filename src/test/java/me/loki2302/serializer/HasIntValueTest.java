@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.serializer;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

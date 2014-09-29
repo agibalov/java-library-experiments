@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.serializer;
 
 public class GoodPersonDto {
     public String name;

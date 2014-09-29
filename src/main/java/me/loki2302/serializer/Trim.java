@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.serializer;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.serializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,4 +1,6 @@
-package me.loki2302;
+package me.loki2302.serializer;
+
+import me.loki2302.serializer.HasIntValue;
 
 public enum GoodGender implements HasIntValue {
     Female(0),
