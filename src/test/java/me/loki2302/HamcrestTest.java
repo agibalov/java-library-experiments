@@ -35,6 +35,17 @@ public class HamcrestTest {
         assertThat(Arrays.asList(1, 3, 5), everyItem(not(isEven())));
     }
 
+    @Test
+    public void canTestCollectionOfObjects() {
+        List<Person> people = Arrays.asList(
+                person(1, "loki2302"),
+                person(2, "Andrey"),
+                person(3, "john")
+        );
+
+        assertThat((Iterable<Object>)(Iterable)people, everyItem(hasProperty("id", greaterThanOrEqualTo(1))));
+    }
+
     public static IsEvenMatcher isEven() {
         return new IsEvenMatcher();
     }
@@ -49,6 +60,24 @@ public class HamcrestTest {
         public void describeTo(Description description) {
             // this results in "[every item should be] even"
             description.appendText("even");
+        }
+    }
+
+    private static Person person(int id, String name) {
+        Person person = new Person();
+        person.id = id;
+        person.name = name;
+        return person;
+    }
+
+    // Hamcrest wants it public
+    public static class Person {
+        public int id;
+        public String name;
+
+        // Hamcrest wants a getter
+        public int getId() {
+            return id;
         }
     }
 }
