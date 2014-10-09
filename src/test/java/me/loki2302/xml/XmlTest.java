@@ -27,7 +27,7 @@ public class XmlTest {
         assertTrue(xml.contains("<people>"));
         assertTrue(xml.contains("</people>"));
         assertTrue(xml.contains("<person>"));
-        assertTrue(xml.contains("<person>"));
+        assertTrue(xml.contains("</person>"));
     }
 
     @Test
