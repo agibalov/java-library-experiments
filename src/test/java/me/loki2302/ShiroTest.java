@@ -19,7 +19,6 @@ public class ShiroTest {
         DefaultSecurityManager securityManager = new DefaultSecurityManager(myRealm);
 
         Subject subject = new Subject.Builder(securityManager).buildSubject();
-
         assertFalse(subject.isAuthenticated());
 
         UsernamePasswordToken token = new UsernamePasswordToken("loki2302", "qwerty");
