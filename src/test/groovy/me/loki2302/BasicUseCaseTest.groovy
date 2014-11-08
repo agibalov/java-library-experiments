@@ -18,17 +18,17 @@ class BasicUseCaseTest {
 
     @Before
     void initValidator() {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        validator = validatorFactory.getValidator();
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()
+        validator = validatorFactory.getValidator()
     }
 
     @Test
     void canGetMultipleValidationErrors() {
-        Person person = new Person();
-        person.name = "";
-        person.age = -1;
+        Person person = new Person()
+        person.name = ""
+        person.age = -1
 
-        Set<ConstraintViolation<Person>> constraintViolations = validator.validate(person);
+        Set<ConstraintViolation<Person>> constraintViolations = validator.validate(person)
 
         assertEquals 2, constraintViolations.size()
         assertTrue constraintViolations.any { it.propertyPath.toString() == 'name' }
@@ -37,21 +37,21 @@ class BasicUseCaseTest {
 
     @Test
     void canGetNoErrorsWhenEverythingIsOk() {
-        Person person = new Person();
-        person.name = "loki2302";
-        person.age = 40;
+        Person person = new Person()
+        person.name = "loki2302"
+        person.age = 40
 
-        Set<ConstraintViolation<Person>> constraintViolations = validator.validate(person);
+        Set<ConstraintViolation<Person>> constraintViolations = validator.validate(person)
 
         assertTrue constraintViolations.empty
     }
 
     static class Person {
         @NotEmpty
-        String name;
+        String name
 
         @Min(0L)
         @Max(1000L)
-        int age;
+        int age
     }
 }

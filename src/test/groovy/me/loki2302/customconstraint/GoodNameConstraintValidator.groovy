@@ -3,7 +3,7 @@ import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
 class GoodNameConstraintValidator implements ConstraintValidator<GoodName, String> {
-    String shouldContain;
+    String shouldContain
 
     @Override
     void initialize(GoodName constraintAnnotation) {
@@ -12,6 +12,6 @@ class GoodNameConstraintValidator implements ConstraintValidator<GoodName, Strin
 
     @Override
     boolean isValid(String value, ConstraintValidatorContext context) {
-        return value != null && value.contains(shouldContain);
+        return value != null && value.contains(shouldContain)
     }
 }

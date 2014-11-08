@@ -10,12 +10,12 @@ import javax.validation.ValidatorFactory
 import static org.junit.Assert.*
 
 class CustomConstraintTest {
-    Validator validator;
+    Validator validator
 
     @Before
     void initValidator() {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        validator = validatorFactory.getValidator();
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()
+        validator = validatorFactory.getValidator()
     }
 
     @Test
@@ -30,6 +30,6 @@ class CustomConstraintTest {
 
     static class Person {
         @GoodName(shouldContain = 'loki')
-        String name;
+        String name
     }
 }
