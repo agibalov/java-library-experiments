@@ -19,9 +19,10 @@ class ClassLevelConstraintsTest {
 
     @Test
     void canGetHandMadeConstraintViolations() {
-        def person = new Person()
-        person.likesProgramming = false
-        person.knowsLanguages = 1
+        def person = Person.builder()
+                .likesProgramming(false)
+                .knowsLanguages(1)
+                .build()
 
         def constraintViolations = validator.validate(person)
         assertEquals 2, constraintViolations.size()
