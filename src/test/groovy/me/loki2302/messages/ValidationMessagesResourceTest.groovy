@@ -24,7 +24,6 @@ class ValidationMessagesResourceTest {
         def violation = violations.first()
         assertEquals 'name', violation.propertyPath.toString()
         assertEquals 'shouldn\'t be empty', violation.message
-        println violation.messageTemplate
     }
 
     static class PersonWithMessageTemplate {
