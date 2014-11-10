@@ -15,7 +15,7 @@ class ValidationMessagesResourceTest {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()
         Validator validator = validatorFactory.getValidator()
 
-        def person = new PersonWithMessageTemplate()
+        def person = new Person()
         person.name = ''
 
         def violations = validator.validate(person)
@@ -26,7 +26,7 @@ class ValidationMessagesResourceTest {
         assertEquals 'shouldn\'t be empty', violation.message
     }
 
-    static class PersonWithMessageTemplate {
+    static class Person {
         // see ValidationMessages.properties in resources
         @NotEmpty(message = '{me.loki2302.NotEmpty.message}')
         String name
