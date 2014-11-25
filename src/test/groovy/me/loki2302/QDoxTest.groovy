@@ -18,11 +18,11 @@ public class Dummy {
 }
 '''))
 
-        List<JavaClass> classes = javaSource.getClasses()
+        List<JavaClass> classes = javaSource.classes
         assertEquals(1, classes.size())
 
-        JavaClass dummyClass = classes.get(0)
-        assertEquals('Dummy', dummyClass.getName())
-        assertEquals('me.loki2302', dummyClass.getPackageName())
+        JavaClass dummyClass = classes[0]
+        assertEquals('Dummy', dummyClass.name)
+        assertEquals('me.loki2302', dummyClass.packageName)
     }
 }
