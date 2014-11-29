@@ -34,7 +34,7 @@ class FlywayTest {
         assertEquals('1', appliedMigrations.first().version.version)
         assertEquals('Initial version', appliedMigrations.first().description)
 
-        Sql sql = Sql.newInstance(dataSource)
+        Sql sql = new Sql(dataSource)
         assertEquals(0, sql.firstRow('select count(*) as c from Posts').c)
 
         sql.execute('insert into Posts(title) values(null)')
@@ -56,7 +56,7 @@ class FlywayTest {
         assertEquals('2', appliedMigrations.last().version.version)
         assertEquals('Add not null constraint to post title', appliedMigrations.last().description)
 
-        Sql sql = Sql.newInstance(dataSource)
+        Sql sql = new Sql(dataSource)
         assertEquals(0, sql.firstRow('select count(*) as c from Posts').c)
 
         sql.execute("insert into Posts(title) values('')")
@@ -71,8 +71,7 @@ class FlywayTest {
         flyway.setTarget('1')
         flyway.migrate()
 
-        Sql sql = Sql.newInstance(dataSource)
-
+        Sql sql = new Sql(dataSource)
         sql.execute('insert into Posts(title) values(null)')
 
         flyway.setTarget('2')
@@ -96,7 +95,7 @@ class FlywayTest {
         flyway.setTarget('2')
         flyway.migrate()
 
-        Sql sql = Sql.newInstance(dataSource)
+        Sql sql = new Sql(dataSource)
         sql.execute("insert into Posts(title) values('')")
 
         flyway.setTarget('3')
@@ -114,7 +113,7 @@ class FlywayTest {
         flyway.setTarget('3')
         flyway.migrate()
 
-        Sql sql = Sql.newInstance(dataSource)
+        Sql sql = new Sql(dataSource)
         sql.execute("insert into Posts(title) values('')")
 
         flyway.setTarget('4')
