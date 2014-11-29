@@ -29,6 +29,7 @@ class FlywayTest {
         sql.execute "insert into Posts(title) values('post one')"
         sql.execute 'insert into Posts(title) values(null)'
         assertEquals(2, sql.rows('select * from Posts').size())
+        assertEquals(1, sql.rows('select * from Posts where title is null').size())
 
         // v2: Posts::title is not nullable
         flyway.setTarget('2')
@@ -39,5 +40,6 @@ class FlywayTest {
         assertEquals('Add not null constraint to post title', appliedMigrations.last().description)
 
         assertEquals(2, sql.rows('select * from Posts').size())
+        assertEquals(0, sql.rows('select * from Posts where title is null').size())
     }
 }
