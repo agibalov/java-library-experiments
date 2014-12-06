@@ -22,14 +22,14 @@ public class AppTest {
     @Test
     public void test() throws Exception {
         Configuration configuration = new ConfigurationImpl();
-        configuration.setJournalDirectory("target/data/journal");
+        configuration.setJournalDirectory("build/data/journal");
         configuration.setPersistenceEnabled(false);
         configuration.setSecurityEnabled(false);
         
         TransportConfiguration serverTransportConfiguration = new TransportConfiguration(InVMAcceptorFactory.class.getName());
         configuration.getAcceptorConfigurations().add(serverTransportConfiguration);
-        HornetQServer server = HornetQServers.newHornetQServer(configuration);        
-        server.start();        
+        HornetQServer server = HornetQServers.newHornetQServer(configuration);
+        server.start();
                 
         TransportConfiguration clientTransportConfiguration = new TransportConfiguration(InVMConnectorFactory.class.getName());
         ServerLocator serverLocator = HornetQClient.createServerLocatorWithoutHA(clientTransportConfiguration);

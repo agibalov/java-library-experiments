@@ -12,8 +12,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile 'org.hornetq:hornetq-core:2.2.21.Final'
-    testCompile 'org.hornetq:hornetq-server:2.3.0.Final'
+    testCompile 'org.hornetq:hornetq-server:2.4.5.Final'
 }
 
 test {
