@@ -2,6 +2,7 @@ package me.loki2302;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -21,8 +23,8 @@ public class ListSerializationTest {
     @Test
     public void cantSerializeAPolymorphicCollectionAsIs() throws IOException {
         List<Issue> issues = Arrays.asList(
-                makeBug("bug-1", "hello"),
-                makeTask("task-1", "hi there"));
+                makeBug("bug-1"),
+                makeTask("task-1"));
         String json = objectMapper.writeValueAsString(issues);
         assertFalse(json.contains("type"));
     }
@@ -30,8 +32,8 @@ public class ListSerializationTest {
     @Test
     public void canSerializeAPolymorphicCollectionWhenUsingInheritedCollectionType() throws JsonProcessingException {
         List<Issue> issues = Arrays.asList(
-                makeBug("bug-1", "hello"),
-                makeTask("task-1", "hi there"));
+                makeBug("bug-1"),
+                makeTask("task-1"));
         String json = objectMapper.writeValueAsString(new ArrayList<Issue>(issues) {
         });
         assertTrue(json.contains("type"));
@@ -40,23 +42,30 @@ public class ListSerializationTest {
     @Test
     public void canSerializeAPolymorphicCollectionWhenSupplyingATypeExplicitly() throws JsonProcessingException {
         List<Issue> issues = Arrays.asList(
-                makeBug("bug-1", "hello"),
-                makeTask("task-1", "hi there"));
+                makeBug("bug-1"),
+                makeTask("task-1"));
         String json = objectMapper.writerWithType(new TypeReference<List<Issue>>() {}).writeValueAsString(issues);
         assertTrue(json.contains("type"));
     }
 
-    private static Bug makeBug(String id, String description) {
+    @Test
+    public void canDeserializeAPolymorphicCollection() throws IOException {
+        String json = "[{\"type\": \"bug\", \"id\": \"bug-1\"}, {\"type\": \"task\", \"id\": \"task-1\"}]";
+        List<Issue> issues = objectMapper.readValue(json, new TypeReference<List<Issue>>() {});
+        assertEquals(2, issues.size());
+        assertTrue(issues.get(0) instanceof Bug);
+        assertTrue(issues.get(1) instanceof Task);
+    }
+
+    private static Bug makeBug(String id) {
         Bug bug = new Bug();
         bug.id = id;
-        bug.description = description;
         return bug;
     }
 
-    private static Task makeTask(String id, String description) {
+    private static Task makeTask(String id) {
         Task task = new Task();
         task.id = id;
-        task.description = description;
         return task;
     }
 
@@ -67,7 +76,6 @@ public class ListSerializationTest {
     })
     public static abstract class Issue {
         public String id;
-        public String description;
     }
 
     public static class Bug extends Issue {
