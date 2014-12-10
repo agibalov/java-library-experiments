@@ -3,16 +3,13 @@ package me.loki2302;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Consume;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
+import org.apache.camel.*;
 import org.apache.camel.guice.CamelModuleWithRouteTypes;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DummyTest {
+public class DummyProducerConsumerTest {
     @Test
     public void canProduceWithInjectedProducerTemplate() {
         Injector injector = Guice.createInjector(
