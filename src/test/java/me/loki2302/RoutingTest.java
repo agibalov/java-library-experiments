@@ -3,10 +3,7 @@ package me.loki2302;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.apache.camel.Consume;
-import org.apache.camel.ExchangePattern;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
+import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.guice.CamelModuleWithRouteTypes;
 import org.junit.Test;
@@ -18,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 
 public class RoutingTest {
     @Test
-    public void canRouteRequests() {
+    public void canSetUpRoutesUsingRouteBuilder() {
         Injector injector = Guice.createInjector(
                 new CamelModuleWithRouteTypes(CalculatorRouteBuilder.class),
                 new AbstractModule() {
@@ -34,12 +31,46 @@ public class RoutingTest {
         assertEquals(-1, calculatorFacade.subNumbers(2, 3));
     }
 
+    @Test
+    public void canSetUpRoutesUsingPOJO() {
+        Injector injector = Guice.createInjector(
+                new CamelModuleWithRouteTypes(),
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                        bind(CalculatorFacade.class).asEagerSingleton();
+                        bind(CalculatorImplementation.class).asEagerSingleton();
+                        bind(MyRouter.class).asEagerSingleton();
+                    }
+                });
+
+        CalculatorFacade calculatorFacade = injector.getInstance(CalculatorFacade.class);
+        assertEquals(5, calculatorFacade.addNumbers(2, 3));
+        assertEquals(-1, calculatorFacade.subNumbers(2, 3));
+    }
+
     public static class CalculatorRouteBuilder extends RouteBuilder {
         @Override
         public void configure() throws Exception {
             from("direct:calculator").choice()
                     .when(header("action").isEqualTo("add")).to("direct:add")
                     .when(header("action").isEqualTo("sub")).to("direct:sub");
+        }
+    }
+
+    public static class MyRouter {
+        @Consume(uri = "direct:calculator")
+        @RecipientList
+        public String route(@Header("action") String action) {
+            if(action.equals("add")) {
+                return "direct:add";
+            }
+
+            if(action.equals("sub")) {
+                return "direct:sub";
+            }
+
+            throw new RuntimeException("Unknown action " + action);
         }
     }
 
