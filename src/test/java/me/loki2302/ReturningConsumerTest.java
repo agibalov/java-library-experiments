@@ -30,7 +30,7 @@ public class ReturningConsumerTest {
     }
 
     public static class CalculatorFacade {
-        @Produce(uri = "direct:calculator")
+        @Produce
         private ProducerTemplate producerTemplate;
 
         public int addNumbers(int a, int b) {
