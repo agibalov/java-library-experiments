@@ -9,6 +9,7 @@ import org.junit.Test;
 import javax.jms.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DummyTest {
     private final static String BROKER_URL = "tcp://localhost:2302";
@@ -36,18 +37,40 @@ public class DummyTest {
     }
 
     @Test
-    public void dummy() throws JMSException {
+    public void canUseTopic() throws JMSException {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         Topic testTopic = session.createTopic("test");
 
         MessageProducer producer = session.createProducer(testTopic);
-        MessageConsumer consumer = session.createConsumer(testTopic);
+        MessageConsumer consumerA = session.createConsumer(testTopic);
+        MessageConsumer consumerB = session.createConsumer(testTopic);
 
         producer.send(session.createTextMessage("hello"));
 
-        Message message = consumer.receive();
-        String text = ((TextMessage)message).getText();
-        assertEquals("hello", text);
+        Message messageA = consumerA.receive();
+        String messageAText = ((TextMessage) messageA).getText();
+        assertEquals("hello", messageAText);
+
+        Message messageB = consumerB.receive();
+        String messageBText = ((TextMessage) messageB).getText();
+        assertEquals("hello", messageBText);
+    }
+
+    @Test
+    public void canUseQueue() throws JMSException {
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        Queue testQueue = session.createQueue("test");
+
+        MessageProducer producer = session.createProducer(testQueue);
+        MessageConsumer consumerA = session.createConsumer(testQueue);
+        MessageConsumer consumerB = session.createConsumer(testQueue);
+
+        producer.send(session.createTextMessage("hello"));
+
+        Message messageA = consumerA.receiveNoWait();
+        Message messageB = consumerB.receiveNoWait();
+        assertTrue(messageA != null || messageB != null);
     }
 }
