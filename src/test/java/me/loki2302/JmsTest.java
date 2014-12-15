@@ -1,6 +1,5 @@
 package me.loki2302;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.*;
@@ -12,7 +11,6 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.guice.CamelModuleWithRouteTypes;
-import org.apache.camel.guice.jndi.JndiBind;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
