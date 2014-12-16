@@ -44,4 +44,5 @@ public class SanitizingStringDeserializerTest {
         public String email;
         public String password;
     }
+
 }
