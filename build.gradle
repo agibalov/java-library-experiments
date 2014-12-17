@@ -22,6 +22,9 @@ test {
     testLogging {
         events "failed", "passed", "skipped"
     }
+
+    // exclude tests designed as inner classes (see ProgrammaticJUnitTest)
+    exclude 'me/loki2302/**/*$*'
 }
 
 task wrapper(type: Wrapper) {
