@@ -51,28 +51,22 @@ public class ProgrammaticJUnitTest {
 
         @Override
         public void testRunStarted(Description description) throws Exception {
-            System.out.println("testRunStarted");
             events.add("testRunStarted");
         }
 
         @Override
         public void testRunFinished(Result result) throws Exception {
-            System.out.println("testRunFinished");
             events.add("testRunFinished");
         }
 
         @Override
         public void testStarted(Description description) throws Exception {
-            System.out.println("testStarted");
             events.add("testStarted");
         }
 
         @Override
         public void testFinished(Description description) throws Exception {
-            System.out.println("testFinished");
             events.add("testFinished");
         }
     }
-
-
 }
