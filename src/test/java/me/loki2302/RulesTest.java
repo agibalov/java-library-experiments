@@ -8,6 +8,7 @@ import org.junit.runner.Result;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,8 +32,18 @@ public class RulesTest {
 
         @Test
         public void canUseTemporaryFolderRule() throws IOException {
-            assertTrue(temporaryFolder.getRoot().exists());
             temporaryFolderRoot = temporaryFolder.getRoot();
+            assertTrue(temporaryFolder.getRoot().exists());
+
+            File file = temporaryFolder.newFile();
+            assertTrue(file.exists());
+
+            File folder = temporaryFolder.newFolder();
+            assertTrue(folder.exists());
+
+            File fileWithinAFolder = Paths.get(folder.getPath(), "1.txt").toFile();
+            fileWithinAFolder.createNewFile();
+            assertTrue(fileWithinAFolder.exists());
         }
     }
 }
