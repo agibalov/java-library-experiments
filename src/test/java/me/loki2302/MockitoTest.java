@@ -2,19 +2,64 @@ package me.loki2302;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class MockitoTest {
     @Test
-    public void canHaveAMockImplementationForInterface() {
-        SomeDataProvider someDataProvider = mock(SomeDataProvider.class);
-        when(someDataProvider.provideSomeData()).thenReturn("hello there");
+    public void canAddNumbersWhenUserIsAuthenticated() {
+        AuthorizationService authorizationService = mock(AuthorizationService.class);
+        when(authorizationService.isAuthorized("loki2302")).thenReturn(true);
 
-        assertEquals("hello there", someDataProvider.provideSomeData());
+        Calculator calculator = new Calculator(authorizationService);
+        assertEquals(5, calculator.addNumbers("loki2302", 2, 3));
     }
 
-    public static interface SomeDataProvider {
-        String provideSomeData();
+    @Test
+    public void cantAddNumbersWhenUserIsNotAuthenticated() {
+        AuthorizationService authorizationService = mock(AuthorizationService.class);
+        when(authorizationService.isAuthorized("loki2302")).thenReturn(false);
+
+        Calculator calculator = new Calculator(authorizationService);
+        try {
+            calculator.addNumbers("loki2302", 2, 3);
+            fail();
+        } catch (NotAuthorizedException e) {
+        }
+    }
+
+    @Test
+    public void calculatorChecksAuthorizationBeforeAddingNumbers() {
+        AuthorizationService authorizationService = mock(AuthorizationService.class);
+        when(authorizationService.isAuthorized(anyString())).thenReturn(true);
+
+        Calculator calculator = new Calculator(authorizationService);
+        calculator.addNumbers("loki2302", 2, 3);
+
+        verify(authorizationService).isAuthorized("loki2302");
+    }
+
+    public static interface AuthorizationService {
+        boolean isAuthorized(String username);
+    }
+
+    public static class Calculator {
+        private final AuthorizationService authorizationService;
+
+        public Calculator(AuthorizationService authorizationService) {
+            this.authorizationService = authorizationService;
+        }
+
+        public int addNumbers(String username, int a, int b) {
+            if(!authorizationService.isAuthorized(username)) {
+                throw new NotAuthorizedException();
+            }
+
+            return a + b;
+        }
+    }
+
+    public static class NotAuthorizedException extends RuntimeException {
     }
 }
