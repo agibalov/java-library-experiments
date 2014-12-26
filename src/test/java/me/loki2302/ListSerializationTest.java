@@ -18,6 +18,13 @@ public class ListSerializationTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    public void canDeserializeAnEmptyList() throws IOException {
+        Issues issues = objectMapper.readValue("{\"issues\": []}", Issues.class);
+        assertNotNull(issues.issues);
+        assertTrue(issues.issues.isEmpty());
+    }
+
+    @Test
     public void cantSerializeAPolymorphicCollectionAsIs() throws IOException {
         List<Issue> issues = Arrays.asList(
                 makeBug("bug-1"),
@@ -79,5 +86,9 @@ public class ListSerializationTest {
     }
 
     public static class Task extends Issue {
+    }
+
+    public static class Issues {
+        public List<Issue> issues;
     }
 }
