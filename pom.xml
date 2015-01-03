@@ -24,32 +24,32 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>9.2.6.v20141205</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>9.2.6.v20141205</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>9.2.6.v20141205</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-api</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>9.2.6.v20141205</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-server</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>9.2.6.v20141205</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
-            <version>9.2.2.v20140723</version>
+            <version>9.2.6.v20141205</version>
         </dependency>
 		<dependency>
 			<groupId>com.mashape.unirest</groupId>
