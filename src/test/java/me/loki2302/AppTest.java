@@ -1,11 +1,6 @@
 package me.loki2302;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import com.mashape.unirest.http.Unirest;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -19,11 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class AppTest {
     @Test
@@ -49,7 +42,8 @@ public class AppTest {
         server.setHandler(webAppContext);
         server.start();
         try {
-            assertEquals("helloDynamicRegistration", getAsString("http://localhost:8080/1"));
+            String responseString = Unirest.get("http://localhost:8080/1").asString().getBody();
+            assertEquals("helloDynamicRegistration", responseString);
         } finally {
             server.stop();
         }
@@ -88,7 +82,7 @@ public class AppTest {
         server.start();
 
         try {
-            String responseString = getAsString("http://localhost:8080/");
+            String responseString = Unirest.get("http://localhost:8080/").asString().getBody();
             assertEquals("hello", responseString);
         } finally {
             server.stop();
@@ -115,29 +109,10 @@ public class AppTest {
         server.start();
                 
         try {
-            String responseString = getAsString("http://localhost:8080/");
+            String responseString = Unirest.get("http://localhost:8080/").asString().getBody();
             assertEquals("hello there", responseString);
         } finally {
             server.stop();            
         }       
-    }
-
-    private static String getAsString(String url) throws IOException {
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        try {
-            HttpGet httpGet = new HttpGet(url);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-            HttpEntity responseEntity = httpResponse.getEntity();
-            assertNotNull(responseEntity);
-            InputStream inputStream = responseEntity.getContent();
-            try {
-                String responseString = IOUtils.toString(inputStream);
-                return responseString;
-            } finally {
-                inputStream.close();
-            }
-        } finally {
-            httpClient.close();
-        }
     }
 }
