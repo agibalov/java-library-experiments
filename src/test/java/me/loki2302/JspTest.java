@@ -12,13 +12,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
+import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 
 public class JspTest {
     @Test
-    public void dummy() throws Exception {
+    public void canHostAServletThatDelegatesToJspServlet() throws Exception {
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setContextPath("/");
         webAppContext.setResourceBase(JspTest.class.getResource("/webroot").toURI().toASCIIString());
@@ -35,6 +35,31 @@ public class JspTest {
         try {
             String responseString = Unirest.get("http://localhost:8080/123").asString().getBody();
             assertEquals("jsp: hello\nel: hello\nservlet: hello\n", responseString);
+        } finally {
+            server.stop();
+        }
+    }
+
+    @Test
+    public void canUseTags() throws Exception {
+        WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setContextPath("/");
+        webAppContext.setResourceBase(JspTest.class.getResource("/webroot").toURI().toASCIIString());
+        webAppContext.addServlet(JspServlet.class, "*.jsp");
+
+        Server server = new Server();
+        ServerConnector serverConnector = new ServerConnector(server);
+        serverConnector.setPort(8080);
+        server.addConnector(serverConnector);
+        server.setHandler(webAppContext);
+
+        server.start();
+        try {
+            String responseString = Unirest.get("http://localhost:8080/tag-tester.jsp")
+                    .asString()
+                    .getBody()
+                    .trim();
+            assertEquals("<div>hi there</div>", responseString);
         } finally {
             server.stop();
         }
