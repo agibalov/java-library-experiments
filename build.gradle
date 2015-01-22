@@ -8,9 +8,9 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile "com.fasterxml.jackson.core:jackson-databind:2.4.4"
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4"
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.4'
+    compile "com.fasterxml.jackson.core:jackson-databind:2.5.0"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.0"
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.5.0'
     compile "org.codehaus.woodstox:woodstox-core-asl:4.4.1"
     compile 'joda-time:joda-time:2.6'
 }

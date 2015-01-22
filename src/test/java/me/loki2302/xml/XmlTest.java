@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class XmlTest {
     @Test
@@ -45,6 +44,23 @@ public class XmlTest {
         assertEquals(2, personList.people.size());
         assertEquals("loki2302", personList.people.get(0).name);
         assertEquals("Andrey", personList.people.get(1).name);
+    }
+
+    // https://github.com/FasterXML/jackson-dataformat-xml/issues/124
+    @Test
+    public void canDeserializeEmptyCollection() throws IOException {
+        String xml =
+                "<PersonList>" +
+                    "<people />" +
+                "</PersonList>";
+
+        XmlMapper xmlMapper = new XmlMapper();
+        PersonList personList = xmlMapper.readValue(xml, PersonList.class);
+        assertNull(personList.people);
+
+        // Should be:
+        // assertNotNull(personList.people);
+        // assertEquals(0, personList.people.size());
     }
 
     private static PersonList personList(Person... people) {
