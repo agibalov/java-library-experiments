@@ -1,11 +1,14 @@
 package me.loki2302;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.*;
 import java.util.concurrent.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TransactionsTest {
@@ -13,105 +16,141 @@ public class TransactionsTest {
     private final static String JDBC_USER = "sa";
     private final static String JDBC_PASSWORD = "";
 
-    @Test
-    public void dummy() throws Exception {
+    private ExecutorService executorServiceA;
+    private Actor actorA;
+
+    private ExecutorService executorServiceB;
+    private Actor actorB;
+
+    @Before
+    public void makeActors() throws ClassNotFoundException, SQLException {
+        executorServiceA = Executors.newSingleThreadExecutor();
+        SyncExecutor syncExecutorA = new SyncExecutor(executorServiceA);
+        actorA = new Actor(syncExecutorA);
+
+        executorServiceB = Executors.newSingleThreadExecutor();
+        SyncExecutor syncExecutorB = new SyncExecutor(executorServiceB);
+        actorB = new Actor(syncExecutorB);
+
         Class.forName("org.hsqldb.jdbcDriver");
 
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             try (PreparedStatement s = connection.prepareStatement(
-                    "create table Notes(id int not null, text varchar(256) not null)")) {
+                    "create table Notes(text varchar(256) not null)")) {
                 s.executeUpdate();
             }
 
             boolean supportsSerializable = connection.getMetaData()
                     .supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE);
-            System.out.printf("supports serializable: %b\n", supportsSerializable);
+            assertTrue(supportsSerializable);
+        }
+    }
+
+    @After
+    public void killAuthors() throws Exception {
+        actorA.closeConnection();
+        actorA = null;
+
+        actorB.closeConnection();
+        actorB = null;
+
+        executorServiceA.shutdown();
+        executorServiceA = null;
+
+        executorServiceB.shutdown();
+        executorServiceB = null;
+    }
+
+    @Test
+    public void serializableIsolationLevelWorks() throws Exception {
+        actorA.openConnection();
+        actorB.openConnection();
+
+        assertEquals(0, actorA.selectAllRows());
+        assertEquals(0, actorB.selectAllRows());
+
+        // this throws "statement execution aborted: timeout reached" in HSQLDB 2.3.1
+        actorA.insertRow("actor A");
+        assertEquals("actorA is expected to see the change it has just made", 1, actorA.selectAllRows());
+
+        // here, actorB sees the changes that actorA has made (in HSQLDB 2.3.2)
+        assertEquals("actorB is expected to see no changes made by actorA", 0, actorB.selectAllRows());
+
+        try {
+            actorB.insertRow("actor B");
+            fail("actorB managed to update the table after actorA has already done it");
+        } catch (SQLTransactionRollbackException e) {
+            // intentionally left blank
+        } finally {
+            actorA.commit();
+            actorB.commit();
         }
 
-        ExecutorService executorServiceA = Executors.newSingleThreadExecutor();
-        SyncExecutor syncExecutorA = new SyncExecutor(executorServiceA);
-
-        ExecutorService executorServiceB = Executors.newSingleThreadExecutor();
-        SyncExecutor syncExecutorB = new SyncExecutor(executorServiceB);
-
-        Connection connectionA = syncExecutorA.execute(() -> {
-            Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-            connection.setAutoCommit(false);
-            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-            return connection;
-        });
-        Connection connectionB = syncExecutorB.execute(() -> {
-            Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-            connection.setAutoCommit(false);
-            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-            return connection;
-        });
-
-        syncExecutorA.execute(() -> {
-            try (PreparedStatement s = connectionA.prepareStatement("select * from Notes")) {
-                s.setQueryTimeout(1);
-                try (ResultSet resultSet = s.executeQuery()) {
+        int noteCount = 0;
+        try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            try(PreparedStatement s = connection.prepareStatement("select * from Notes")) {
+                try(ResultSet resultSet = s.executeQuery()) {
                     while (resultSet.next()) {
-                        System.out.printf("A: %d %s\n", resultSet.getInt(1), resultSet.getString(2));
+                        System.out.printf("xxx %s\n", resultSet.getString(1));
+                        ++noteCount;
                     }
                 }
             }
-        });
-        syncExecutorB.execute(() -> {
-            try (PreparedStatement s = connectionB.prepareStatement("select * from Notes")) {
-                s.setQueryTimeout(1);
-                try (ResultSet resultSet = s.executeQuery()) {
-                    while (resultSet.next()) {
-                        System.out.printf("B: %d %s\n", resultSet.getInt(1), resultSet.getString(2));
+        }
+
+        assertEquals(1, noteCount);
+    }
+
+    public static class Actor {
+        private final SyncExecutor syncExecutor;
+        private Connection connection;
+
+        public Actor(SyncExecutor syncExecutor) {
+            this.syncExecutor = syncExecutor;
+        }
+
+        public void openConnection() throws Exception {
+            connection = syncExecutor.execute(() -> {
+                Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+                connection.setAutoCommit(false);
+                connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                return connection;
+            });
+        }
+
+        public int selectAllRows() throws Exception {
+            return syncExecutor.execute(() -> {
+                int rowCount = 0;
+                try (PreparedStatement s = connection.prepareStatement("select * from Notes")) {
+                    s.setQueryTimeout(1);
+                    try (ResultSet resultSet = s.executeQuery()) {
+                        while (resultSet.next()) {
+                            ++rowCount;
+                        }
                     }
                 }
-            }
-        });
 
-        syncExecutorA.execute(() -> {
-            try (PreparedStatement s = connectionA.prepareStatement("insert into Notes(id, text) values(?, ?)")) {
-                s.setInt(1, 1);
-                s.setString(2, "created by A");
-                s.setQueryTimeout(1);
-                s.executeUpdate();
-            }
-        });
-        try {
-            syncExecutorB.execute(() -> {
-                try (PreparedStatement s = connectionB.prepareStatement("insert into Notes(id, text) values(?, ?)")) {
-                    s.setInt(1, 1);
-                    s.setString(2, "created by B");
+                return rowCount;
+            });
+        }
+
+        public void insertRow(String text) throws Exception {
+            syncExecutor.execute(() -> {
+                try (PreparedStatement s = connection.prepareStatement("insert into Notes(text) values(?)")) {
+                    s.setString(1, text);
                     s.setQueryTimeout(1);
                     s.executeUpdate();
                 }
             });
+        }
 
-            fail("client 2 managed to update the table after client 1 has already done it");
-        } catch(SQLTransactionRollbackException e) {
-            System.out.println("hurray!");
-        } finally {
-            syncExecutorA.execute(() -> connectionA.commit());
-            syncExecutorB.execute(() -> connectionB.commit());
+        public void commit() throws Exception {
+            syncExecutor.execute(() -> connection.commit());
+        }
 
-            syncExecutorA.execute(() -> connectionA.close());
-            syncExecutorB.execute(() -> connectionB.close());
-
-            executorServiceA.shutdown();
-            executorServiceB.shutdown();
-
-            int noteCount = 0;
-            try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-                try(PreparedStatement s = connection.prepareStatement("select * from Notes")) {
-                    try(ResultSet resultSet = s.executeQuery()) {
-                        while (resultSet.next()) {
-                            System.out.printf("xxx %d %s\n", resultSet.getInt(1), resultSet.getString(2));
-                            ++noteCount;
-                        }
-                    }
-                }
-            }
-
-            assertEquals(1, noteCount);
+        public void closeConnection() throws Exception {
+            syncExecutor.execute(() -> connection.close());
+            connection = null;
         }
     }
 
