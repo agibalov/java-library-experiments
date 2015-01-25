@@ -32,8 +32,6 @@ public class TransactionsTest {
         SyncExecutor syncExecutorB = new SyncExecutor(executorServiceB);
         actorB = new Actor(syncExecutorB);
 
-        Class.forName("org.hsqldb.jdbcDriver");
-
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
             try (PreparedStatement s = connection.prepareStatement(
                     "create table Notes(text varchar(256) not null)")) {
@@ -113,6 +111,7 @@ public class TransactionsTest {
             connection = syncExecutor.execute(() -> {
                 Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
                 connection.setAutoCommit(false);
+                connection.setReadOnly(false);
                 connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
                 return connection;
             });
