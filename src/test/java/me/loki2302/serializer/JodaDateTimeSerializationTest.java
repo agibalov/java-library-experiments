@@ -51,9 +51,7 @@ public class JodaDateTimeSerializationTest {
         assertEquals(TEST_DATETIME.toString(ISODateTimeFormat.dateTime()), postWithStringDate.createdAt);
 
         post = objectMapper.readValue(json, Post.class);
-        assertEquals(TEST_DATETIME, new DateTime(
-                post.createdAt,
-                DateTimeZone.forTimeZone(TimeZone.getTimeZone("UTC"))));
+        assertEquals(TEST_DATETIME, post.createdAt);
     }
 
     public static class Post {
