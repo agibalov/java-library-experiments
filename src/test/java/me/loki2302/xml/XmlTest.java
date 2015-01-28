@@ -1,5 +1,6 @@
 package me.loki2302.xml;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,6 +65,27 @@ public class XmlTest {
         // assertEquals(0, personList.people.size());
     }
 
+    @Test
+    public void xmlMapper124Workaround() throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+
+        PersonListWorkaround nullPersonList = xmlMapper.readValue(
+                "<PersonList></PersonList>", PersonListWorkaround.class);
+        assertNull(nullPersonList.people);
+
+        PersonListWorkaround emptyPersonList = xmlMapper.readValue(
+                "<PersonList><people /></PersonList>", PersonListWorkaround.class);
+        assertNotNull(emptyPersonList.people);
+        assertEquals(0, emptyPersonList.people.size());
+
+        PersonListWorkaround notEmptyPersonList = xmlMapper.readValue(
+                "<PersonList><people>" +
+                        "<person><name>loki2302</name></person><person><name>Andrey</name></person>" +
+                "</people></PersonList>", PersonListWorkaround.class);
+        assertNotNull(notEmptyPersonList.people);
+        assertEquals(2, notEmptyPersonList.people.size());
+    }
+
     private static PersonList personList(Person... people) {
         PersonList personList = new PersonList();
         personList.people = Arrays.asList(people);
@@ -79,6 +102,20 @@ public class XmlTest {
         @JacksonXmlElementWrapper(localName = "people")
         @JacksonXmlProperty(localName = "person")
         public List<Person> people;
+    }
+
+    public static class PersonListWorkaround {
+        @JacksonXmlElementWrapper(localName = "people")
+        @JacksonXmlProperty(localName = "person")
+        public List<Person> people;
+
+        public void setPeople(List<Person> people) {
+            if(people == null) {
+                people = new ArrayList<Person>();
+            }
+
+            this.people = people;
+        }
     }
 
     public static class Person {
