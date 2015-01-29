@@ -217,6 +217,41 @@ public class HSQLDBTransactionsTest {
         }
     }
 
+    @Test
+    public void parallelInsertWithSerializableIsolation() throws SQLException {
+        try(Connection connection1 = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            connection1.setAutoCommit(false);
+
+            try(Connection connection2 = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+                connection2.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                connection2.setAutoCommit(false);
+
+                assertEquals(0, selectAll(connection1)); // select * from XXX
+                assertEquals(0, selectAll(connection2)); //     select * from XXX
+
+                insertOne(connection1);                  // insert into XXX
+
+                assertEquals(1, selectAll(connection1)); // select * from XXX
+                assertEquals(0, selectAll(connection2)); //     select * from XXX
+
+                connection1.commit();                    // commit
+
+                assertEquals(1, selectAll(connection1)); // select * from XXX
+                assertEquals(0, selectAll(connection2)); //     select * from XXX
+
+                insertOne(connection2);                  //     insert into XXX
+
+                assertEquals(1, selectAll(connection1)); // select * from XXX
+                assertEquals(1, selectAll(connection2)); //     select * from XXX
+
+                connection2.commit();                    //     commit
+
+                assertEquals(2, selectAll(connection1)); // select * from XXX
+                assertEquals(2, selectAll(connection2)); //     select * from XXX
+            }
+        }
+    }
+
     private static int selectAll(Connection connection) throws SQLException {
         int count = 0;
         try (PreparedStatement s = connection.prepareStatement("select * from Notes")) {
