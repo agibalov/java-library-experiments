@@ -138,7 +138,7 @@ public class HSQLDBTransactionsTest {
 
                 assertEquals("updated", selectOnly(connection1));
                 // the first read was "original", so all the next reads should be "original" as well
-                assertEquals("original", selectOnly(connection2)); // WTF?? "updated"
+                assertEquals("original", selectOnly(connection2));
             }
         }
     }
@@ -163,7 +163,7 @@ public class HSQLDBTransactionsTest {
                 connection1.commit();
 
                 assertEquals(1, selectAll(connection1));
-                assertEquals(0, selectAll(connection2)); // WTF?? 1
+                assertEquals(0, selectAll(connection2));
             }
         }
     }
