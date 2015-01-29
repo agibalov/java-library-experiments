@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class HSQLDBTransactionsTest {
+    // hsqldb.tx=mvlocks also works, hsqldb.tx=locks doesn't
     private final static String JDBC_URL = "jdbc:hsqldb:mem:test;hsqldb.tx=mvcc";
     private final static String JDBC_USER = "sa";
     private final static String JDBC_PASSWORD = "";
