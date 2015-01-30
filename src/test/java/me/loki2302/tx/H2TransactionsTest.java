@@ -1,7 +1,6 @@
 package me.loki2302.tx;
 
 import org.h2.api.ErrorCode;
-import org.h2.jdbc.JdbcSQLException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,9 +8,7 @@ import org.junit.Test;
 import java.sql.*;
 import java.util.concurrent.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class H2TransactionsTest {
     private final static String JDBC_URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MV_STORE=FALSE";
