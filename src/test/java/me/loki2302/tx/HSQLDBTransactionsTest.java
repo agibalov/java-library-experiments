@@ -1,5 +1,6 @@
 package me.loki2302.tx;
 
+import org.hsqldb.error.ErrorCode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import java.util.concurrent.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class HSQLDBTransactionsTest {
     // hsqldb.tx=mvlocks also works, hsqldb.tx=locks doesn't
@@ -249,6 +251,34 @@ public class HSQLDBTransactionsTest {
 
                 assertEquals(2, selectAll(connection1)); // select * from XXX
                 assertEquals(2, selectAll(connection2)); //     select * from XXX
+            }
+        }
+    }
+
+    @Test
+    public void parallelUpdateWithSerializableIsolation() throws SQLException {
+        try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            insertOne(connection);
+        }
+
+        try(Connection connection1 = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            connection1.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            connection1.setAutoCommit(false);
+
+            try (Connection connection2 = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+                connection2.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                connection2.setAutoCommit(false);
+
+                updateOnly(connection1, "A");
+
+                try {
+                    updateOnly(connection2, "B");
+                    fail();
+                } catch (SQLTransactionRollbackException e) {
+                    // serialization failure
+                    // TODO: does Java have all these constants somewhere?
+                    assertEquals("40001", e.getSQLState());
+                }
             }
         }
     }
