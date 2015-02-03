@@ -3,8 +3,11 @@ package me.loki2302;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runners.model.Statement;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,13 +21,13 @@ public class RulesTest {
     @Test
     public void canUseTemporaryFolderRule() {
         JUnitCore jUnitCore = new JUnitCore();
-        Result result = jUnitCore.run(DummyTest.class);
+        Result result = jUnitCore.run(DummyTestThatUsesTemporaryFolderRule.class);
         assertEquals(1, result.getRunCount());
         assertTrue(result.wasSuccessful());
-        assertFalse(DummyTest.temporaryFolderRoot.exists());
+        assertFalse(DummyTestThatUsesTemporaryFolderRule.temporaryFolderRoot.exists());
     }
 
-    public static class DummyTest {
+    public static class DummyTestThatUsesTemporaryFolderRule {
         public static File temporaryFolderRoot;
 
         @Rule
@@ -44,6 +47,54 @@ public class RulesTest {
             File fileWithinAFolder = Paths.get(folder.getPath(), "1.txt").toFile();
             fileWithinAFolder.createNewFile();
             assertTrue(fileWithinAFolder.exists());
+        }
+    }
+
+    @Test
+    public void canUseExceptionCounterRule() {
+        JUnitCore jUnitCore = new JUnitCore();
+        Result result = jUnitCore.run(DummyTestThatUsesExceptionCounterRule.class);
+        assertEquals(3, result.getRunCount());
+        assertFalse(result.wasSuccessful());
+        assertEquals(2, ExceptionCounterRule.exceptionCount);
+    }
+
+    public static class DummyTestThatUsesExceptionCounterRule {
+        @Rule
+        public ExceptionCounterRule exceptionCounterRule = new ExceptionCounterRule();
+
+        @Test
+        public void failingTest1() {
+            assertTrue(false);
+        }
+
+        @Test
+        public void succeedingTest1() {
+            assertTrue(true);
+        }
+
+        @Test
+        public void failingTest2() {
+            assertTrue(false);
+        }
+    }
+
+    public static class ExceptionCounterRule implements TestRule {
+        public static int exceptionCount;
+
+        @Override
+        public Statement apply(final Statement base, Description description) {
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    try {
+                        base.evaluate();
+                    } catch (Throwable throwable) {
+                        ++exceptionCount;
+                        throw throwable;
+                    }
+                }
+            };
         }
     }
 }
