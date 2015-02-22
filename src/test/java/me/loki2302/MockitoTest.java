@@ -14,6 +14,8 @@ public class MockitoTest {
 
         Calculator calculator = new Calculator(authorizationService);
         assertEquals(5, calculator.addNumbers("loki2302", 2, 3));
+
+        verify(authorizationService, times(1)).isAuthorized("loki2302");
     }
 
     @Test
@@ -27,6 +29,8 @@ public class MockitoTest {
             fail();
         } catch (NotAuthorizedException e) {
         }
+
+        verify(authorizationService, times(1)).isAuthorized("loki2302");
     }
 
     @Test
@@ -37,7 +41,7 @@ public class MockitoTest {
         Calculator calculator = new Calculator(authorizationService);
         calculator.addNumbers("loki2302", 2, 3);
 
-        verify(authorizationService).isAuthorized("loki2302");
+        verify(authorizationService, times(1)).isAuthorized("loki2302");
     }
 
     public static interface AuthorizationService {
