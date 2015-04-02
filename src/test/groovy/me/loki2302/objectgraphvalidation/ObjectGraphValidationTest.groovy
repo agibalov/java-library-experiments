@@ -1,11 +1,15 @@
 package me.loki2302.objectgraphvalidation
 
+import groovy.transform.builder.Builder
+import org.hibernate.validator.constraints.NotEmpty
 import org.junit.Before
 import org.junit.Test
 
+import javax.validation.Valid
 import javax.validation.Validation
 import javax.validation.Validator
 import javax.validation.ValidatorFactory
+import javax.validation.constraints.NotNull
 
 import static org.junit.Assert.*
 
@@ -91,5 +95,31 @@ class ObjectGraphValidationTest {
         assertEquals 1, violations.size()
 
         assertEquals 'interests[1].description', violations.first().propertyPath.toString()
+    }
+
+    @Builder
+    static class Person {
+        @NotEmpty
+        String name
+
+        @NotNull
+        @Valid
+        PersonDetails details
+
+        @NotEmpty
+        @Valid
+        List<Interest> interests
+    }
+
+    @Builder
+    static class PersonDetails {
+        @NotEmpty
+        String about
+    }
+
+    @Builder
+    static class Interest {
+        @NotEmpty
+        String description
     }
 }
