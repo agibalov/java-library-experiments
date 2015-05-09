@@ -1,5 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'docker'
+
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+    }
+}
 
 mainClassName = 'me.loki2302.App'
 
@@ -21,4 +29,21 @@ dependencies {
 
 test {
     testLogging.showStandardStreams = true
+}
+
+docker {
+    baseImage 'ubuntu:14.04'
+}
+
+// sudo ./gradlew dummyDocker
+// creates dummy:1.0
+// run with sudo docker run --rm dummy:1.0 ls
+task dummyDocker(type: Docker) {
+    applicationName = 'dummy'
+
+    // when building the image
+    runCommand 'apt-get update'
+
+    // when running
+    defaultCommand = ['ls']
 }
