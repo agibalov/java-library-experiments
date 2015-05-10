@@ -5,5 +5,4 @@ RUN apt-get update && \
     puppet module install deric-zookeeper && \
     puppet apply /opt/pp/zookeeper.pp
 
-#/usr/share/zookeeper/bin/zkServer.sh
 CMD ["/usr/share/zookeeper/bin/zkServer.sh", "start-foreground"]
