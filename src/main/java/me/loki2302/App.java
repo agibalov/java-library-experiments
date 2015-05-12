@@ -18,6 +18,10 @@ import java.util.concurrent.ExecutionException;
 
 public class App {
     public static void main(String[] args) throws InterruptedException, ExecutionException, BrokenBarrierException {
+        kafkaProducerConsumerHelloWorld();
+    }
+
+    private static void dummyProducer() throws ExecutionException, InterruptedException {
         String topicName = "the-topic";
 
         Properties properties = new Properties();
