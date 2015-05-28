@@ -1,10 +1,13 @@
 package me.loki2302;
 
+import org.apache.curator.test.TestingServer;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,6 +16,19 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 public class ZooKeeperTest {
+    private TestingServer zookeeperServer;
+
+    @Before
+    public void startup() throws Exception {
+        zookeeperServer = new TestingServer(2181);
+        zookeeperServer.start();
+    }
+
+    @After
+    public void shutdown() throws IOException {
+        zookeeperServer.close();
+    }
+
     @Test
     public void dummy() throws KeeperException, InterruptedException, IOException {
         assertOmgExists(false);
