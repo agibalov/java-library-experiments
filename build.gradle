@@ -10,7 +10,20 @@ repositories {
     mavenCentral()
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.apache.kafka:kafka_2.10:0.8.2.1'
+
+    // *** these are for embedded tests only
+    compile 'org.apache.curator:curator-framework:2.8.0'
+    compile 'org.apache.curator:curator-test:2.8.0'
+    //
 }

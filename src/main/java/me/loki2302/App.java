@@ -43,7 +43,7 @@ public class App {
         }
     }
 
-    private static void kafkaProducerConsumerHelloWorld() throws InterruptedException, ExecutionException, BrokenBarrierException {
+    public static int kafkaProducerConsumerHelloWorld() throws InterruptedException, ExecutionException, BrokenBarrierException {
         // Topic removal functionality doesn't seem to work reliably, event with "delete.topic.enable" set to true,
         // so I have to create a new topic on each run
         String topicName = "topic-" + UUID.randomUUID().toString();
@@ -65,7 +65,10 @@ public class App {
         producerThread.join();
         consumerThread.join();
 
-        System.out.println(consumerThread.getNumberOfMessagesConsumed());
+        int numberOfMessagesConsumed = consumerThread.getNumberOfMessagesConsumed();
+        System.out.println(numberOfMessagesConsumed);
+
+        return numberOfMessagesConsumed;
     }
 
     public static class ConsumerThread extends Thread {
