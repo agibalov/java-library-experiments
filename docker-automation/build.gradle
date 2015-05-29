@@ -1,0 +1,49 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'docker'
+
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+    }
+}
+
+mainClassName = 'me.loki2302.App'
+
+version = '1.0'
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.3'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'com.github.docker-java:docker-java:1.2.0'
+    compile 'commons-io:commons-io:2.4'
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+
+docker {
+    baseImage 'ubuntu:14.04'
+}
+
+// sudo ./gradlew dummyDocker
+// creates dummy:1.0
+// run with sudo docker run --rm dummy:1.0 ls
+task dummyDocker(type: Docker) {
+    applicationName = 'dummy'
+
+    // when building the image
+    runCommand 'apt-get update'
+
+    // when running
+    defaultCommand = ['ls']
+}
