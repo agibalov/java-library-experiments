@@ -12,10 +12,6 @@ mainClassName = 'me.loki2302.App'
 
 version = '1.0'
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
-}
-
 repositories {
     mavenCentral()
 }
@@ -24,19 +20,18 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-/*docker {
-    baseImage 'ubuntu:14.04'
+// build the tar package, dockerize it:
+// sudo ./gradlew clean docker-app:customDocker
+// run it:
+// sudo docker run docker-java-experiment/custom:1.0
+task customDocker(type: Docker) {
+    applicationName = 'custom'
+    tagVersion = '1.0'
+
+    baseImage = 'aglover/java8-pier'
+    addFile "${buildDir}/distributions/docker-app-1.0.tar", '/'
+    workingDir '/docker-app-1.0/bin'
+    defaultCommand = ['./docker-app']
 }
 
-// sudo ./gradlew dummyDocker
-// creates dummy:1.0
-// run with sudo docker run --rm dummy:1.0 ls
-task dummyDocker(type: Docker) {
-    applicationName = 'dummy'
-
-    // when building the image
-    runCommand 'apt-get update'
-
-    // when running
-    defaultCommand = ['ls']
-}*/
+customDocker.dependsOn 'distTar'

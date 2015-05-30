@@ -13,10 +13,6 @@ mainClassName = 'me.loki2302.App'
 
 version = '1.0'
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.3'
-}
-
 repositories {
     mavenCentral()
 }
