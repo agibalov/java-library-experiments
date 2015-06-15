@@ -1,27 +1,12 @@
 package me.loki2302
-
 import groovy.sql.Sql
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.internal.dbsupport.FlywaySqlScriptException
-import org.hsqldb.jdbc.JDBCDataSource
-import org.junit.Before
 import org.junit.Test
 
-import javax.sql.DataSource
+import static org.junit.Assert.*
 
-import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertTrue
-import static org.junit.Assert.fail
-
-class FlywayTest {
-    private DataSource dataSource
-
-    @Before
-    void constructDataSource() {
-        def databaseName = UUID.randomUUID().toString()
-        dataSource = new JDBCDataSource(url: "jdbc:hsqldb:mem:${databaseName}")
-    }
-
+class DummyTest extends AbstractFlywayTest {
     @Test
     void canCreateV1Database() {
         def flyway = new Flyway()
