@@ -25,11 +25,11 @@ class CreateIndexTest extends AbstractFlywayTest {
         assertIndexExists(sql, "table1", "dataIndex")
     }
 
-    boolean assertIndexExists(Sql sql, String tableName, String indexName) {
+    void assertIndexExists(Sql sql, String tableName, String indexName) {
         assertTrue(doesIndexExist(sql, tableName, indexName))
     }
 
-    boolean assertIndexDoesNotExist(Sql sql, String tableName, String indexName) {
+    void assertIndexDoesNotExist(Sql sql, String tableName, String indexName) {
         assertFalse(doesIndexExist(sql, tableName, indexName))
     }
 

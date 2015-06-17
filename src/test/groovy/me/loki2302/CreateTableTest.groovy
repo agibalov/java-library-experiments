@@ -25,11 +25,11 @@ class CreateTableTest extends AbstractFlywayTest {
         assertTableExists(sql, 'table2')
     }
 
-    boolean assertTableExists(Sql sql, String tableName) {
+    void assertTableExists(Sql sql, String tableName) {
         assertTrue(doesTableExist(sql, tableName))
     }
 
-    boolean assertTableDoesNotExist(Sql sql, String tableName) {
+    void assertTableDoesNotExist(Sql sql, String tableName) {
         assertFalse(doesTableExist(sql, tableName))
     }
 
