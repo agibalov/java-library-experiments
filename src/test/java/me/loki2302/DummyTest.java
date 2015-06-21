@@ -36,6 +36,13 @@ public class DummyTest {
     }
 
     @Test
+    public void canEvictElementExplicitly() {
+        testCache.put(new Element("x", 123));
+        testCache.remove("x");
+        assertFalse(testCache.getKeys().contains("x"));
+    }
+
+    @Test
     public void canSetElementTimeToLive() throws InterruptedException {
         {
             Element element = new Element("x", 123);
