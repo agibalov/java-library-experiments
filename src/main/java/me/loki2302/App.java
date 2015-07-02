@@ -1,7 +1,8 @@
 package me.loki2302;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -53,7 +54,7 @@ public class App {
         @Override
         public String toString() {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             try {
                 return objectMapper.writeValueAsString(this);
             } catch (IOException e) {
