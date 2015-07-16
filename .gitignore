@@ -1,7 +1,4 @@
-.class
-.project
-.settings
-.classpath
 .idea
-target
+.gradle
 *.iml
+build
