@@ -26,7 +26,7 @@ class MetricsTests {
         }
 
         assertEquals(numberOfRepetitions, meter.count)
-        assertEquals(MillisecondsInOneSecond / delayInMilliseconds, meter.meanRate, 0.1)
+        assertEquals(MillisecondsInOneSecond / delayInMilliseconds, meter.meanRate, 0.2)
     }
 
     @Test
@@ -85,7 +85,7 @@ class MetricsTests {
 
         final nanosecondsInMillisecond = 1000000
         assertEquals(delayInMilliseconds, snapshot.min / nanosecondsInMillisecond, 10.0)
-        assertEquals(delayInMilliseconds, snapshot.mean / nanosecondsInMillisecond, 0.1)
+        assertEquals(delayInMilliseconds, snapshot.mean / nanosecondsInMillisecond, 1)
         assertEquals(delayInMilliseconds, snapshot.max / nanosecondsInMillisecond, 10.0)
     }
 

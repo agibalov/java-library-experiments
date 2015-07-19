@@ -10,8 +10,8 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.codehaus.groovy:groovy-all:2.3.7'
-    testCompile 'com.codahale.metrics:metrics-core:3.0.2'
-    testCompile 'com.codahale.metrics:metrics-healthchecks:3.0.2'
+    testCompile 'io.dropwizard.metrics:metrics-core:3.1.2'
+    testCompile 'io.dropwizard.metrics:metrics-healthchecks:3.1.2'
 }
 
 test {
@@ -19,4 +19,8 @@ test {
         showStandardStreams = true
         events 'failed', 'passed', 'skipped'
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }
