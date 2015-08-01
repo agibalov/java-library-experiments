@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.dalesbred.Database;
 import org.junit.After;
 import org.junit.Before;
-
-import fi.evident.dalesbred.Database;
 
 public class DalesbredUserServiceTest extends AbstractUserServiceTest {
 	private Connection connection;

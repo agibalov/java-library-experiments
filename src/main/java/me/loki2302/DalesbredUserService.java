@@ -1,11 +1,8 @@
 package me.loki2302;
 
-import fi.evident.dalesbred.Database;
-import fi.evident.dalesbred.instantiation.DefaultInstantiatorRegistry;
-import fi.evident.dalesbred.results.ReflectionResultSetProcessor;
-import fi.evident.dalesbred.results.ResultSetProcessor;
-import fi.evident.dalesbred.results.RowMapper;
-import fi.evident.dalesbred.results.UniqueResultSetProcessor;
+import org.dalesbred.Database;
+import org.dalesbred.result.ResultSetProcessor;
+import org.dalesbred.result.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,8 +17,19 @@ public class DalesbredUserService implements UserService {
 	}	
 	
 	public UserDTO createUser(String name) {
-        int userId = database.updateAndProcessGeneratedKeys(
-                makeSingleIdResultSetProcessor(),
+		ResultSetProcessor<Integer> rpp = new ResultSetProcessor<Integer>() {
+			@Override
+			public Integer process(ResultSet resultSet) throws SQLException {
+				if(!resultSet.next()) {
+					throw new RuntimeException();
+				}
+
+				return resultSet.getInt(1);
+			}
+		};
+
+        int userId = database.<Integer>updateAndProcessGeneratedKeys(
+                rpp,
                 Collections.<String>emptyList(),
                 "insert into Users(name) values(?)",
                 name);
@@ -29,13 +37,6 @@ public class DalesbredUserService implements UserService {
         UserDTO userDto = database.findUnique(new UserDTOMapper(), "select id, name from Users where id = ?", userId);
         return userDto;
 	}
-
-    private ResultSetProcessor<Integer> makeSingleIdResultSetProcessor() {
-        return UniqueResultSetProcessor.unique(
-                new ReflectionResultSetProcessor<Integer>(
-                        Integer.class,
-                        (DefaultInstantiatorRegistry)database.getInstantiatorRegistry()));
-    }
 
 	public UserDTO getUser(int userId) {
 		return database.findUnique(new UserDTOMapper(), "select id, name from Users where id = ?", userId);
