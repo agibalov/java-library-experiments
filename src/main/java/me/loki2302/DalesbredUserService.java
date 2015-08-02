@@ -17,19 +17,16 @@ public class DalesbredUserService implements UserService {
 	}	
 	
 	public UserDTO createUser(String name) {
-		ResultSetProcessor<Integer> rpp = new ResultSetProcessor<Integer>() {
-			@Override
-			public Integer process(ResultSet resultSet) throws SQLException {
-				if(!resultSet.next()) {
-					throw new RuntimeException();
-				}
+		ResultSetProcessor<Integer> rsp = resultSet -> {
+            if(!resultSet.next()) {
+                throw new RuntimeException();
+            }
 
-				return resultSet.getInt(1);
-			}
-		};
+            return resultSet.getInt(1);
+        };
 
         int userId = database.<Integer>updateAndProcessGeneratedKeys(
-                rpp,
+				rsp,
                 Collections.<String>emptyList(),
                 "insert into Users(name) values(?)",
                 name);
