@@ -19,8 +19,8 @@ public class ApacheDBUtilsUserService implements UserService {
     public UserDTO createUser(String name) {
         QueryRunner queryRunner = new QueryRunner();
         try {
-            queryRunner.update(connection, "insert into Users(name) values(?)", name);
-            return queryRunner.query(connection, "select id, name from Users where name = ?", new SingleUserResultSetHandler(), name);
+            int id = queryRunner.insert(connection, "insert into Users(name) values(?)", new ScalarHandler<Integer>(), name);
+            return queryRunner.query(connection, "select id, name from Users where id = ?", new SingleUserResultSetHandler(), id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
