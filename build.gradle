@@ -1,9 +1,8 @@
-apply plugin: 'java'
 apply plugin: 'application'
 
 mainClassName = 'me.loki2302.App'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.7
 version = '1.0'
 
 repositories {
@@ -12,11 +11,15 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile 'org.apache.camel:camel-core:2.14.0'
-    compile 'org.apache.camel:camel-guice:2.14.0'
-    compile 'org.apache.camel:camel-jms:2.14.0'
+    compile 'org.apache.camel:camel-core:2.15.2'
+    compile 'org.apache.camel:camel-guice:2.15.2'
+    compile 'org.apache.camel:camel-jms:2.15.2'
     compile 'com.google.inject:guice:3.0'
-    compile 'org.apache.activemq:activemq-broker:5.10.0'
-    compile 'org.apache.activemq:activemq-kahadb-store:5.10.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
+    compile 'org.apache.activemq:activemq-broker:5.11.1'
+    compile 'org.apache.activemq:activemq-kahadb-store:5.11.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }
