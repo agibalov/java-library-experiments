@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopAnalyzer;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.phonetic.DoubleMetaphoneFilter;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.Document;
@@ -28,16 +29,14 @@ import org.apache.lucene.util.Version;
 
 public class App {
     public static void main(String[] args) throws IOException, ParseException {
-        // Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_45);
-
         Analyzer analyzer = new Analyzer() {
             @Override
-            protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
-                final StandardTokenizer src = new StandardTokenizer(Version.LUCENE_45, reader);
+            protected TokenStreamComponents createComponents(String s) {
+                final StandardTokenizer src = new StandardTokenizer();
                 src.setMaxTokenLength(256);
-                TokenStream tok = new StandardFilter(Version.LUCENE_45, src);
-                tok = new LowerCaseFilter(Version.LUCENE_45, tok);
-                tok = new StopFilter(Version.LUCENE_45, tok, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+                TokenStream tok = new StandardFilter(src);
+                tok = new LowerCaseFilter(tok);
+                tok = new StopFilter(tok, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
                 tok = new DoubleMetaphoneFilter(tok, 256, true);
                 return new TokenStreamComponents(src, tok) {
                     @Override
@@ -51,7 +50,7 @@ public class App {
 
         Directory directory = new RAMDirectory();
 
-        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_45, analyzer);
+        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
         IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
         if (true) {
             Document document = new Document();
@@ -66,10 +65,10 @@ public class App {
         }
         indexWriter.close();
 
-        Query query = new QueryParser(Version.LUCENE_45, "title", analyzer).parse("broos");
+        Query query = new QueryParser("title", analyzer).parse("broos");
         DirectoryReader directoryReader = DirectoryReader.open(directory);
         IndexSearcher indexSearcher = new IndexSearcher(directoryReader);
-        ScoreDoc[] scoreDocs = indexSearcher.search(query, null, 1000).scoreDocs;
+        ScoreDoc[] scoreDocs = indexSearcher.search(query, 1000).scoreDocs;
         for (ScoreDoc scoreDoc : scoreDocs) {
             System.out.printf("%s: %s\n", scoreDoc, indexSearcher.doc(scoreDoc.doc));
         }
