@@ -1,10 +1,14 @@
 package me.loki2302;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,7 +19,36 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class ListSerializationTest {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
+
+    @Before
+    public void makeObjectMapper() {
+        objectMapper = new ObjectMapper();
+    }
+
+    @Test
+    public void canSerializeANullListAsNull() throws JsonProcessingException {
+        Issues issues = new Issues();
+        issues.issues = null;
+        String json = objectMapper.writeValueAsString(issues);
+        assertEquals("{\"issues\":null}", json);
+    }
+
+    @Test
+    public void canSerializeANullListAsNothing() throws JsonProcessingException {
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        Issues issues = new Issues();
+        issues.issues = null;
+        String json = objectMapper.writeValueAsString(issues);
+        assertEquals("{}", json);
+    }
+
+    @Test
+    public void canDeserializeANullListAsNull() throws IOException {
+        assertNull(objectMapper.readValue("{}", Issues.class).issues);
+        assertNull(objectMapper.readValue("{\"issues\":null}", Issues.class).issues);
+    }
 
     @Test
     public void canDeserializeAnEmptyList() throws IOException {
