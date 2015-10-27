@@ -32,6 +32,7 @@ class CompositionTest {
         userDTO.username = ''
         def violations = validator.validate(userDTO)
         assertFalse violations.empty
+        assertEquals('may not be empty', violations[0].interpolatedMessage)
     }
 
     @Test
@@ -40,5 +41,15 @@ class CompositionTest {
         userDTO.username = 'loki2302'
         def violations = validator.validate(userDTO)
         assertFalse violations.empty
+        assertEquals('must match "^[a-z]*$"', violations[0].interpolatedMessage)
+    }
+
+    @Test
+    public void canHaveASingleViolationReported() {
+        UserDTOWithReportAsSingleViolation userDTO = new UserDTOWithReportAsSingleViolation()
+        userDTO.username = 'loki2302'
+        def violations = validator.validate(userDTO)
+        assertFalse violations.empty
+        assertEquals("that's a bad username", violations[0].interpolatedMessage)
     }
 }
