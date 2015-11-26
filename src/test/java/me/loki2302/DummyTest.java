@@ -10,6 +10,7 @@ import javax.jms.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class DummyTest {
     private final static String BROKER_URL = "tcp://localhost:2302";
@@ -38,7 +39,7 @@ public class DummyTest {
     }
 
     @Test
-    public void canUseTopic() throws JMSException {
+    public void canUseTopicToDeliverASingleMessageToAllSubscribers() throws JMSException {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         Topic testTopic = session.createTopic("test");
@@ -49,27 +50,35 @@ public class DummyTest {
 
         producer.send(session.createTextMessage("hello"));
 
+        // consumer A receives a message...
         Message messageA = consumerA.receive();
         String messageAText = ((TextMessage) messageA).getText();
         assertEquals("hello", messageAText);
 
+        // as well as consumer B does
         Message messageB = consumerB.receive();
         String messageBText = ((TextMessage) messageB).getText();
         assertEquals("hello", messageBText);
     }
 
     @Test
-    public void canUseQueue() throws JMSException {
+    public void canUseQueueToDeliverAMessageToASingleSubscriber() throws JMSException {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         Queue testQueue = session.createQueue("test");
 
         MessageProducer producer = session.createProducer(testQueue);
         MessageConsumer consumerA = session.createConsumer(testQueue);
+        MessageConsumer consumerB = session.createConsumer(testQueue);
 
         producer.send(session.createTextMessage("hello1"));
 
+        // consumer A receives a message...
         Message messageA = consumerA.receive();
         assertNotNull(messageA);
+
+        // consumer B doesn't receive anything
+        Message messageB = consumerB.receiveNoWait();
+        assertNull(messageB);
     }
 }
