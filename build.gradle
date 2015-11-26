@@ -1,9 +1,8 @@
-apply plugin: 'java'
 apply plugin: 'application'
 
 mainClassName = 'me.loki2302.App'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
 version = '1.0'
 
 repositories {
@@ -12,6 +11,9 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile 'org.apache.activemq:activemq-broker:5.10.0'
-    compile 'org.apache.activemq:activemq-kahadb-store:5.10.0'
+    compile 'org.apache.activemq:activemq-broker:5.12.1'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
 }

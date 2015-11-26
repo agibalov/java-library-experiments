@@ -9,6 +9,7 @@ import org.junit.Test;
 import javax.jms.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class DummyTest {
@@ -20,6 +21,7 @@ public class DummyTest {
     public void startBrokerAndStartConnection() throws Exception {
         broker = new BrokerService();
         broker.addConnector(BROKER_URL);
+        broker.setPersistent(false);
         broker.start();
 
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
@@ -65,12 +67,10 @@ public class DummyTest {
 
         MessageProducer producer = session.createProducer(testQueue);
         MessageConsumer consumerA = session.createConsumer(testQueue);
-        MessageConsumer consumerB = session.createConsumer(testQueue);
 
-        producer.send(session.createTextMessage("hello"));
+        producer.send(session.createTextMessage("hello1"));
 
-        Message messageA = consumerA.receiveNoWait();
-        Message messageB = consumerB.receiveNoWait();
-        assertTrue(messageA != null || messageB != null);
+        Message messageA = consumerA.receive();
+        assertNotNull(messageA);
     }
 }

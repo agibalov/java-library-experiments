@@ -9,6 +9,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         BrokerService broker = new BrokerService();
         broker.addConnector("tcp://localhost:2302");
+        broker.setPersistent(false);
         broker.start();
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("vm://localhost:2302");
