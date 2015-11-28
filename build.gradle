@@ -11,6 +11,7 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'org.flywaydb:flyway-core:3.2.1'
     compile 'org.hsqldb:hsqldb:2.3.3'
+    compile 'org.liquibase:liquibase-core:3.4.2'
 }
 
 task wrapper(type: Wrapper) {
