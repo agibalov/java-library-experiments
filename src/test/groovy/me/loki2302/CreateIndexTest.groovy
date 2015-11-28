@@ -10,13 +10,13 @@ class CreateIndexTest extends AbstractFlywayTest {
         def flyway = new Flyway()
         flyway.setLocations('db/create_index')
         flyway.setDataSource(dataSource)
-        flyway.setTarget('1')
+        flyway.setTargetAsString('1')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
         InformationSchemaUtils.assertIndexDoesNotExist(sql, "table1", "dataIndex")
 
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         InformationSchemaUtils.assertIndexExists(sql, "table1", "dataIndex")

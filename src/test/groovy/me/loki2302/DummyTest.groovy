@@ -11,7 +11,7 @@ class DummyTest extends AbstractFlywayTest {
     void canCreateV1Database() {
         def flyway = new Flyway()
         flyway.setDataSource(dataSource)
-        flyway.setTarget('1')
+        flyway.setTargetAsString('1')
         flyway.migrate()
 
         def appliedMigrations = flyway.info().applied()
@@ -31,7 +31,7 @@ class DummyTest extends AbstractFlywayTest {
     void canCreateV2Database() {
         def flyway = new Flyway()
         flyway.setDataSource(dataSource)
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         def appliedMigrations = flyway.info().applied()
@@ -53,13 +53,13 @@ class DummyTest extends AbstractFlywayTest {
     void canUpdateV1DatabaseToV2() {
         def flyway = new Flyway()
         flyway.setDataSource(dataSource)
-        flyway.setTarget('1')
+        flyway.setTargetAsString('1')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
         sql.execute('insert into Posts(title) values(null)')
 
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         def appliedMigrations = flyway.info().applied()
@@ -77,13 +77,13 @@ class DummyTest extends AbstractFlywayTest {
     void canUseJavaMigration() {
         def flyway = new Flyway()
         flyway.setDataSource(dataSource)
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
         sql.execute("insert into Posts(title) values('')")
 
-        flyway.setTarget('3')
+        flyway.setTargetAsString('3')
         flyway.migrate()
 
         def row = sql.firstRow('select * from Posts')
@@ -95,13 +95,13 @@ class DummyTest extends AbstractFlywayTest {
     void canGetAnErrorWhenMigrationFails() {
         def flyway = new Flyway()
         flyway.setDataSource(dataSource)
-        flyway.setTarget('3')
+        flyway.setTargetAsString('3')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
         sql.execute("insert into Posts(title) values('')")
 
-        flyway.setTarget('4')
+        flyway.setTargetAsString('4')
 
         try {
             flyway.migrate()

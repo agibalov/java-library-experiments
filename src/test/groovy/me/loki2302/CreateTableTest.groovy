@@ -10,14 +10,14 @@ class CreateTableTest extends AbstractFlywayTest {
         def flyway = new Flyway()
         flyway.setLocations('db/create_table')
         flyway.setDataSource(dataSource)
-        flyway.setTarget('1')
+        flyway.setTargetAsString('1')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
         InformationSchemaUtils.assertTableExists(sql, 'table1')
         InformationSchemaUtils.assertTableDoesNotExist(sql, 'table2')
 
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         InformationSchemaUtils.assertTableExists(sql, 'table1')

@@ -13,7 +13,7 @@ class AlterColumnTypeTest extends AbstractFlywayTest {
         def flyway = new Flyway()
         flyway.setLocations('db/alter_column_type')
         flyway.setDataSource(dataSource)
-        flyway.setTarget('1')
+        flyway.setTargetAsString('1')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
@@ -21,7 +21,7 @@ class AlterColumnTypeTest extends AbstractFlywayTest {
 
         sql.executeInsert('insert into table1(data) values(?)', ['123'])
 
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         // InformationSchemaUtils.assertColumnExists(sql, 'table1', 'data2')

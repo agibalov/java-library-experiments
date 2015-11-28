@@ -12,7 +12,7 @@ class DropColumnTest extends AbstractFlywayTest {
         def flyway = new Flyway()
         flyway.setLocations('db/drop_column')
         flyway.setDataSource(dataSource)
-        flyway.setTarget('1')
+        flyway.setTargetAsString('1')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
@@ -20,7 +20,7 @@ class DropColumnTest extends AbstractFlywayTest {
 
         sql.executeInsert('insert into table1(data, data2) values(?, ?)', ['hello', 123])
 
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         InformationSchemaUtils.assertColumnDoesNotExist(sql, 'table1', 'data2')

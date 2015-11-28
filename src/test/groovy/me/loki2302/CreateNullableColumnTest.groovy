@@ -12,7 +12,7 @@ class CreateNullableColumnTest extends AbstractFlywayTest {
         def flyway = new Flyway()
         flyway.setLocations('db/create_nullable_column')
         flyway.setDataSource(dataSource)
-        flyway.setTarget('1')
+        flyway.setTargetAsString('1')
         flyway.migrate()
 
         Sql sql = new Sql(dataSource)
@@ -20,7 +20,7 @@ class CreateNullableColumnTest extends AbstractFlywayTest {
 
         sql.executeInsert('insert into table1(data) values(?)', ['hello'])
 
-        flyway.setTarget('2')
+        flyway.setTargetAsString('2')
         flyway.migrate()
 
         InformationSchemaUtils.assertColumnExists(sql, 'table1', 'data2')
