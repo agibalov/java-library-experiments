@@ -1,2 +1,2 @@
-flyway-experiment
-=================
+java-db-migrations-experiment
+=============================
