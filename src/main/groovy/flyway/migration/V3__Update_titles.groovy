@@ -1,4 +1,4 @@
-package db.migration
+package flyway.migration
 
 import groovy.sql.Sql
 import org.flywaydb.core.api.migration.jdbc.JdbcMigration

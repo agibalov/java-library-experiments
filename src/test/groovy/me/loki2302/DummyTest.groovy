@@ -10,6 +10,7 @@ class DummyTest extends AbstractFlywayTest {
     @Test
     void canCreateV1Database() {
         def flyway = new Flyway()
+        flyway.setLocations('flyway/migration')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()
@@ -30,6 +31,7 @@ class DummyTest extends AbstractFlywayTest {
     @Test
     void canCreateV2Database() {
         def flyway = new Flyway()
+        flyway.setLocations('flyway/migration')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('2')
         flyway.migrate()
@@ -52,6 +54,7 @@ class DummyTest extends AbstractFlywayTest {
     @Test
     void canUpdateV1DatabaseToV2() {
         def flyway = new Flyway()
+        flyway.setLocations('flyway/migration')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()
@@ -76,6 +79,7 @@ class DummyTest extends AbstractFlywayTest {
     @Test
     void canUseJavaMigration() {
         def flyway = new Flyway()
+        flyway.setLocations('flyway/migration')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('2')
         flyway.migrate()
@@ -94,6 +98,7 @@ class DummyTest extends AbstractFlywayTest {
     @Test
     void canGetAnErrorWhenMigrationFails() {
         def flyway = new Flyway()
+        flyway.setLocations('flyway/migration')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('3')
         flyway.migrate()

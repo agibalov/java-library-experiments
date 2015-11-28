@@ -10,7 +10,7 @@ class DropColumnTest extends AbstractFlywayTest {
     @Test
     void dummy() {
         def flyway = new Flyway()
-        flyway.setLocations('db/drop_column')
+        flyway.setLocations('flyway/drop_column')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()

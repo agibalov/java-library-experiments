@@ -1,17 +1,15 @@
 package me.loki2302
-
 import groovy.sql.Sql
 import org.flywaydb.core.Flyway
 import org.junit.Test
 
 import static org.junit.Assert.assertEquals
-import static org.junit.Assert.assertNull
 
 class CreateNonNullableColumnTest extends AbstractFlywayTest {
     @Test
     void dummy() {
         def flyway = new Flyway()
-        flyway.setLocations('db/create_non-nullable_column')
+        flyway.setLocations('flyway/create_non-nullable_column')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()

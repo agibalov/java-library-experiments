@@ -8,7 +8,7 @@ class CreateIndexTest extends AbstractFlywayTest {
     @Test
     void dummy() {
         def flyway = new Flyway()
-        flyway.setLocations('db/create_index')
+        flyway.setLocations('flyway/create_index')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()

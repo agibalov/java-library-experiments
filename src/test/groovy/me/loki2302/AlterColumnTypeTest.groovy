@@ -11,7 +11,7 @@ class AlterColumnTypeTest extends AbstractFlywayTest {
     @Test
     void dummy() {
         def flyway = new Flyway()
-        flyway.setLocations('db/alter_column_type')
+        flyway.setLocations('flyway/alter_column_type')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()

@@ -7,7 +7,7 @@ class CreateForeignKeyTest extends AbstractFlywayTest {
     @Test
     void dummy() {
         def flyway = new Flyway()
-        flyway.setLocations('db/create_foreign_key')
+        flyway.setLocations('flyway/create_foreign_key')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()

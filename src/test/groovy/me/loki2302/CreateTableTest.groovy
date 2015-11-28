@@ -8,7 +8,7 @@ class CreateTableTest extends AbstractFlywayTest {
     @Test
     void dummy() {
         def flyway = new Flyway()
-        flyway.setLocations('db/create_table')
+        flyway.setLocations('flyway/create_table')
         flyway.setDataSource(dataSource)
         flyway.setTargetAsString('1')
         flyway.migrate()
