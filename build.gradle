@@ -8,13 +8,13 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile 'org.codehaus.groovy:groovy-all:2.4.3'
+    compile 'org.codehaus.groovy:groovy-all:2.4.5'
     compile 'org.flywaydb:flyway-core:3.2.1'
-    compile 'org.hsqldb:hsqldb:2.3.2'
+    compile 'org.hsqldb:hsqldb:2.3.3'
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
+    gradleVersion = '2.9'
 }
 
 test {
