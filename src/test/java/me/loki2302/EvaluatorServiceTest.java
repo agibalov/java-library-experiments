@@ -62,7 +62,7 @@ public class EvaluatorServiceTest {
         private static class GetContextFreeRefFunction implements FreeRefFunction {
             private final Map<String, Double> context;
 
-            private GetContextFreeRefFunction(Map<String, Double> context) {
+            public GetContextFreeRefFunction(Map<String, Double> context) {
                 this.context = context;
             }
 
@@ -80,7 +80,7 @@ public class EvaluatorServiceTest {
         private static class PutContextFreeRefFunction implements FreeRefFunction {
             private final Map<String, Double> context;
 
-            private PutContextFreeRefFunction(Map<String, Double> context) {
+            public PutContextFreeRefFunction(Map<String, Double> context) {
                 this.context = context;
             }
 
