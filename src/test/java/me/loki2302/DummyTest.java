@@ -4,8 +4,13 @@ import opennlp.tools.doccat.DoccatFactory;
 import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.doccat.DocumentCategorizerME;
 import opennlp.tools.doccat.DocumentSample;
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.NameSample;
+import opennlp.tools.namefind.TokenNameFinderFactory;
+import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.util.CollectionObjectStream;
 import opennlp.tools.util.ObjectStream;
+import opennlp.tools.util.Span;
 import opennlp.tools.util.TrainingParameters;
 import org.junit.Test;
 
@@ -54,5 +59,29 @@ public class DummyTest {
             String category = documentCategorizerME.getBestCategory(outcomes);
             assertEquals("farewell", category);
         }
+    }
+
+    @Test
+    public void canFindNames() throws IOException {
+        List<NameSample> nameSampleList = new ArrayList<>();
+        for(int i = 0; i < 10; ++i) {
+            nameSampleList.add(new NameSample(new String[]{"my", "name", "is", "joe"}, new Span[]{new Span(3, 3)}, false));
+        }
+
+        ObjectStream<NameSample> nameSampleObjectStream = new CollectionObjectStream<>(nameSampleList);
+        TokenNameFinderModel tokenNameFinderModel = NameFinderME.train(
+                "en",
+                "person",
+                nameSampleObjectStream,
+                TrainingParameters.defaultParams(),
+                new TokenNameFinderFactory());
+
+        NameFinderME nameFinder = new NameFinderME(tokenNameFinderModel);
+
+        String[] tokens = new String[] {"his", "name", "is", "john"};
+        Span[] nameSpans = nameFinder.find(tokens);
+        String[] names = Span.spansToStrings(nameSpans, tokens);
+        assertEquals(1, names.length);
+        assertEquals("john", names[0]);
     }
 }
