@@ -8,10 +8,14 @@ import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.NameSample;
 import opennlp.tools.namefind.TokenNameFinderFactory;
 import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.sentdetect.*;
+import opennlp.tools.tokenize.DetokenizationDictionary;
+import opennlp.tools.tokenize.DictionaryDetokenizer;
 import opennlp.tools.util.CollectionObjectStream;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.Span;
 import opennlp.tools.util.TrainingParameters;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -83,5 +87,54 @@ public class DummyTest {
         String[] names = Span.spansToStrings(nameSpans, tokens);
         assertEquals(1, names.length);
         assertEquals("john", names[0]);
+        // assertEquals("person", nameSpans[0].getType()); // TODO: how do I make it work?
+    }
+
+    @Ignore("TODO: how do I make it work?")
+    @Test
+    public void canDetectSentences() throws IOException {
+        List<SentenceSample> sentenceSampleList = new ArrayList<>();
+        for(int i = 0; i < 100; ++i) {
+            sentenceSampleList.add(new SentenceSample(
+                    new DictionaryDetokenizer(
+                            new DetokenizationDictionary(
+                                    new String[] {
+                                            "."
+                                    },
+                                    new DetokenizationDictionary.Operation[] {
+                                            DetokenizationDictionary.Operation.MOVE_LEFT
+                                    })),
+                    new String[][] {
+                            new String[] { "hi", "." },
+                            new String[] { "my", "name", "is", "john", "." }
+                    }));
+        }
+        ObjectStream<SentenceSample> sentenceSampleObjectStream = new CollectionObjectStream<>(sentenceSampleList);
+
+        SentenceModel sentenceModel = SentenceDetectorME.train(
+                "en",
+                sentenceSampleObjectStream,
+                new SentenceDetectorFactory(),
+                TrainingParameters.defaultParams());
+
+        SentenceDetector sentenceDetector = new SentenceDetectorME(sentenceModel);
+        String[] sentences = sentenceDetector.sentDetect("hello there. how are you?");
+        assertEquals(2, sentences.length);
+    }
+
+    @Test
+    public void canDetokenize() {
+        DetokenizationDictionary detokenizationDictionary = new DetokenizationDictionary(
+                new String[] {
+                        "."
+                },
+                new DetokenizationDictionary.Operation[] {
+                        DetokenizationDictionary.Operation.MOVE_LEFT
+                });
+        DictionaryDetokenizer dictionaryDetokenizer = new DictionaryDetokenizer(detokenizationDictionary);
+        String detokenizedString = dictionaryDetokenizer.detokenize(
+                new String[] {"Hello", "there", ".", "My", "name", "is", "John", "."}, "");
+
+        assertEquals("Hello there. My name is John.", detokenizedString);
     }
 }
