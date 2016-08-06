@@ -9,8 +9,7 @@ import opennlp.tools.namefind.NameSample;
 import opennlp.tools.namefind.TokenNameFinderFactory;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.sentdetect.*;
-import opennlp.tools.tokenize.DetokenizationDictionary;
-import opennlp.tools.tokenize.DictionaryDetokenizer;
+import opennlp.tools.tokenize.*;
 import opennlp.tools.util.CollectionObjectStream;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.Span;
@@ -20,6 +19,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -69,7 +69,7 @@ public class DummyTest {
     public void canFindNames() throws IOException {
         List<NameSample> nameSampleList = new ArrayList<>();
         for(int i = 0; i < 10; ++i) {
-            nameSampleList.add(new NameSample(new String[]{"my", "name", "is", "joe"}, new Span[]{new Span(3, 3)}, false));
+            nameSampleList.add(new NameSample(new String[]{"my", "name", "is", "joe"}, new Span[]{new Span(3, 4)}, false));
         }
 
         ObjectStream<NameSample> nameSampleObjectStream = new CollectionObjectStream<>(nameSampleList);
@@ -117,9 +117,38 @@ public class DummyTest {
                 new SentenceDetectorFactory(),
                 TrainingParameters.defaultParams());
 
-        SentenceDetector sentenceDetector = new SentenceDetectorME(sentenceModel);
+        SentenceDetectorME sentenceDetector = new SentenceDetectorME(sentenceModel);
         String[] sentences = sentenceDetector.sentDetect("hello there. how are you?");
         assertEquals(2, sentences.length);
+    }
+
+    @Test
+    public void canTokenize() throws IOException {
+        List<TokenSample> tokenSampleList = new ArrayList<>();
+        tokenSampleList.add(TokenSample.parse("test", "<SPACE>"));
+        tokenSampleList.add(TokenSample.parse("test<SPACE>.", "<SPACE>"));
+        tokenSampleList.add(TokenSample.parse("test<SPACE>!", "<SPACE>"));
+        tokenSampleList.add(TokenSample.parse("test<SPACE>?", "<SPACE>"));
+        tokenSampleList.add(TokenSample.parse("how<SPACE>is<SPACE>it<SPACE>going<SPACE>?", "<SPACE>"));
+
+        ObjectStream<TokenSample> tokenSampleObjectStream = new CollectionObjectStream<>(tokenSampleList);
+
+        TokenizerModel tokenizerModel = TokenizerME.train(
+                tokenSampleObjectStream,
+                new TokenizerFactory("en", null, true, null), // new TokenizerFactory() is supposed to be a default, but it doesn't work
+                TrainingParameters.defaultParams());
+
+        TokenizerME tokenizer = new TokenizerME(tokenizerModel);
+        String[] tokens = tokenizer.tokenize("hello there! how are you?");
+        System.out.println(Arrays.toString(tokens));
+        assertEquals(7, tokens.length);
+        assertEquals("hello", tokens[0]);
+        assertEquals("there", tokens[1]);
+        assertEquals("!", tokens[2]);
+        assertEquals("how", tokens[3]);
+        assertEquals("are", tokens[4]);
+        assertEquals("you", tokens[5]);
+        assertEquals("?", tokens[6]);
     }
 
     @Test
