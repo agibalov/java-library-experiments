@@ -10,14 +10,13 @@ import opennlp.tools.namefind.TokenNameFinderFactory;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.sentdetect.*;
 import opennlp.tools.tokenize.*;
-import opennlp.tools.util.CollectionObjectStream;
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.Span;
-import opennlp.tools.util.TrainingParameters;
+import opennlp.tools.util.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,36 +89,34 @@ public class DummyTest {
         // assertEquals("person", nameSpans[0].getType()); // TODO: how do I make it work?
     }
 
-    @Ignore("TODO: how do I make it work?")
     @Test
     public void canDetectSentences() throws IOException {
         List<SentenceSample> sentenceSampleList = new ArrayList<>();
-        for(int i = 0; i < 100; ++i) {
             sentenceSampleList.add(new SentenceSample(
                     new DictionaryDetokenizer(
                             new DetokenizationDictionary(
                                     new String[] {
-                                            "."
                                     },
                                     new DetokenizationDictionary.Operation[] {
-                                            DetokenizationDictionary.Operation.MOVE_LEFT
                                     })),
                     new String[][] {
-                            new String[] { "hi", "." },
-                            new String[] { "my", "name", "is", "john", "." }
+                            "My name is John .".split(" "),
+                            "Today I woke up at 6 A.M.".split(" "),
+                            "O.M.G.".split(" ")
                     }));
-        }
-        ObjectStream<SentenceSample> sentenceSampleObjectStream = new CollectionObjectStream<>(sentenceSampleList);
 
+        ObjectStream<SentenceSample> sentenceSampleObjectStream = new CollectionObjectStream<>(sentenceSampleList);
         SentenceModel sentenceModel = SentenceDetectorME.train(
                 "en",
                 sentenceSampleObjectStream,
-                new SentenceDetectorFactory(),
+                new SentenceDetectorFactory("en", true, null, null),
                 TrainingParameters.defaultParams());
 
         SentenceDetectorME sentenceDetector = new SentenceDetectorME(sentenceModel);
         String[] sentences = sentenceDetector.sentDetect("hello there. how are you?");
         assertEquals(2, sentences.length);
+        assertEquals("hello there.", sentences[0]);
+        assertEquals("how are you?", sentences[1]);
     }
 
     @Test
