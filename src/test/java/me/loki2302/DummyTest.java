@@ -1,8 +1,6 @@
 package me.loki2302;
 
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 
 import java.lang.annotation.Retention;
@@ -23,7 +21,13 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 public class DummyTest {
     public int injectedValue;
 
+    @BeforeEach
+    void init(TestInfo testInfo) {
+        System.out.printf("testInfo: %s::%s - %s\n", testInfo.getTestClass(), testInfo.getTestMethod(), testInfo.getDisplayName());
+    }
+
     @Test
+    @DisplayName("1+2 should be 3")
     void oneAndTwoShouldBeThree() {
         assertEquals(3, 1 + 2);
     }
