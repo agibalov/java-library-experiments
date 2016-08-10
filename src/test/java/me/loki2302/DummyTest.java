@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -56,26 +57,26 @@ public class DummyTest {
 
     @Nested
     class NestedLevelOneTest {
-
         @Test
         void levelOneTest() {
-
         }
 
         @Nested
         class NestedLevelTwoTest {
-
             @Test
-            void levelTwoTest() {
-
+            void levelTwoTest(TestReporter testReporter) {
+                testReporter.publishEntry("hey", "I'm reporting something");
             }
-
         }
     }
 
     public static class TestPrinterExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+        private static final Logger LOG = Logger.getLogger(TestPrinterExtension.class.getName());
+
         @Override
         public void beforeTestExecution(TestExtensionContext context) throws Exception {
+            LOG.info("I am logging something");
+
             String displayName = context.getDisplayName();
             System.out.printf("Executing %s...\n", displayName);
         }
@@ -118,7 +119,7 @@ public class DummyTest {
             if(!(testInstance instanceof DummyTest)) {
                 return;
             }
-            
+
             ((DummyTest)testInstance).injectedValue = 222;
         }
     }
