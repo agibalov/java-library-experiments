@@ -54,6 +54,25 @@ public class DummyTest {
         assertEquals(222, injectedValue);
     }
 
+    @Nested
+    class NestedLevelOneTest {
+
+        @Test
+        void levelOneTest() {
+
+        }
+
+        @Nested
+        class NestedLevelTwoTest {
+
+            @Test
+            void levelTwoTest() {
+
+            }
+
+        }
+    }
+
     public static class TestPrinterExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
         @Override
         public void beforeTestExecution(TestExtensionContext context) throws Exception {
@@ -96,6 +115,10 @@ public class DummyTest {
                 Object testInstance, // test class object is injected here
                 ExtensionContext context) throws Exception {
 
+            if(!(testInstance instanceof DummyTest)) {
+                return;
+            }
+            
             ((DummyTest)testInstance).injectedValue = 222;
         }
     }
