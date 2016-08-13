@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -67,5 +68,43 @@ public class DummyTest {
         logger.info("hello");
 
         assertTrue(systemOutRule.getLog().contains("INFO hello"));
+    }
+
+    @Test
+    public void canUseDifferentLoggingLevels() throws JoranException {
+        org.slf4j.Logger debugLogger = LoggerFactory.getLogger("debug-logger");
+        org.slf4j.Logger infoLogger = LoggerFactory.getLogger("info-logger");
+        org.slf4j.Logger warnLogger = LoggerFactory.getLogger("warn-logger");
+
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        JoranConfigurator joranConfigurator = new JoranConfigurator();
+        joranConfigurator.setContext(loggerContext);
+        loggerContext.reset();
+        joranConfigurator.doConfigure(DummyTest.class.getResource("/log-levels.xml"));
+
+        debugLogger.debug("debug debug");
+        debugLogger.info("debug info");
+        debugLogger.warn("debug warn");
+
+        infoLogger.debug("info debug");
+        infoLogger.info("info info");
+        infoLogger.warn("info warn");
+
+        warnLogger.debug("warn debug");
+        warnLogger.info("warn info");
+        warnLogger.warn("warn warn");
+
+        assertTrue(systemOutRule.getLog().contains("DEBUG debug debug"));
+        assertTrue(systemOutRule.getLog().contains("INFO debug info"));
+        assertTrue(systemOutRule.getLog().contains("WARN debug warn"));
+
+        assertFalse(systemOutRule.getLog().contains("DEBUG info debug"));
+        assertTrue(systemOutRule.getLog().contains("INFO info info"));
+        assertTrue(systemOutRule.getLog().contains("WARN info warn"));
+
+        assertFalse(systemOutRule.getLog().contains("DEBUG warn debug"));
+        assertFalse(systemOutRule.getLog().contains("INFO warn info"));
+        assertTrue(systemOutRule.getLog().contains("WARN warn warn"));
     }
 }
