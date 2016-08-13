@@ -17,6 +17,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'com.github.stefanbirkner:system-rules:1.15.1'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
 
 }
