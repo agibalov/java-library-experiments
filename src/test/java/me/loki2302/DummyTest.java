@@ -1,9 +1,6 @@
 package me.loki2302;
 
-import me.loki2302.jooq.public_.Tables;
-import org.assertj.core.api.IntegerAssert;
 import org.jooq.DSLContext;
-import org.jooq.Record;
 import org.jooq.Record2;
 import org.jooq.Result;
 import org.junit.Test;
@@ -14,8 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import static org.junit.Assert.*;
-import static me.loki2302.jooq.public_.Tables.*;
+
+import static me.loki2302.jooq.public_.Tables.NOTES;
+import static org.jooq.impl.DSL.field;
+import static org.jooq.impl.DSL.table;
+import static org.junit.Assert.assertEquals;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest
@@ -25,11 +25,30 @@ public class DummyTest {
     private DSLContext dslContext;
 
     @Test
-    public void dummy() {
-        dslContext.insertInto(NOTES, NOTES.TEXT).values("hello").execute();
-        Result<Record2<Integer, String>> results = dslContext.select(NOTES.ID, NOTES.TEXT).from(NOTES).fetch();
+    public void canDoWithGeneratedCode() {
+        dslContext
+                .insertInto(NOTES, NOTES.TEXT)
+                .values("hello").execute();
+        Result<Record2<Integer, String>> results = dslContext
+                .select(NOTES.ID, NOTES.TEXT)
+                .from(NOTES)
+                .fetch();
         assertEquals(1, (int)results.getValue(0, NOTES.ID));
         assertEquals("hello", results.getValue(0, NOTES.TEXT));
+    }
+
+    @Test
+    public void canDoWithoutGeneratedCode() {
+        dslContext
+                .insertInto(table("notes"), field("text"))
+                .values("hello")
+                .execute();
+        Result<Record2<Integer, String>> results = dslContext
+                .select(field("id", Integer.class), field("text", String.class))
+                .from("notes")
+                .fetch();
+        assertEquals(1, (int)results.getValue(0, "id"));
+        assertEquals("hello", results.getValue(0, "text"));
     }
 
     @Configuration
