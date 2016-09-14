@@ -1,0 +1,67 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'nu.studer:gradle-jooq-plugin:1.0.5'
+        classpath group: 'com.h2database', name: 'h2', version: '1.4.192'
+    }
+}
+
+
+plugins {
+    id "org.flywaydb.flyway" version "4.0.3"
+}
+
+group 'me.loki2302'
+version '1.0-SNAPSHOT'
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.5'
+  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
+apply plugin: 'java'
+apply plugin: 'nu.studer.jooq'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jooq', version: '1.4.0.RELEASE'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.192'
+    compile group: 'org.flywaydb', name: 'flyway-core', version: '4.0.3'
+}
+
+flyway {
+    driver = 'org.h2.Driver'
+    url = 'jdbc:h2:./db/dummy'
+    user = 'SA'
+}
+
+jooq {
+    dummy(sourceSets.main) {
+        jdbc {
+            driver = 'org.h2.Driver'
+            url = 'jdbc:h2:./db/dummy'
+            user = 'SA'
+        }
+
+        generator {
+            database {
+                name = 'org.jooq.util.h2.H2Database'
+            }
+            target {
+                packageName = 'me.loki2302.jooq'
+                directory = 'src/generated/jooq'
+            }
+
+        }
+    }
+}
+
