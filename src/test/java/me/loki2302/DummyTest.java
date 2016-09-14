@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static me.loki2302.jooq.public_.Tables.NOTES;
+import static me.loki2302.db.Tables.*;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 import static org.junit.Assert.assertEquals;
@@ -28,11 +28,14 @@ public class DummyTest {
     public void canDoWithGeneratedCode() {
         dslContext
                 .insertInto(NOTES, NOTES.TEXT)
-                .values("hello").execute();
+                .values("hello")
+                .execute();
+
         Result<Record2<Integer, String>> results = dslContext
                 .select(NOTES.ID, NOTES.TEXT)
                 .from(NOTES)
                 .fetch();
+
         assertEquals(1, (int)results.getValue(0, NOTES.ID));
         assertEquals("hello", results.getValue(0, NOTES.TEXT));
     }
@@ -43,10 +46,12 @@ public class DummyTest {
                 .insertInto(table("notes"), field("text"))
                 .values("hello")
                 .execute();
+
         Result<Record2<Integer, String>> results = dslContext
                 .select(field("id", Integer.class), field("text", String.class))
                 .from("notes")
                 .fetch();
+
         assertEquals(1, (int)results.getValue(0, "id"));
         assertEquals("hello", results.getValue(0, "text"));
     }

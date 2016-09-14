@@ -55,13 +55,12 @@ jooq {
         generator {
             database {
                 name = 'org.jooq.util.h2.H2Database'
+                inputSchema = 'PUBLIC'
             }
             target {
-                packageName = 'me.loki2302.jooq'
+                packageName = 'me.loki2302.db'
                 directory = 'src/generated/jooq'
             }
-
         }
     }
 }
-
