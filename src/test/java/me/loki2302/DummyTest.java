@@ -31,12 +31,12 @@ public class DummyTest {
                 .values("hello")
                 .execute();
 
-        Result<Record2<Integer, String>> results = dslContext
+        Result<Record2<Long, String>> results = dslContext
                 .select(NOTES.ID, NOTES.TEXT)
                 .from(NOTES)
                 .fetch();
 
-        assertEquals(1, (int)results.getValue(0, NOTES.ID));
+        assertEquals(1, (long)results.getValue(0, NOTES.ID));
         assertEquals("hello", results.getValue(0, NOTES.TEXT));
     }
 

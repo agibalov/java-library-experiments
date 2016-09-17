@@ -40,7 +40,7 @@ dependencies {
 
 flyway {
     driver = 'org.h2.Driver'
-    url = 'jdbc:h2:./db/dummy'
+    url = 'jdbc:h2:./dbsample/dummy'
     user = 'SA'
 }
 
@@ -48,7 +48,7 @@ jooq {
     dummy(sourceSets.main) {
         jdbc {
             driver = 'org.h2.Driver'
-            url = 'jdbc:h2:./db/dummy'
+            url = 'jdbc:h2:./dbsample/dummy'
             user = 'SA'
         }
 

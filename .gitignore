@@ -3,4 +3,4 @@
 *.iml
 build
 src/generated
-db
+dbsample
