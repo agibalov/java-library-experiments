@@ -7,19 +7,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import static me.loki2302.db.Tables.*;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@Transactional
 public class DummyTest {
     @Autowired
     private DSLContext dslContext;
@@ -36,7 +39,7 @@ public class DummyTest {
                 .from(NOTES)
                 .fetch();
 
-        assertEquals(1, (long)results.getValue(0, NOTES.ID));
+        assertNotEquals(-1, (long)results.getValue(0, NOTES.ID));
         assertEquals("hello", results.getValue(0, NOTES.TEXT));
     }
 
@@ -52,7 +55,7 @@ public class DummyTest {
                 .from("notes")
                 .fetch();
 
-        assertEquals(1, (int)results.getValue(0, "id"));
+        assertNotEquals(-1, (int)results.getValue(0, "id"));
         assertEquals("hello", results.getValue(0, "text"));
     }
 
