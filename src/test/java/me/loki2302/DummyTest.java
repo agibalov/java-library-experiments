@@ -6,14 +6,17 @@ import com.thoughtworks.qdox.model.JavaField;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Graph;
+import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.apache.tinkerpop.gremlin.util.iterator.IteratorUtils;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class DummyTest {
@@ -27,6 +30,19 @@ public class DummyTest {
         assertTrue(vertices.stream().anyMatch(v -> v.label().contains("Adder")));
         assertTrue(vertices.stream().anyMatch(v -> v.label().contains("Subtractor")));
         assertTrue(vertices.stream().anyMatch(v -> v.label().contains("Negator")));
+    }
+
+    @Test
+    public void canGetAllVertexLabels() {
+        Graph graph = makeGraph(new File("./src/test/java/me/loki2302/DummyTest.java"));
+
+        GraphTraversal<Vertex, String> traversal = graph.traversal().V().label();
+        List<String> labels = IteratorUtils.list(traversal);
+        assertEquals(5, labels.size());
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Calculator")));
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Adder")));
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Subtractor")));
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Negator")));
     }
 
     @Test
