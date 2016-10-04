@@ -16,6 +16,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.V;
+import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.inE;
+import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.outE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,6 +46,29 @@ public class DummyTest {
         assertTrue(labels.stream().anyMatch(l -> l.contains("Adder")));
         assertTrue(labels.stream().anyMatch(l -> l.contains("Subtractor")));
         assertTrue(labels.stream().anyMatch(l -> l.contains("Negator")));
+    }
+
+    @Test
+    public void canGetAllClassesThatDependOnSomething() {
+        Graph graph = makeGraph(new File("./src/test/java/me/loki2302/DummyTest.java"));
+
+        GraphTraversal<Vertex, String> traversal = graph.traversal().V().where(outE("uses")).label();
+        List<String> labels = IteratorUtils.list(traversal);
+        assertEquals(2, labels.size());
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Calculator"))); // depends on Adder and Subtractor
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Subtractor"))); // depends on Added and Negator
+    }
+
+    @Test
+    public void canGetAllClassesThatAreDependedUponThem() {
+        Graph graph = makeGraph(new File("./src/test/java/me/loki2302/DummyTest.java"));
+
+        GraphTraversal<Vertex, String> traversal = graph.traversal().V().where(inE("uses")).label();
+        List<String> labels = IteratorUtils.list(traversal);
+        assertEquals(3, labels.size());
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Adder"))); // Subtractor and Calculator depend on Adder
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Subtractor"))); // Calculator depends on Subtractor
+        assertTrue(labels.stream().anyMatch(l -> l.contains("Negator"))); // Subtractor depends on Negator
     }
 
     @Test
