@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
 version = '1.0'
 
 repositories {
@@ -10,7 +10,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile 'org.hibernate:hibernate-validator:5.2.2.Final'
+    testCompile 'org.hibernate:hibernate-validator:5.2.4.Final'
     testCompile 'org.glassfish.web:javax.el:2.2.4'
     testCompile 'com.google.inject:guice:3.0'
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
