@@ -21,6 +21,9 @@ public class AppUI extends UI {
             }
         });
 
-        setContent(new VerticalLayout(new Label("Push this button"), button));
+        setContent(new VerticalLayout(
+                new Label("Push this button"),
+                button,
+                new MyPanel()));
     }
 }
