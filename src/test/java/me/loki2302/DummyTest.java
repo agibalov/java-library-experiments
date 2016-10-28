@@ -87,7 +87,7 @@ public class DummyTest {
         if(true) {
             List<CtComment> comments = addMethod.getComments();
             assertEquals(1, comments.size());
-            assertEquals("Some method comment here", comments.get(0).getContent());
+            assertEquals("Some multiline\nmethod comment\nhere", comments.get(0).getContent());
         }
 
         if(true) {
