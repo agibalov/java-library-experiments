@@ -21,7 +21,7 @@ public class CommentsTest {
      */
     @Test
     public void canGetMyOwnComments() {
-        String description = testComment.getDescription();
+        String description = testComment.getComment();
         assertEquals("I am\nthe test", description);
     }
 
@@ -47,7 +47,7 @@ public class CommentsTest {
             methodName = description.getMethodName();
         }
 
-        public String getDescription() {
+        public String getComment() {
             CtClass<?> testClass = spoonAPI.getFactory().Class().get(className);
             CtMethod<?> testMethod = testClass.getMethod(methodName);
             String testComment = testMethod.getDocComment();
