@@ -9,10 +9,7 @@ import spoon.reflect.code.CtBlock;
 import spoon.reflect.code.CtComment;
 import spoon.reflect.code.CtReturn;
 import spoon.reflect.code.CtStatement;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtParameter;
-import spoon.reflect.declaration.CtType;
+import spoon.reflect.declaration.*;
 import spoon.reflect.reference.CtTypeReference;
 
 import java.util.List;
@@ -102,5 +99,12 @@ public class DummyTest {
             assertEquals("of x and y", comments.get(1).getContent());
             assertEquals("some return comment here", comments.get(2).getContent());
         }
+    }
+
+    @Test
+    public void canGetPackageComments() {
+        CtPackage ctPackage = spoon.getFactory().Package().get("me.loki2302.dummy");
+        String comment = ctPackage.getDocComment();
+        assertEquals("It's a dummy package", comment);
     }
 }
