@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
@@ -105,5 +106,39 @@ public class DummyTest {
         assertFalse(systemOutRule.getLog().contains("DEBUG warn debug"));
         assertFalse(systemOutRule.getLog().contains("INFO warn info"));
         assertTrue(systemOutRule.getLog().contains("WARN warn warn"));
+    }
+
+    @Test
+    public void canUseMdc() {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        PatternLayoutEncoder patternLayoutEncoder = new PatternLayoutEncoder();
+        patternLayoutEncoder.setPattern("%date %level [%thread] %logger{10} [%file:%line] <%X{username}> %msg%n");
+        patternLayoutEncoder.setContext(loggerContext);
+        patternLayoutEncoder.start();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        OutputStreamAppender<ILoggingEvent> outputStreamAppender = new OutputStreamAppender<>();
+        outputStreamAppender.setContext(loggerContext);
+        outputStreamAppender.setEncoder(patternLayoutEncoder);
+        outputStreamAppender.setOutputStream(baos);
+        outputStreamAppender.start();
+
+        Logger logger = loggerContext.getLogger(App.class);
+        logger.addAppender(outputStreamAppender);
+        logger.setLevel(Level.DEBUG);
+        logger.setAdditive(false);
+        logger.debug("hi there");
+
+        MDC.put("username", "loki2302");
+        logger.debug("hi there");
+
+        MDC.remove("username");
+        logger.debug("hi there");
+
+        String lines[] = new String(baos.toByteArray(), Charset.forName("UTF-8")).split("\n");
+        assertTrue(lines[0].contains("<> hi there"));
+        assertTrue(lines[1].contains("<loki2302> hi there"));
+        assertTrue(lines[2].contains("<> hi there"));
     }
 }
