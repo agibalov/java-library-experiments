@@ -1,11 +1,14 @@
 package me.loki2302;
 
 import lombok.Getter;
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.jasper.builder.export.JasperPdfExporterBuilder;
 import net.sf.dynamicreports.report.builder.chart.BarChartBuilder;
 import net.sf.dynamicreports.report.builder.chart.PieChartBuilder;
 import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
+import net.sf.dynamicreports.report.builder.component.MultiPageListBuilder;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
+import net.sf.dynamicreports.report.constant.SplitType;
 import net.sf.dynamicreports.report.exception.DRException;
 import net.sf.jasperreports.components.items.Item;
 
@@ -43,7 +46,7 @@ public class App {
                 .setKey(itemColumn)
                 .addSerie(cht.serie(quantityColumn));
 
-        report()
+        JasperReportBuilder r = report()
                 .setColumnTitleStyle(columnTitleStyle)
                 .setDetailStyle(stl.style(stl.pen1Point()))
                 .setColumnStyle(stl.style(stl.pen1Point()))
@@ -58,6 +61,11 @@ public class App {
                 .setDataSource(items)
                 .toPdf(export.pdfExporter("1.pdf"))
                 .show();
+
+        concatenatedReport()
+                .setContinuousPageNumbering(true)
+                .concatenate(r, r, r)
+                .toPdf(export.pdfExporter("2.pdf"));
     }
 
     @Getter
