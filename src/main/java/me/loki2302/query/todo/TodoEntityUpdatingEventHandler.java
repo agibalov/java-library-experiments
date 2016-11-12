@@ -1,4 +1,4 @@
-package me.loki2302.query;
+package me.loki2302.query.todo;
 
 import me.loki2302.domain.events.TodoCreatedEvent;
 import me.loki2302.domain.events.TodoDeletedEvent;
@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TodoItemUpdatingEventHandler {
-    private final static Logger LOGGER = LoggerFactory.getLogger(TodoItemUpdatingEventHandler.class);
+public class TodoEntityUpdatingEventHandler {
+    private final static Logger LOGGER = LoggerFactory.getLogger(TodoEntityUpdatingEventHandler.class);
 
     @Autowired
     private TodoEntityRepository todoEntityRepository;

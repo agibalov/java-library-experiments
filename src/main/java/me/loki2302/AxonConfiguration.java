@@ -1,7 +1,7 @@
 package me.loki2302;
 
 import me.loki2302.domain.TodoAggregateRoot;
-import me.loki2302.query.TodoEntity;
+import me.loki2302.query.todo.TodoEntity;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.annotation.AggregateAnnotationCommandHandler;
@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EntityScan(basePackageClasses = { TodoEntity.class, DomainEventEntry.class })
+@EntityScan(basePackageClasses = DomainEventEntry.class)
 public class AxonConfiguration {
     @Bean
     public CommandBus commandBus() {

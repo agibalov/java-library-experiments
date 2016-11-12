@@ -1,4 +1,4 @@
-package me.loki2302.query;
+package me.loki2302.query.todo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

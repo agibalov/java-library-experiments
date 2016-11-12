@@ -1,11 +1,11 @@
-package me.loki2302.query;
+package me.loki2302.query.todocount;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class TodoEntity {
+public class TodoCountEntity {
     @Id
     public String id;
-    public String text;
+    public long count;
 }

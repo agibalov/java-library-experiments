@@ -17,9 +17,11 @@ public class AppTest {
     @Test
     public void dummy() {
         assertEquals(0, apiFacade.countTodos());
+        assertEquals(0, apiFacade.countTodos2());
 
         apiFacade.createTodo("1", "hello");
 
         assertEquals(1, apiFacade.countTodos());
+        assertEquals(1, apiFacade.countTodos2());
     }
 }
