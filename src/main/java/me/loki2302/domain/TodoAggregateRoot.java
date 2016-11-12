@@ -1,11 +1,11 @@
 package me.loki2302.domain;
 
-import me.loki2302.domain.commands.CreateTodoItemCommand;
-import me.loki2302.domain.commands.DeleteTodoItemCommand;
-import me.loki2302.domain.commands.UpdateTodoItemCommand;
-import me.loki2302.domain.events.TodoItemCreatedEvent;
-import me.loki2302.domain.events.TodoItemDeletedEvent;
-import me.loki2302.domain.events.TodoItemUpdatedEvent;
+import me.loki2302.domain.commands.CreateTodoCommand;
+import me.loki2302.domain.commands.DeleteTodoCommand;
+import me.loki2302.domain.commands.UpdateTodoCommand;
+import me.loki2302.domain.events.TodoCreatedEvent;
+import me.loki2302.domain.events.TodoDeletedEvent;
+import me.loki2302.domain.events.TodoUpdatedEvent;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
@@ -13,49 +13,49 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TodoItem extends AbstractAnnotatedAggregateRoot {
-    private final static Logger LOGGER = LoggerFactory.getLogger(TodoItem.class);
+public class TodoAggregateRoot extends AbstractAnnotatedAggregateRoot {
+    private final static Logger LOGGER = LoggerFactory.getLogger(TodoAggregateRoot.class);
 
     @AggregateIdentifier
     private String id;
     private String text;
 
-    public TodoItem() {
+    public TodoAggregateRoot() {
     }
 
     @CommandHandler
-    public TodoItem(CreateTodoItemCommand command) {
+    public TodoAggregateRoot(CreateTodoCommand command) {
         LOGGER.info("in constructor, command={}", command);
-        apply(new TodoItemCreatedEvent(command.todoId, command.text));
+        apply(new TodoCreatedEvent(command.todoId, command.text));
     }
 
     @CommandHandler
-    public void on(UpdateTodoItemCommand command) {
+    public void on(UpdateTodoCommand command) {
         LOGGER.info("in update command handler, command={}", command);
-        apply(new TodoItemUpdatedEvent(command.todoId, command.text));
+        apply(new TodoUpdatedEvent(command.todoId, command.text));
     }
 
     @CommandHandler
-    public void on(DeleteTodoItemCommand command) {
+    public void on(DeleteTodoCommand command) {
         LOGGER.info("in delete command handler, command={}", command);
-        apply(new TodoItemDeletedEvent(command.todoId));
+        apply(new TodoDeletedEvent(command.todoId));
     }
 
     @EventHandler
-    public void on(TodoItemCreatedEvent event) {
+    public void on(TodoCreatedEvent event) {
         LOGGER.info("in create event handler, event={}", event);
         id = event.todoId;
         text = event.text;
     }
 
     @EventHandler
-    public void on(TodoItemUpdatedEvent event) {
+    public void on(TodoUpdatedEvent event) {
         LOGGER.info("in update event handler, event={}", event);
         text = event.text;
     }
 
     @EventHandler
-    public void on(TodoItemDeletedEvent event) {
+    public void on(TodoDeletedEvent event) {
         LOGGER.info("in delete event handler, event={}", event);
         // ?
     }

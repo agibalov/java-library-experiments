@@ -1,8 +1,8 @@
 package me.loki2302;
 
-import me.loki2302.domain.commands.CreateTodoItemCommand;
-import me.loki2302.domain.commands.DeleteTodoItemCommand;
-import me.loki2302.domain.commands.UpdateTodoItemCommand;
+import me.loki2302.domain.commands.CreateTodoCommand;
+import me.loki2302.domain.commands.DeleteTodoCommand;
+import me.loki2302.domain.commands.UpdateTodoCommand;
 import me.loki2302.query.TodoEntityRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +19,17 @@ public class ApiFacade {
 
     @Transactional
     public void createTodo(String id, String text) {
-        commandGateway.send(new CreateTodoItemCommand(id, text));
+        commandGateway.send(new CreateTodoCommand(id, text));
     }
 
     @Transactional
     public void updateTodo(String id, String text) {
-        commandGateway.send(new UpdateTodoItemCommand(id, text));
+        commandGateway.send(new UpdateTodoCommand(id, text));
     }
 
     @Transactional
     public void deleteTodo(String id) {
-        commandGateway.send(new DeleteTodoItemCommand(id));
+        commandGateway.send(new DeleteTodoCommand(id));
     }
 
     @Transactional

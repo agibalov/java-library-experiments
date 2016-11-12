@@ -1,8 +1,8 @@
 package me.loki2302.query;
 
-import me.loki2302.domain.events.TodoItemCreatedEvent;
-import me.loki2302.domain.events.TodoItemDeletedEvent;
-import me.loki2302.domain.events.TodoItemUpdatedEvent;
+import me.loki2302.domain.events.TodoCreatedEvent;
+import me.loki2302.domain.events.TodoDeletedEvent;
+import me.loki2302.domain.events.TodoUpdatedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ public class TodoItemUpdatingEventHandler {
     private TodoEntityRepository todoEntityRepository;
 
     @EventHandler
-    public void handle(TodoItemCreatedEvent event) {
+    public void handle(TodoCreatedEvent event) {
         LOGGER.info("in create handler, event={}", event);
 
         TodoEntity todoEntity = new TodoEntity();
@@ -27,7 +27,7 @@ public class TodoItemUpdatingEventHandler {
     }
 
     @EventHandler
-    public void handle(TodoItemUpdatedEvent event) {
+    public void handle(TodoUpdatedEvent event) {
         LOGGER.info("in update handler, event={}", event);
 
         TodoEntity todoEntity = todoEntityRepository.findOne(event.todoId);
@@ -36,7 +36,7 @@ public class TodoItemUpdatingEventHandler {
     }
 
     @EventHandler
-    public void handle(TodoItemDeletedEvent event) {
+    public void handle(TodoDeletedEvent event) {
         LOGGER.info("in delete handler, event={}", event);
 
         todoEntityRepository.delete(event.todoId);

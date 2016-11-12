@@ -1,6 +1,6 @@
 package me.loki2302;
 
-import me.loki2302.domain.TodoItem;
+import me.loki2302.domain.TodoAggregateRoot;
 import me.loki2302.query.TodoEntity;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
@@ -53,7 +53,7 @@ public class AxonConfiguration {
 
     @Bean
     public EventSourcingRepository todoItemRepository() {
-        EventSourcingRepository repository = new EventSourcingRepository(TodoItem.class, eventStore());
+        EventSourcingRepository repository = new EventSourcingRepository(TodoAggregateRoot.class, eventStore());
         repository.setEventBus(eventBus());
         return repository;
     }
@@ -73,7 +73,7 @@ public class AxonConfiguration {
     }
 
     @Bean
-    public AggregateAnnotationCommandHandler<TodoItem> taskCommandHandler() {
-        return AggregateAnnotationCommandHandler.subscribe(TodoItem.class, todoItemRepository(), commandBus());
+    public AggregateAnnotationCommandHandler<TodoAggregateRoot> taskCommandHandler() {
+        return AggregateAnnotationCommandHandler.subscribe(TodoAggregateRoot.class, todoItemRepository(), commandBus());
     }
 }
