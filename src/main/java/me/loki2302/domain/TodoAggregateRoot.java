@@ -1,12 +1,8 @@
 package me.loki2302.domain;
 
-import me.loki2302.domain.commands.CreateTodoCommand;
-import me.loki2302.domain.commands.DeleteTodoCommand;
-import me.loki2302.domain.commands.UpdateTodoCommand;
 import me.loki2302.domain.events.TodoCreatedEvent;
 import me.loki2302.domain.events.TodoDeletedEvent;
 import me.loki2302.domain.events.TodoUpdatedEvent;
-import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
@@ -23,22 +19,16 @@ public class TodoAggregateRoot extends AbstractAnnotatedAggregateRoot {
     public TodoAggregateRoot() {
     }
 
-    @CommandHandler
-    public TodoAggregateRoot(CreateTodoCommand command) {
-        LOGGER.info("in constructor, command={}", command);
-        apply(new TodoCreatedEvent(command.todoId, command.text));
+    public void create(String id, String text) {
+        apply(new TodoCreatedEvent(id, text));
     }
 
-    @CommandHandler
-    public void on(UpdateTodoCommand command) {
-        LOGGER.info("in update command handler, command={}", command);
-        apply(new TodoUpdatedEvent(command.todoId, command.text));
+    public void update(String text) {
+        apply(new TodoUpdatedEvent(id, text));
     }
 
-    @CommandHandler
-    public void on(DeleteTodoCommand command) {
-        LOGGER.info("in delete command handler, command={}", command);
-        apply(new TodoDeletedEvent(command.todoId));
+    public void delete() {
+        apply(new TodoDeletedEvent(id));
     }
 
     @EventHandler
@@ -57,6 +47,6 @@ public class TodoAggregateRoot extends AbstractAnnotatedAggregateRoot {
     @EventHandler
     public void on(TodoDeletedEvent event) {
         LOGGER.info("in delete event handler, event={}", event);
-        // ?
+        markDeleted();
     }
 }
