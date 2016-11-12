@@ -24,8 +24,8 @@ public class ApiFacade {
     private TodoCountEntityRepository todoCountEntityRepository;
 
     @Transactional
-    public void createTodo(String id, String text) throws BusinessException {
-        appCommandGateway.sendAndWait(new CreateTodoCommand(id, text));
+    public String createTodo(String text) throws BusinessException {
+        return appCommandGateway.sendAndWait(new CreateTodoCommand(text));
     }
 
     @Transactional

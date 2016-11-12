@@ -3,7 +3,6 @@ package me.loki2302.domain;
 import me.loki2302.domain.commands.CreateTodoCommand;
 import me.loki2302.domain.commands.DeleteTodoCommand;
 import me.loki2302.domain.commands.UpdateTodoCommand;
-import me.loki2302.domain.exceptions.TodoAlreadyExistsException;
 import me.loki2302.domain.exceptions.TodoCountLimitExceededException;
 import me.loki2302.domain.exceptions.TodoNotFoundException;
 import me.loki2302.query.todocount.TodoCountEntity;
@@ -17,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class TodoCommandHandler {
     private final static Logger LOGGER = LoggerFactory.getLogger(TodoCommandHandler.class);
@@ -28,17 +29,7 @@ public class TodoCommandHandler {
     private TodoCountEntityRepository todoCountEntityRepository;
 
     @CommandHandler
-    public void handle(CreateTodoCommand command) throws TodoAlreadyExistsException, TodoCountLimitExceededException {
-        TodoAggregateRoot todoAggregateRoot = null;
-        try {
-            todoAggregateRoot = todoRepository.load(command.todoId);
-        } catch (AggregateNotFoundException e) {
-        }
-
-        if(todoAggregateRoot != null) {
-            throw new TodoAlreadyExistsException();
-        }
-
+    public String handle(CreateTodoCommand command) throws TodoCountLimitExceededException {
         // !!! using read model to enforce write model constraints !!!
         TodoCountEntity todoCountEntity =
                 todoCountEntityRepository.findOne(TodoCountEntityUpdatingEventHandler.SINGLETON_TODO_COUNT_ENTITY_ID);
@@ -46,9 +37,13 @@ public class TodoCommandHandler {
             throw new TodoCountLimitExceededException();
         }
 
-        todoAggregateRoot = new TodoAggregateRoot();
-        todoAggregateRoot.create(command.todoId, command.text);
+        String id = UUID.randomUUID().toString();
+
+        TodoAggregateRoot todoAggregateRoot = new TodoAggregateRoot();
+        todoAggregateRoot.create(id, command.text);
         todoRepository.add(todoAggregateRoot);
+
+        return id;
     }
 
     @CommandHandler

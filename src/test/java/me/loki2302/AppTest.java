@@ -1,7 +1,6 @@
 package me.loki2302;
 
 import me.loki2302.domain.exceptions.BusinessException;
-import me.loki2302.domain.exceptions.TodoAlreadyExistsException;
 import me.loki2302.domain.exceptions.TodoCountLimitExceededException;
 import me.loki2302.domain.exceptions.TodoNotFoundException;
 import org.junit.Test;
@@ -12,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 @SpringBootTest
@@ -26,16 +26,16 @@ public class AppTest {
         assertEquals(0, apiFacade.countTodos());
         assertEquals(0, apiFacade.countTodos2());
 
-        apiFacade.createTodo("1", "hello");
+        apiFacade.createTodo("hello");
 
         assertEquals(1, apiFacade.countTodos());
         assertEquals(1, apiFacade.countTodos2());
     }
 
-    @Test(expected = TodoAlreadyExistsException.class)
-    public void createShouldThrowIfTodoAlreadyExists() throws BusinessException {
-        apiFacade.createTodo("111", "hi");
-        apiFacade.createTodo("111", "bye");
+    @Test
+    public void createShouldReturnTodoId() throws BusinessException {
+        String id = apiFacade.createTodo("hello");
+        assertNotNull(id);
     }
 
     @Test(expected = TodoNotFoundException.class)
@@ -50,12 +50,12 @@ public class AppTest {
 
     @Test
     public void createShouldThrowIfTodoCountIsExceeded() throws BusinessException {
-        apiFacade.createTodo("1", "hello");
-        apiFacade.createTodo("2", "world");
-        apiFacade.createTodo("3", "!!!");
+        apiFacade.createTodo("hello");
+        apiFacade.createTodo("world");
+        apiFacade.createTodo("!!!");
 
         try {
-            apiFacade.createTodo("4", "fail");
+            apiFacade.createTodo("fail");
             fail();
         } catch (TodoCountLimitExceededException e) {
             // expected
