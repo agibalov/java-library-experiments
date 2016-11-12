@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.query;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

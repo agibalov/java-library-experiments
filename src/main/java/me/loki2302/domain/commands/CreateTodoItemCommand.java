@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.domain.commands;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 

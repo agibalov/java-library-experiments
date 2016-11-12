@@ -1,14 +1,12 @@
-package me.loki2302;
+package me.loki2302.domain.commands;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
-public class UpdateTodoItemCommand {
+public class DeleteTodoItemCommand {
     @TargetAggregateIdentifier
     public final String todoId;
-    public final String text;
 
-    public UpdateTodoItemCommand(String todoId, String text) {
+    public DeleteTodoItemCommand(String todoId) {
         this.todoId = todoId;
-        this.text = text;
     }
 }

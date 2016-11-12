@@ -1,5 +1,7 @@
 package me.loki2302;
 
+import me.loki2302.domain.TodoItem;
+import me.loki2302.query.TodoEntity;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.annotation.AggregateAnnotationCommandHandler;

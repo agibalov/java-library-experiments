@@ -1,5 +1,8 @@
-package me.loki2302;
+package me.loki2302.query;
 
+import me.loki2302.domain.events.TodoItemCreatedEvent;
+import me.loki2302.domain.events.TodoItemDeletedEvent;
+import me.loki2302.domain.events.TodoItemUpdatedEvent;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

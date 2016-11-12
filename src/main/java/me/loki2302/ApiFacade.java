@@ -1,5 +1,9 @@
 package me.loki2302;
 
+import me.loki2302.domain.commands.CreateTodoItemCommand;
+import me.loki2302.domain.commands.DeleteTodoItemCommand;
+import me.loki2302.domain.commands.UpdateTodoItemCommand;
+import me.loki2302.query.TodoEntityRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

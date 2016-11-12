@@ -1,5 +1,11 @@
-package me.loki2302;
+package me.loki2302.domain;
 
+import me.loki2302.domain.commands.CreateTodoItemCommand;
+import me.loki2302.domain.commands.DeleteTodoItemCommand;
+import me.loki2302.domain.commands.UpdateTodoItemCommand;
+import me.loki2302.domain.events.TodoItemCreatedEvent;
+import me.loki2302.domain.events.TodoItemDeletedEvent;
+import me.loki2302.domain.events.TodoItemUpdatedEvent;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;

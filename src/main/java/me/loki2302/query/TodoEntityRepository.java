@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.query;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
