@@ -3,6 +3,10 @@
         "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport name="HelloReport">
     <parameter name="What" class="java.lang.String" />
+
+    <field name="name" class="java.lang.String" />
+    <field name="quantity" class="java.lang.Integer" />
+
     <title>
         <band height="50">
             <staticText>
@@ -23,12 +27,38 @@
             </staticText>
         </band>
     </pageHeader>
+    <columnHeader>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>Column Header</text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="0" width="100" height="50" />
+                <text>Name</text>
+            </staticText>
+            <staticText>
+                <reportElement x="200" y="0" width="100" height="50" />
+                <text>Quantity</text>
+            </staticText>
+        </band>
+    </columnHeader>
     <detail>
         <band height="50">
             <staticText>
                 <reportElement x="0" y="0" width="100" height="50" />
                 <text>I am detail</text>
             </staticText>
+            <textField>
+                <reportElement x="100" y="0" width="100" height="50" />
+                <textElement />
+                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="100" height="50" />
+                <textElement />
+                <textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+            </textField>
         </band>
     </detail>
     <pageFooter>
