@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN"
+        "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport name="HelloReport">
+    <parameter name="What" class="java.lang.String" />
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>Hello</text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="0" width="100" height="50" />
+                <textFieldExpression class="java.lang.String">$P{What}</textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am page header</text>
+            </staticText>
+        </band>
+    </pageHeader>
+    <detail>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am detail</text>
+            </staticText>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am page footer</text>
+            </staticText>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am summary</text>
+            </staticText>
+        </band>
+    </summary>
+</jasperReport>
