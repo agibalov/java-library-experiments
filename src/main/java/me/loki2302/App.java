@@ -3,6 +3,7 @@ package me.loki2302;
 import lombok.Getter;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,6 +26,8 @@ public class App {
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jrDataSource);
 
         JasperExportManager.exportReportToPdfFile(jasperPrint, "test.pdf");
+
+        JasperViewer.viewReport(jasperPrint, true);
     }
 
     @Getter
