@@ -14,7 +14,8 @@ public class App {
     public static void main(String[] args) throws JRException {
         List<Item> items = Arrays.asList(
                 new Item("Item One", 11),
-                new Item("Item Two", 22));
+                new Item("Item Two", 22),
+                new Item("Item Three", 33));
 
         JasperReport jasperReport = JasperCompileManager.compileReport("test.jrxml");
 
