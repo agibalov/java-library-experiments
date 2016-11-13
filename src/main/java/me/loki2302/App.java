@@ -1,20 +1,86 @@
 package me.loki2302;
 
 import lombok.Getter;
+import static me.loki2302.db.Tables.*;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.report.builder.chart.BarChartBuilder;
 import net.sf.dynamicreports.report.builder.chart.PieChartBuilder;
 import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.exception.DRException;
+import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.sf.dynamicreports.report.builder.DynamicReports.*;
 
-public class App {
+@SpringBootApplication
+public class App implements CommandLineRunner {
     public static void main(String[] args) throws DRException {
+        SpringApplication.run(App.class, args);
+    }
+
+    @Autowired
+    private DSLContext dslContext;
+
+    @Override
+    public void run(String... args) throws Exception {
+        int categoryOneId = dslContext.insertInto(CATEGORIES, CATEGORIES.NAME)
+                .values("Category One")
+                .returning(CATEGORIES.ID)
+                .fetchOne()
+                .getId();
+
+        int categoryTwoId = dslContext.insertInto(CATEGORIES, CATEGORIES.NAME)
+                .values("Category Two")
+                .returning(CATEGORIES.ID)
+                .fetchOne()
+                .getId();
+
+        for(int i = 0; i < 10; ++i) {
+            String name = String.format("Item #%d", i + 1);
+            int categoryId = i % 2 == 0 ? categoryOneId : categoryTwoId;
+            int quantity = 1 + 2 * i;
+            dslContext
+                    .insertInto(ITEMS, ITEMS.NAME, ITEMS.CATEGORYID, ITEMS.QUANTITY)
+                    .values(name, categoryId, quantity)
+                    .execute();
+        }
+
+        ResultSet resultSet = dslContext
+                .select(
+                        ITEMS.NAME.as("itemName"),
+                        ITEMS.QUANTITY.as("quantity"),
+                        CATEGORIES.NAME.as("categoryName")
+                )
+                .from(ITEMS).join(CATEGORIES).on(CATEGORIES.ID.eq(ITEMS.CATEGORYID))
+                .orderBy(CATEGORIES.NAME.asc())
+                .fetch()
+                .intoResultSet();
+
+        System.out.println(resultSet);
+
+        TextColumnBuilder<String> itemColumn =
+                col.column("Item", "itemName", type.stringType());
+        TextColumnBuilder<String> categoryColumn =
+                col.column("Category", "categoryName", type.stringType());
+        TextColumnBuilder<Integer> quantityColumn =
+                col.column("Quantity", "quantity", type.integerType());
+
+        report()
+                .columns(itemColumn, categoryColumn, quantityColumn)
+                .groupBy(categoryColumn)
+                .setDataSource(resultSet)
+                .toPdf(export.pdfExporter("fromdb.pdf"));
+    }
+
+    private static void makeDummyReport() throws Exception {
         List<Item> items = new ArrayList<>();
         for(int i = 0; i < 10; ++i) {
             // the weird thing is, it won't actual do any grouping if I do i % 2
@@ -55,7 +121,7 @@ public class App {
                 .summary(myBarChart, myPieChart)
                 .setDataSource(items)
                 .toPdf(export.pdfExporter("1.pdf"))
-                .show();
+                .show(); // .show() won't work with Spring
 
         concatenatedReport()
                 .setContinuousPageNumbering(true)
