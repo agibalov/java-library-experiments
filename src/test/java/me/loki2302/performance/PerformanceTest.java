@@ -1,14 +1,16 @@
 package me.loki2302.performance;
 
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
-public class AppTest {
+public class PerformanceTest {
     @Rule
     public final Meter meter = new Meter();
 
@@ -20,7 +22,7 @@ public class AppTest {
             Thread.sleep(30 + random.nextInt(60));
         });
 
-        assertTrue(measurement.getMean() > 50 && measurement.getMean() < 70);
+        assertThat(measurement.getMean(), between(50, 70));
     }
 
     @Test
@@ -31,6 +33,10 @@ public class AppTest {
             Thread.sleep(30 + random.nextInt(60));
         });
 
-        assertEquals(100, measurement.getMean());
+        assertThat(measurement.getMean(), equalTo(100));
+    }
+
+    private static Matcher<Long> between(long low, long high) {
+        return Matchers.allOf(greaterThanOrEqualTo(low), lessThanOrEqualTo(high));
     }
 }
