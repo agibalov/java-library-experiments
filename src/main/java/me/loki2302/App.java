@@ -8,6 +8,11 @@ import com.atlassian.jira.rest.client.api.domain.SearchResult;
 import com.atlassian.jira.rest.client.api.domain.Status;
 import com.atlassian.jira.rest.client.auth.AnonymousAuthenticationHandler;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
+import net.rcarz.jiraclient.JiraClient;
+import net.rcarz.jiraclient.JiraException;
+import net.rcarz.jiraclient.greenhopper.GreenHopperClient;
+import net.rcarz.jiraclient.greenhopper.RapidView;
+import net.rcarz.jiraclient.greenhopper.Sprint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -34,6 +40,9 @@ public class App implements CommandLineRunner {
 
     @Autowired
     private JiraRestClient jiraRestClient;
+
+    @Autowired
+    private JiraClient jiraClient;
 
     private void fetchOneIssueDetails() throws ExecutionException, InterruptedException {
         final String issueKey = "DATAGRAPH-146";
@@ -96,10 +105,28 @@ public class App implements CommandLineRunner {
         });
     }
 
+    private void findAllSprints() throws JiraException {
+        GreenHopperClient greenHopperClient = new GreenHopperClient(jiraClient);
+        List<RapidView> rapidViews = greenHopperClient.getRapidViews();
+        for(RapidView rapidView : rapidViews) {
+            LOGGER.info("Board={}", rapidView.getName());
+
+            List<Sprint> sprints = rapidView.getSprints();
+            for(Sprint sprint : sprints) {
+                LOGGER.info("  Sprint={} (start={}, end={}, closed={})",
+                        sprint.getName(),
+                        sprint.getStartDate(),
+                        sprint.getEndDate(),
+                        sprint.isClosed());
+            }
+        }
+    }
+
     @Override
     public void run(String... args) throws Exception {
         fetchOneIssueDetails();
         findIssuesByJqlQuery();
+        findAllSprints();
     }
 
     @Bean(destroyMethod = "close")
@@ -108,5 +135,10 @@ public class App implements CommandLineRunner {
         return restClientFactory.create(
                 URI.create("https://jira.spring.io/"),
                 new AnonymousAuthenticationHandler());
+    }
+
+    @Bean
+    public JiraClient jiraClient() {
+        return new JiraClient("http://jira.spring.io");
     }
 }

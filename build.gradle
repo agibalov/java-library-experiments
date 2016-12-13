@@ -23,5 +23,6 @@ dependencies {
     compile 'com.atlassian.jira:jira-rest-java-client-api:4.0.0'
     compile 'com.atlassian.jira:jira-rest-java-client-core:4.0.0'
     compile 'com.atlassian.fugue:fugue:2.2.1'
+    compile 'net.rcarz:jira-client:0.5'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '1.4.0.RELEASE'
 }
