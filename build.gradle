@@ -17,6 +17,7 @@ dependencies {
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+    testCompile group: 'org.springframework', name: 'spring-expression', version: '4.3.4.RELEASE'
 }
 
 test {
