@@ -1,0 +1,27 @@
+version: "2"
+
+services:
+  dummy1:
+    build: ./dummy-service
+    networks:
+      test:
+        ipv4_address: 172.25.0.11
+
+  dummy2:
+    build: ./dummy-service
+    networks:
+      test:
+        ipv4_address: 172.25.0.22
+
+  tester:
+    build: ./integration-test
+    links:
+      - dummy1
+      - dummy2
+    networks:
+      test:
+        ipv4_address: 172.25.0.33
+
+networks:
+  test:
+    external: true
