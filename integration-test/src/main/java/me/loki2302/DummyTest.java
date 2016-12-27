@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
@@ -22,8 +24,8 @@ public class DummyTest {
     private RestTemplate restTemplate;
 
     @Test
-    public void canWriteToNodeAAndReadFromNodeA() throws InterruptedException {
-        makeSureEverythingIsUp();
+    public void canWriteToNodeAAndReadFromNodeA() {
+        ping("http://172.25.0.11:8080/info");
 
         restTemplate.put("http://172.25.0.11:8080/api/data", "hi there1");
         String s = restTemplate.getForObject("http://172.25.0.11:8080/api/data", String.class);
@@ -32,7 +34,8 @@ public class DummyTest {
 
     @Test
     public void canWriteToNodeAAndReadFromNodeB() throws InterruptedException {
-        makeSureEverythingIsUp();
+        ping("http://172.25.0.11:8080/info");
+        ping("http://172.25.0.22:8080/info");
 
         restTemplate.put("http://172.25.0.11:8080/api/data", "hi there2");
         String s = restTemplate.getForObject("http://172.25.0.22:8080/api/data", String.class);
@@ -41,18 +44,38 @@ public class DummyTest {
 
     @Test
     public void canWriteToNodeBAndReadFromNodeA() throws InterruptedException {
-        makeSureEverythingIsUp();
+        ping("http://172.25.0.11:8080/info");
+        ping("http://172.25.0.22:8080/info");
 
         restTemplate.put("http://172.25.0.22:8080/api/data", "hi there3");
         String s = restTemplate.getForObject("http://172.25.0.11:8080/api/data", String.class);
         assertEquals("hi there3", s);
     }
 
-    private static void makeSureEverythingIsUp() throws InterruptedException {
-        // TODO: what's the better way to make it wait?
-        for(int i = 0; i < 20; ++i) {
-            Thread.sleep(1000);
-            LOGGER.info("Waiting {}", i);
+    private static void ping(String url) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        for(int i = 1; i <= 100; ++i) {
+            ResponseEntity<String> responseEntity = null;
+            ResourceAccessException resourceAccessException = null;
+            try {
+                responseEntity = restTemplate.getForEntity(url, String.class);
+            } catch (ResourceAccessException e) {
+                resourceAccessException = e;
+            }
+
+            if(resourceAccessException != null) {
+                LOGGER.info("Pinging {} - attempt #{} failed ({})", url, i, resourceAccessException.getMessage());
+            } else if(!responseEntity.getStatusCode().is2xxSuccessful()) {
+                LOGGER.info("Pinging {} - attempt #{} failed ({})", url, i, responseEntity.getStatusCode());
+            } else {
+                LOGGER.info("Pinging {} - attempt #{} succeeded", url, i);
+                break;
+            }
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ie) {}
         }
     }
 
