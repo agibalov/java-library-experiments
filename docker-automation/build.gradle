@@ -3,7 +3,10 @@ apply plugin: 'application'
 apply plugin: 'docker'
 
 buildscript {
-    repositories { jcenter() }
+    repositories {
+        jcenter()
+    }
+
     dependencies {
         classpath 'se.transmode.gradle:gradle-docker:1.2'
     }
