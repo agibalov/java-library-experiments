@@ -1,5 +1,6 @@
-package me.loki2302;
+package me.loki2302.jmh;
 
+import me.loi2302.app.App;
 import org.openjdk.jmh.annotations.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;

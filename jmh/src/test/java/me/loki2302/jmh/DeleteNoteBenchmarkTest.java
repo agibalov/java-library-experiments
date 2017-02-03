@@ -1,6 +1,6 @@
-package me.loki2302;
+package me.loki2302.jmh;
 
-import me.loki2302.jmh.Jmh;
+import me.loki2302.jmh.impl.Jmh;
 import org.junit.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.results.RunResult;

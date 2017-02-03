@@ -1,4 +1,4 @@
-package me.loki2302.jmh;
+package me.loki2302.jmh.impl;
 
 import org.mockito.MockingDetails;
 import org.mockito.invocation.Invocation;

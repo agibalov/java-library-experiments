@@ -5,34 +5,3 @@ task wrapper(type: Wrapper) {
   gradleVersion = '3.2.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
-
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
-    testCompile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.17.2'
-    testCompile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.17.2'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.2.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.2.RELEASE'
-}
-
-test {
-    exclude '**/*AllBenchmarksTest*'
-    exclude '**/*_jmh*'
-    testLogging.showStandardStreams = true
-}
-
-task benchmark(type: Test) {
-    useJUnit()
-    include '**/*AllBenchmarksTest*'
-    systemProperty 'JMH_RESULTS_PATH', 'build/jmh/results.json'
-    systemProperty 'JMH_OUTPUT_PATH', 'build/jmh/output.txt'
-    testLogging.showStandardStreams = true
-}

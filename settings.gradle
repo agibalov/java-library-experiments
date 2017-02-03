@@ -1,2 +1,5 @@
 rootProject.name = 'spring-jmh-experiment'
+include 'app'
+include 'jmh'
+include 'metrics'
 

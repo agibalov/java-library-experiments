@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loi2302.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
