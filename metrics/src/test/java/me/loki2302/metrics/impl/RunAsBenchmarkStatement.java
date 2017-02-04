@@ -15,9 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-
 public class RunAsBenchmarkStatement extends Statement {
     private final String className;
     private final String methodName;
