@@ -5,8 +5,6 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
 /**
  * A specialization of {@link BlockJUnit4ClassRunner} that allows running tests in 2 modes:
  * "tests only" and "benchmarks". The mode is determined based on system property ENABLE_BENCHMARK -
@@ -34,6 +32,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *     <li>@AfterIteration methods x (WARMUP_IT + MEASUREMENT_IT)</li>
  *     <li>@After methods x 1</li>
  * </ul>
+ *
+ * Only test method execution time is measured. @Before/@After and @BeforeIteration/@AfterIteration
+ * method execution time is NOT measured.
  *
  * @see AfterIteration
  * @see BeforeIteration
