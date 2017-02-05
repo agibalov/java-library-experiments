@@ -1,15 +1,21 @@
 package me.loki2302;
 
 import me.loki2302.shared.RecordingRunListener;
-import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.TestClass;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CustomRunnerTest {
     @Test
@@ -20,13 +26,6 @@ public class CustomRunnerTest {
         core.addListener(recordingRunListener);
         Result result = core.run(DummyTest.class);
 
-        // it's not quite clear what all these numbers mean
-        // I interpret it like this:
-        //   RunCount - tests which at least have been started (NOT ignored)
-        //   FailureCount - tests which have been started but then failed
-        //   IgnoreCount - tests which have been ignored
-        // So, TotalTests = RunCount + IgnoreCount
-
         assertEquals(2, result.getRunCount());
         assertEquals(1, result.getFailureCount());
         assertEquals(1, result.getIgnoreCount());
@@ -34,70 +33,85 @@ public class CustomRunnerTest {
         List<String> events = recordingRunListener.events;
         assertEquals(8, events.size());
         assertEquals("testRunStarted null", events.get(0));
-        assertEquals("testStarted Test that succeeds(me.loki2302.CustomRunnerTest$DummyTest)", events.get(1));
-        assertEquals("testFinished Test that succeeds(me.loki2302.CustomRunnerTest$DummyTest)", events.get(2));
-        assertEquals("testStarted Test that fails(me.loki2302.CustomRunnerTest$DummyTest)", events.get(3));
-        assertEquals("testFailure Some sort of comparison failure expected:<[loki]2302> but was:<[10k1]2302>", events.get(4));
-        assertEquals("testFinished Test that fails(me.loki2302.CustomRunnerTest$DummyTest)", events.get(5));
-        assertEquals("testIgnored An ignored test(me.loki2302.CustomRunnerTest$DummyTest)", events.get(6));
+        assertEquals("testStarted badTest(me.loki2302.CustomRunnerTest$DummyTest)", events.get(1));
+        assertEquals("testFailure null", events.get(2));
+        assertEquals("testFinished badTest(me.loki2302.CustomRunnerTest$DummyTest)", events.get(3));
+        assertEquals("testIgnored ignoredTest(me.loki2302.CustomRunnerTest$DummyTest)", events.get(4));
+        assertEquals("testStarted goodTest(me.loki2302.CustomRunnerTest$DummyTest)", events.get(5));
+        assertEquals("testFinished goodTest(me.loki2302.CustomRunnerTest$DummyTest)", events.get(6));
         assertEquals("testRunFinished false", events.get(7));
     }
 
     @RunWith(DummyRunner.class)
     public static class DummyTest {
-        @Test
-        public void dummy() {
-            // TODO
+        @MyTest
+        public void goodTest() {
+        }
+
+        @MyTest
+        public void badTest() {
+            assertTrue(false);
+        }
+
+        @MyIgnore
+        @MyTest
+        public void ignoredTest() {
         }
     }
 
     public static class DummyRunner extends Runner {
-        private final Class<?> testClass;
+        private final Class<?> targetClass;
 
-        public DummyRunner(Class<?> testClass) {
-            this.testClass = testClass;
+        public DummyRunner(Class<?> targetClass) {
+            this.targetClass = targetClass;
         }
 
         @Override
         public Description getDescription() {
-            return Description.createSuiteDescription(testClass);
+            return Description.createSuiteDescription(targetClass);
         }
 
         @Override
         public void run(RunNotifier notifier) {
-            if(true) {
-                Description description = Description.createTestDescription(
-                        testClass,
-                        "Test that succeeds");
-
-                notifier.fireTestStarted(description);
-                notifier.fireTestFinished(description);
+            TestClass testClass = new TestClass(targetClass);
+            Object testObject;
+            try {
+                testObject = targetClass.newInstance();
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
 
-            if(true) {
-                Description description = Description.createTestDescription(
-                        testClass,
-                        "Test that fails");
+            List<FrameworkMethod> testMethods = testClass.getAnnotatedMethods(MyTest.class);
+            for (FrameworkMethod testMethod : testMethods) {
+                Description testDescription = Description.createTestDescription(targetClass, testMethod.getName());
 
-                notifier.fireTestStarted(description);
+                MyIgnore myIgnore = testMethod.getAnnotation(MyIgnore.class);
+                if(myIgnore != null) {
+                    notifier.fireTestIgnored(testDescription);
+                    continue;
+                }
 
-                Failure failure = new Failure(
-                        description,
-                        new ComparisonFailure(
-                                "Some sort of comparison failure",
-                                "loki2302",
-                                "10k12302"));
-                notifier.fireTestFailure(failure);
-                notifier.fireTestFinished(description);
-            }
-
-            if(true) {
-                Description description = Description.createTestDescription(
-                        testClass,
-                        "An ignored test");
-
-                notifier.fireTestIgnored(description);
+                notifier.fireTestStarted(testDescription);
+                try {
+                    testMethod.invokeExplosively(testObject);
+                } catch (Throwable throwable) {
+                    notifier.fireTestFailure(new Failure(testDescription, throwable));
+                } finally {
+                    notifier.fireTestFinished(testDescription);
+                }
             }
         }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public @interface MyTest {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public @interface MyIgnore {
     }
 }
