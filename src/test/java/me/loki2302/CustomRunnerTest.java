@@ -1,17 +1,23 @@
 package me.loki2302;
 
+import me.loki2302.shared.RecordingRunListener;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runner.*;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 public class CustomRunnerTest {
     @Test
     public void canUseCustomRunner() {
+        RecordingRunListener recordingRunListener = new RecordingRunListener();
+
         JUnitCore core = new JUnitCore();
+        core.addListener(recordingRunListener);
         Result result = core.run(DummyTest.class);
 
         // it's not quite clear what all these numbers mean
@@ -24,6 +30,17 @@ public class CustomRunnerTest {
         assertEquals(2, result.getRunCount());
         assertEquals(1, result.getFailureCount());
         assertEquals(1, result.getIgnoreCount());
+
+        List<String> events = recordingRunListener.events;
+        assertEquals(8, events.size());
+        assertEquals("testRunStarted null", events.get(0));
+        assertEquals("testStarted Test that succeeds(me.loki2302.CustomRunnerTest$DummyTest)", events.get(1));
+        assertEquals("testFinished Test that succeeds(me.loki2302.CustomRunnerTest$DummyTest)", events.get(2));
+        assertEquals("testStarted Test that fails(me.loki2302.CustomRunnerTest$DummyTest)", events.get(3));
+        assertEquals("testFailure Some sort of comparison failure expected:<[loki]2302> but was:<[10k1]2302>", events.get(4));
+        assertEquals("testFinished Test that fails(me.loki2302.CustomRunnerTest$DummyTest)", events.get(5));
+        assertEquals("testIgnored An ignored test(me.loki2302.CustomRunnerTest$DummyTest)", events.get(6));
+        assertEquals("testRunFinished false", events.get(7));
     }
 
     @RunWith(DummyRunner.class)
