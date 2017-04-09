@@ -67,7 +67,7 @@ public class CustomDeserializerTest {
                 return mood;
             }
 
-            throw new JsonParseException("Unknown update", p.getCurrentLocation());
+            throw new JsonParseException(p, "Unknown update");
         }
     }
 
