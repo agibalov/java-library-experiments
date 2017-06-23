@@ -1,4 +1,0 @@
-rootProject.name = 'docker-java-experiment'
-
-include 'docker-app'
-include 'docker-automation'

@@ -7,7 +7,6 @@ import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
-import com.github.dockerjava.core.RemoteApiVersion;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 import com.github.dockerjava.core.command.WaitContainerResultCallback;
@@ -62,7 +61,13 @@ public class DockerTest {
             String containerId = createContainerResponse.getId();
 
             dockerClient.startContainerCmd(containerId).exec();
-            dockerClient.stopContainerCmd(containerId).exec();
+            try {
+                dockerClient.stopContainerCmd(containerId).exec();
+            } catch (NotModifiedException e) {
+                // https://github.com/docker-java/docker-java/issues/98
+                // This exception is OK. It just means that container had already been stopped when I made this call.
+            }
+
             int result = dockerClient.waitContainerCmd(containerId).exec(new WaitContainerResultCallback()).awaitStatusCode();
             assertEquals(0, result);
 
