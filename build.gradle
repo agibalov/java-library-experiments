@@ -21,4 +21,6 @@ dependencies {
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
     testCompile group: 'com.wix', name: 'wix-embedded-mysql', version: '2.2.4'
     testCompile group: 'ch.vorburger.mariaDB4j', name: 'mariaDB4j', version: '2.2.3'
+    testCompile group: 'org.postgresql', name: 'postgresql', version: '42.1.1'
+    testCompile group: 'ru.yandex.qatools.embed', name: 'postgresql-embedded', version: '2.2'
 }
