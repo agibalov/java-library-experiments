@@ -21,5 +21,5 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.4.RELEASE'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.4.RELEASE'
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
-
+    testCompile group: 'org.rnorth.duct-tape', name: 'duct-tape', version: '1.0.6'
 }
