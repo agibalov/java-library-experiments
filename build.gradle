@@ -20,4 +20,5 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.4.RELEASE'
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
     testCompile group: 'com.wix', name: 'wix-embedded-mysql', version: '2.2.4'
+    testCompile group: 'ch.vorburger.mariaDB4j', name: 'mariaDB4j', version: '2.2.3'
 }

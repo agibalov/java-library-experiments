@@ -1,7 +1,6 @@
 package me.loki2302;
 
-import com.wix.mysql.EmbeddedMysql;
-import com.wix.mysql.config.MysqldConfig;
+import ch.vorburger.mariadb4j.DB;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,24 +12,21 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
-import static com.wix.mysql.EmbeddedMysql.anEmbeddedMysql;
-import static com.wix.mysql.config.MysqldConfig.aMysqldConfig;
-import static com.wix.mysql.distribution.Version.v5_7_latest;
 import static org.junit.Assert.assertEquals;
 
 @TestExecutionListeners(listeners = {
-        WixEmbeddedMySqlTest.WixEmbeddedMySqlTestExecutionListener.class
+        MariaDB4jTest.MariaDB4jTestExecutionListener.class
 }, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 @SpringBootTest(properties = {
         "spring.datasource.url=jdbc:mysql://localhost/xxx",
-        "spring.datasource.username=myuser",
-        "spring.datasource.password=mypassword",
+        "spring.datasource.username=root",
+        "spring.datasource.password=",
         "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver",
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.jpa.properties.dialect=org.hibernate.dialect.MySQL5Dialect"
 })
 @RunWith(SpringRunner.class)
-public class WixEmbeddedMySqlTest {
+public class MariaDB4jTest {
     @Autowired
     private NoteRepository noteRepository;
 
@@ -51,24 +47,21 @@ public class WixEmbeddedMySqlTest {
     public static class Config {
     }
 
-    public static class WixEmbeddedMySqlTestExecutionListener extends AbstractTestExecutionListener {
-        private EmbeddedMysql embeddedMysql;
+    public static class MariaDB4jTestExecutionListener extends AbstractTestExecutionListener {
+        private DB db;
 
         @Override
         public void beforeTestClass(TestContext testContext) throws Exception {
-            MysqldConfig mysqldConfig = aMysqldConfig(v5_7_latest)
-                    .withUser("myuser", "mypassword")
-                    .withPort(3306)
-                    .build();
-
-            embeddedMysql = anEmbeddedMysql(mysqldConfig)
-                    .addSchema("xxx")
-                    .start();
+            db = DB.newEmbeddedDB(3306);
+            // user is root/<nopassword>
+            db.start();
+            db.run("SET GLOBAL time_zone='+00:00';");
+            db.createDB("xxx");
         }
 
         @Override
         public void afterTestClass(TestContext testContext) throws Exception {
-            embeddedMysql.stop();
+            db.stop();
         }
 
         @Override
