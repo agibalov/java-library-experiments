@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
         "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect"
 })
 @RunWith(SpringRunner.class)
-public class DummyTest {
+public class JdbcUrlTest {
     @Autowired
     private NoteRepository noteRepository;
 
