@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @see CustomDeserializerTest
  */
-public class YamlTest {
+public class YamlCustomDeserializerTest {
     private ObjectMapper objectMapper;
 
     @Before
