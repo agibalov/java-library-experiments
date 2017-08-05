@@ -19,5 +19,6 @@ dependencies {
     testCompile group: 'io.github.resilience4j', name: 'resilience4j-retry', version: '0.10.0'
     testCompile group: 'io.github.resilience4j', name: 'resilience4j-circuitbreaker', version: '0.10.0'
     testCompile group: 'io.github.resilience4j', name: 'resilience4j-ratelimiter', version: '0.10.0'
+    testCompile group: 'io.github.resilience4j', name: 'resilience4j-timelimiter', version: '0.10.0'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.8.47'
 }
