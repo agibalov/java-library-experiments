@@ -15,9 +15,11 @@ public class GherkinParserTest {
     @Test
     public void canParseGherkin() {
         //language=Gherkin
-        String gherkin = "Feature: dummy\n" +
+        String gherkin = "# qwerty\n" +
+                "Feature: dummy\n" +
                 "  It should work.\n" +
                 "\n" +
+                "  # hey there!\n" +
                 "  @omg\n" +
                 "  @wtf\n" +
                 "  Scenario: Eat apples and see what happens\n" +
@@ -32,6 +34,12 @@ public class GherkinParserTest {
 
         Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
         GherkinDocument gherkinDocument = parser.parse(gherkin);
+
+        assertEquals(2, gherkinDocument.getComments().size());
+        assertEquals("# qwerty", gherkinDocument.getComments().get(0).getText());
+        assertEquals("  # hey there!", gherkinDocument.getComments().get(1).getText());
+        assertEquals(5, gherkinDocument.getComments().get(1).getLocation().getLine());
+        assertEquals(1, gherkinDocument.getComments().get(1).getLocation().getColumn());
 
         assertEquals("dummy", gherkinDocument.getFeature().getName());
         assertEquals(2, gherkinDocument.getFeature().getChildren().size());
