@@ -2,7 +2,7 @@ group 'me.loki2302.App'
 version '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.5'
+  gradleVersion = '4.3'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
@@ -16,8 +16,7 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile 'com.github.stefanbirkner:system-rules:1.15.1'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
-
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'com.github.stefanbirkner:system-rules:1.16.1'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
