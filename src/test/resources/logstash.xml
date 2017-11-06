@@ -2,6 +2,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
+                <!-- see https://github.com/logstash/logstash-logback-encoder#providers-for-loggingevents -->
                 <timestamp />
                 <pattern>
                     <pattern>
@@ -13,6 +14,9 @@
                         }
                     </pattern>
                 </pattern>
+                <mdc />
+                <logstashMarkers /> <!-- logger.info(append("something", 222), "omg"); -->
+                <arguments /> <!-- logger.info("asshole", keyValue("omg", 123)); -->
             </providers>
         </encoder>
     </appender>
