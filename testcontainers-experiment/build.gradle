@@ -2,7 +2,7 @@ group 'me.loki2302'
 version '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '3.3'
+  gradleVersion = '4.3'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
@@ -16,10 +16,10 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.testcontainers', name: 'testcontainers', version: '1.3.1'
-    testCompile group: 'org.testcontainers', name: 'mysql', version: '1.3.1'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.4.RELEASE'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.4.RELEASE'
+    testCompile group: 'org.testcontainers', name: 'testcontainers', version: '1.4.3'
+    testCompile group: 'org.testcontainers', name: 'mysql', version: '1.4.3'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.8.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.8.RELEASE'
     testCompile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
     testCompile group: 'org.rnorth.duct-tape', name: 'duct-tape', version: '1.0.6'
 }
