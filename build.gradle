@@ -14,12 +14,14 @@ dependencies {
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.0'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.9.0'
+    compile group: 'com.kjetland', name: 'mbknor-jackson-jsonschema_2.12', version: '1.0.25'
+    compile 'com.github.java-json-tools:json-schema-validator:2.2.8'
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
 }
 
 test {
     testLogging {
-        showStandardStreams = true
+        //showStandardStreams = true
         events 'failed', 'passed', 'skipped'
     }
 }
