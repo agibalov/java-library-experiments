@@ -74,7 +74,7 @@ public class DummyTest {
         private static final Logger LOG = Logger.getLogger(TestPrinterExtension.class.getName());
 
         @Override
-        public void beforeTestExecution(TestExtensionContext context) throws Exception {
+        public void beforeTestExecution(ExtensionContext context) throws Exception {
             LOG.info("I am logging something");
 
             String displayName = context.getDisplayName();
@@ -82,7 +82,7 @@ public class DummyTest {
         }
 
         @Override
-        public void afterTestExecution(TestExtensionContext context) throws Exception {
+        public void afterTestExecution(ExtensionContext context) throws Exception {
             String displayName = context.getDisplayName();
             System.out.printf("Executed %s\n", displayName);
         }
@@ -90,7 +90,7 @@ public class DummyTest {
 
     public static class DummyParameterResolverExtension implements ParameterResolver {
         @Override
-        public boolean supports(
+        public boolean supportsParameter(
                 ParameterContext parameterContext,
                 ExtensionContext extensionContext) throws ParameterResolutionException {
 
@@ -98,7 +98,7 @@ public class DummyTest {
         }
 
         @Override
-        public Object resolve(
+        public Object resolveParameter(
                 ParameterContext parameterContext,
                 ExtensionContext extensionContext) throws ParameterResolutionException {
 
@@ -130,6 +130,5 @@ public class DummyTest {
             DummyTest.DummyTestInstancePostProcessor.class
     })
     public @interface EnableDummyParameterResolverExtensionAndDummyTestInstancePostProcessor {
-
     }
 }
