@@ -1,0 +1,37 @@
+group 'me.loki2302'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'antlr'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.12.0'
+    antlr "org.antlr:antlr4:4.7"
+    compile "org.antlr:antlr4-runtime:4.7"
+}
+
+generateGrammarSource {
+    arguments += ['-visitor']
+}
+
+sourceSets {
+    generated {
+        java.srcDir 'build/generated-src/antlr/main/'
+    }
+}
+
+compileJava.source sourceSets.generated.java, sourceSets.main.java
+
+idea {
+    module {
+        sourceDirs += file("build/generated-src/antlr/main")
+    }
+}
