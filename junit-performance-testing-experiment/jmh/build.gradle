@@ -1,0 +1,33 @@
+group 'me.loki2302'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testCompile group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.17.2'
+    testCompile group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.17.2'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.2.RELEASE'
+    testCompile project(':app')
+}
+
+test {
+    exclude '**/*AllBenchmarksTest*'
+    exclude '**/*_jmh*'
+    testLogging.showStandardStreams = true
+}
+
+task benchmark(type: Test) {
+    useJUnit()
+    include '**/*AllBenchmarksTest*'
+    systemProperty 'JMH_RESULTS_PATH', 'build/jmh/results.json'
+    systemProperty 'JMH_OUTPUT_PATH', 'build/jmh/output.txt'
+    testLogging.showStandardStreams = true
+}
