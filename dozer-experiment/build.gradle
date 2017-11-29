@@ -1,0 +1,18 @@
+group 'me.loki2302'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.2'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.2'
+    compile group: 'net.sf.dozer', name: 'dozer', version: '5.5.1'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+}
