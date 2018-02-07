@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema targetNamespace="urn:me/loki2302/jaxb"
+        xmlns:tns="urn:me/loki2302/jaxb"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified">
+
+    <!-- message -->
+    <xsd:simpleType name="status">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="pending" />
+            <xsd:enumeration value="processed" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="message">
+        <xsd:sequence>
+            <xsd:element name="id" nillable="false" type="xsd:int" />
+            <xsd:element name="content" nillable="true" type="xsd:string" />
+            <xsd:element name="status" nillable="false" type="tns:status" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="message" type="tns:message" />
+    <!-- /message -->
+
+    <!-- person -->
+    <xsd:complexType name="person" abstract="true">
+        <xsd:sequence>
+            <xsd:element name="name" nillable="false" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="goodPerson">
+        <xsd:complexContent>
+            <xsd:extension base="tns:person">
+                <xsd:sequence>
+                    <xsd:element name="goodnessLevel" type="xsd:int" nillable="false" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="goodPerson" type="tns:goodPerson" />
+    <!-- end person -->
+
+    <!-- calculator -->
+    <xsd:complexType name="calculatorRequest" abstract="true">        
+    </xsd:complexType>
+    
+    <xsd:complexType name="addNumbersCalculatorRequest">
+        <xsd:complexContent>
+            <xsd:extension base="tns:calculatorRequest">
+                <xsd:sequence>
+                    <xsd:element name="a" type="xsd:int" nillable="false" />
+                    <xsd:element name="b" type="xsd:int" nillable="false" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="subNumbersCalculatorRequest">
+        <xsd:complexContent>
+            <xsd:extension base="tns:calculatorRequest">
+                <xsd:sequence>
+                    <xsd:element name="a" type="xsd:int" nillable="false" />
+                    <xsd:element name="b" type="xsd:int" nillable="false" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="requestContainer">
+        <xsd:sequence>
+            <xsd:element name="request" type="tns:calculatorRequest" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="addNumbersCalculatorRequest" type="tns:addNumbersCalculatorRequest" />
+    <xsd:element name="subNumbersCalculatorRequest" type="tns:subNumbersCalculatorRequest" />
+    <xsd:element name="requestContainer" type="tns:requestContainer" />
+    <!-- end calculator -->
+
+</xsd:schema>
