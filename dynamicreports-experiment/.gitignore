@@ -1,0 +1,7 @@
+.idea
+.gradle
+*.iml
+build
+*.pdf
+dbsample
+src/generated
