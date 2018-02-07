@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD Report Design//EN"
+        "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport name="HelloReport">
+    <parameter name="What" class="java.lang.String" />
+
+    <field name="name" class="java.lang.String" />
+    <field name="quantity" class="java.lang.Integer" />
+
+    <title>
+        <band height="50">
+            <textField>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <textFieldExpression class="java.lang.String">"Hello " + $P{What}</textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am page header</text>
+            </staticText>
+        </band>
+    </pageHeader>
+    <columnHeader>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>Column Header</text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="0" width="100" height="50" />
+                <text>Name</text>
+            </staticText>
+            <staticText>
+                <reportElement x="200" y="0" width="100" height="50" />
+                <text>Quantity</text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am detail</text>
+            </staticText>
+            <textField>
+                <reportElement x="100" y="0" width="100" height="50" />
+                <textElement />
+                <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="100" height="50" />
+                <textElement />
+                <textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am page footer</text>
+            </staticText>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="300">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="50" />
+                <text>I am summary</text>
+            </staticText>
+            <pieChart>
+                <chart>
+                    <reportElement x="0" y="50" width="250" height="250" />
+                    <chartTitle>
+                        <titleExpression>"My pie chart"</titleExpression>
+                    </chartTitle>
+                </chart>
+                <pieDataset>
+                    <keyExpression>$F{name}</keyExpression>
+                    <valueExpression>$F{quantity}</valueExpression>
+                </pieDataset>
+                <piePlot>
+                    <plot />
+                </piePlot>
+            </pieChart>
+            <barChart>
+                <chart>
+                    <reportElement x="250" y="50" width="250" height="250" />
+                    <chartTitle>
+                        <titleExpression>"My bar chart"</titleExpression>
+                    </chartTitle>
+                </chart>
+                <categoryDataset>
+                    <categorySeries>
+                        <seriesExpression>$F{name}</seriesExpression>
+                        <categoryExpression>"hello"</categoryExpression>
+                        <valueExpression>$F{quantity}</valueExpression>
+                    </categorySeries>
+                </categoryDataset>
+                <barPlot>
+                    <plot />
+                </barPlot>
+            </barChart>
+        </band>
+    </summary>
+</jasperReport>
