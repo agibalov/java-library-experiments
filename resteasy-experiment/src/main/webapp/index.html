@@ -1,0 +1,129 @@
+<!doctype html>
+<html ng-app="app">
+	<head>
+		<title>app</title>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+	</head>
+	<body ng-controller="AppController">
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#/">App</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="#/person">Persons</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div class="container" ng-view></div>
+
+		<script type="text/javascript" src="/angular.min.js"></script>
+		<script type="text/javascript" src="/angular-route.min.js"></script>
+
+		<script type="text/javascript">
+			var app = angular.module('app', ['ngRoute'], function($routeProvider) {
+				$routeProvider
+					.when('/person', {
+						templateUrl: 'persons.html',
+						controller: 'PersonsController',
+						resolve: {
+							persons: function(Api) {
+								return Api.getPersons();
+							}
+						}
+					})
+					.when('/person/:id', {
+						templateUrl: 'person.html',
+						controller: 'PersonController',
+						resolve: {
+							person: function(Api, $route) {
+								var id = $route.current.params.id;
+								return Api.getPerson(id);
+							}
+						}
+					})
+					.otherwise({
+						redirectTo: '/person'
+					});
+			});
+
+			app.factory("Api", function($q, $http) {
+				return {
+					getPersons: function() {
+						var defer = $q.defer();
+
+						$http.get('/api/person')
+						.success(function(data, status) {
+							defer.resolve(data);
+						})
+						.error(function(data, status) {
+							defer.reject({
+								status: status,
+								details: data
+							});
+						});
+
+						return defer.promise;
+					},
+
+					getPerson: function(id) {
+						var defer = $q.defer();
+
+						$http.get('/api/person/' + id)
+						.success(function(data, status) {
+							defer.resolve(data);
+						})
+						.error(function(data, status) {
+							defer.reject({
+								status: status,
+								details: data
+							});
+						});
+
+						return defer.promise;
+					}
+				};
+			});
+			
+			app.controller("AppController", function($rootScope) {
+				$rootScope.$on("$routeChangeError", function(event, current, previous, rejection) {
+					console.log("route change error", rejection.status, rejection.details);
+				});
+			});
+
+			app.controller("PersonsController", function($scope, persons) {
+				console.log(persons);
+
+				$scope.model = {
+					persons: persons
+				};				
+			});
+
+			app.controller("PersonController", function($scope, person) {
+				console.log(person);
+
+				$scope.model = {
+					person: person
+				};
+			});
+		</script>
+
+		<script type="text/ng-template" id="persons.html">
+			<h1>Persons</h1>
+			<ul>
+				<li><a href="#/person/999">The person does not exist</a></li>
+				<li ng-repeat="person in model.persons"><a href="#/person/{{person.id}}">{{person.name}}</a></li>
+			</ul>
+		</script>
+
+		<script type="text/ng-template" id="person.html">
+			<h1>Person</h1>
+
+			<img src="{{model.person.imageUrl}}">
+			<p>Id: {{model.person.id}}</p>
+			<p>Name: {{model.person.name}}</p>
+		</script>
+	</body>
+</html>
