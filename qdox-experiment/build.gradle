@@ -1,0 +1,18 @@
+apply plugin: 'groovy'
+
+sourceCompatibility = 1.8
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'com.thoughtworks.qdox:qdox:2.0-M4'
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
