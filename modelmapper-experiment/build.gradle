@@ -12,8 +12,9 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile 'org.modelmapper:modelmapper:0.7.7'
+    compile 'org.modelmapper:modelmapper:1.1.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.6'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
 }
 
 task wrapper(type: Wrapper) {
