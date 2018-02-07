@@ -1,0 +1,42 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.5
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'hdf5'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    //jarhdf5-2.10.0'
+    compile name: 'fits'
+    compile name: 'jarfitsobj'
+    compile name: 'jarh4obj'
+    compile name: 'jarh5obj'
+    compile name: 'jarhdf-2.10.0'
+    compile name: 'jarhdf5-2.10.0'
+    compile name: 'jarhdfobj'
+    compile name: 'jarnc2obj'
+    compile name: 'jhdfview'
+    compile name: 'netcdf'
+    compile name: 'slf4j-api-1.7.5'
+    compile name: 'slf4j-nop-1.7.5'
+}
+
+run {
+    main = "me.loki2302.App"
+    systemProperties = [
+            "java.library.path": "$rootDir\\hdf5"
+    ]
+}
+
+test {
+    systemProperties = [
+            "java.library.path": "$rootDir\\hdf5"
+    ]
+}
