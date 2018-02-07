@@ -1,0 +1,14 @@
+apply plugin: 'application'
+
+mainClassName = 'me.loki2302.App'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testCompile 'junit:junit:4.11'
+	compile 'org.apache.lucene:lucene-core:5.2.1'
+	compile 'org.apache.lucene:lucene-queryparser:5.2.1'
+	compile 'org.apache.lucene:lucene-analyzers-phonetic:5.2.1'
+}
