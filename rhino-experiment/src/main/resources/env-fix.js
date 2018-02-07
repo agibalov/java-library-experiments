@@ -1,0 +1,1 @@
+var print = function(m) {};
