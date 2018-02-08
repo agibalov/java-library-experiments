@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class SneakyThrowsTest {
     @Test(expected = IOException.class)
-    public void xxx() {
+    public void canThrowCheckedExceptionsWithoutSpecifyingThemInMethodSignature() {
         someMethodThatThrowsIoException();
     }
 
