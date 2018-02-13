@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.junit.Test;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import static org.junit.Assert.assertEquals;
 
 public class GetterSetterTest {
@@ -21,6 +24,14 @@ public class GetterSetterTest {
         assertEquals("hello", somethingWithSetter.something);
     }
 
+    @Test
+    public void canUseOnMethod() throws NoSuchMethodException {
+        HeyThere heyThere = SomethingWithFieldLevelGetter.class
+                .getDeclaredMethod("getSomething")
+                .getAnnotation(HeyThere.class);
+        assertEquals("how are you?", heyThere.value());
+    }
+
     @Getter
     private static class SomethingWithGetter {
         private String something;
@@ -29,5 +40,15 @@ public class GetterSetterTest {
     @Setter
     private static class SomethingWithSetter {
         private String something;
+    }
+
+    private static class SomethingWithFieldLevelGetter {
+        @Getter(onMethod = @__(@HeyThere("how are you?")))
+        private String something;
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    private @interface HeyThere {
+        String value();
     }
 }
