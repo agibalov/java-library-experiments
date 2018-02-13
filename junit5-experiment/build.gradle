@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.3'
     }
 }
 
@@ -28,8 +28,8 @@ junitPlatform {
 }
 
 dependencies {
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.2"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.2"
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.3"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.3"
     testRuntime "org.apache.logging.log4j:log4j-core:2.9.1"
     testRuntime "org.apache.logging.log4j:log4j-jul:2.9.1"
 }
