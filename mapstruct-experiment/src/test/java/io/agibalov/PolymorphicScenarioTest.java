@@ -1,5 +1,8 @@
 package io.agibalov;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.junit.Test;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -15,16 +18,38 @@ public class PolymorphicScenarioTest {
 
     @Test
     public void canMapBasedOnConcreteType() {
-        assertTrue(FRUIT_MAPPER.fruitFromFruitDto(new AppleDto()) instanceof Apple);
-        assertTrue(FRUIT_MAPPER.fruitFromFruitDto(new BananaDto()) instanceof Banana);
+        Fruit fruit1 = FRUIT_MAPPER.fruitFromFruitDto(new AppleDto("f", "a"));
+        assertTrue(fruit1 instanceof Apple);
+        Apple apple = (Apple)fruit1;
+        assertEquals("f", apple.getFruitDescriptor());
+        assertEquals("a", apple.getAppleDescriptor());
+
+        Fruit fruit2 = FRUIT_MAPPER.fruitFromFruitDto(new BananaDto("f", "b"));
+        assertTrue(fruit2 instanceof Banana);
+        Banana banana = (Banana)fruit2;
+        assertEquals("f", banana.getFruitDescriptor());
+        assertEquals("b", banana.getBananaDescriptor());
     }
 
     @Test
     public void canMapManyBasedOnConcreteType() {
-        List<Fruit> fruits = FRUIT_MAPPER.fruitsFromFruitDtos(Arrays.asList(new AppleDto(), new BananaDto()));
+        List<Fruit> fruits = FRUIT_MAPPER.fruitsFromFruitDtos(Arrays.asList(
+                new AppleDto("f1", "a"),
+                new BananaDto("f2", "b")));
+
         assertEquals(2, fruits.size());
-        assertEquals(Apple.class, fruits.get(0).getClass());
-        assertEquals(Banana.class, fruits.get(1).getClass());
+
+        Fruit fruit1 = fruits.get(0);
+        assertTrue(fruit1 instanceof Apple);
+        Apple apple = (Apple)fruit1;
+        assertEquals("f1", apple.getFruitDescriptor());
+        assertEquals("a", apple.getAppleDescriptor());
+
+        Fruit fruit2 = fruits.get(1);
+        assertTrue(fruit2 instanceof Banana);
+        Banana banana = (Banana)fruit2;
+        assertEquals("f2", banana.getFruitDescriptor());
+        assertEquals("b", banana.getBananaDescriptor());
     }
 
     @Mapper
@@ -43,11 +68,45 @@ public class PolymorphicScenarioTest {
         }
     }
 
-    public interface Fruit {}
-    public static class Apple implements Fruit {}
-    public static class Banana implements Fruit {}
+    public interface Fruit {
+        void setFruitDescriptor(String value);
+        String getFruitDescriptor();
+    }
 
-    public interface FruitDto {}
-    public static class AppleDto implements FruitDto {}
-    public static class BananaDto implements FruitDto {}
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Apple implements Fruit {
+        private String fruitDescriptor;
+        private String appleDescriptor;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Banana implements Fruit {
+        private String fruitDescriptor;
+        private String bananaDescriptor;
+    }
+
+    public interface FruitDto {
+        void setFruitDescriptor(String value);
+        String getFruitDescriptor();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AppleDto implements FruitDto {
+        private String fruitDescriptor;
+        private String appleDescriptor;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BananaDto implements FruitDto {
+        private String fruitDescriptor;
+        private String bananaDescriptor;
+    }
 }
