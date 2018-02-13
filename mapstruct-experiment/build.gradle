@@ -1,0 +1,24 @@
+plugins {
+    id 'net.ltgt.apt' version '0.8'
+}
+
+group 'io.agibalov'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile "org.mapstruct:mapstruct-jdk8:1.2.0.Final"
+    testCompileOnly "org.projectlombok:lombok:1.16.20"
+
+    testCompile 'junit:junit:4.12'
+
+    testApt "org.mapstruct:mapstruct-processor:1.2.0.Final"
+    testApt "org.projectlombok:lombok:1.16.20"
+}
