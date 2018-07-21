@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -57,8 +58,7 @@ public class DummyTest {
         assertEquals("hello", results.getValue(0, "text"));
     }
 
-    @Configuration
-    @EnableAutoConfiguration
+    @SpringBootApplication
     public static class Config {
     }
 }

@@ -21,8 +21,8 @@ wrapper {
 dependencies {
     jooqRuntime group: 'com.h2database', name: 'h2', version: '1.4.197'
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.14.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jooq', version: '1.5.14.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.0.3.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jooq', version: '2.0.3.RELEASE'
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.1.4'
 }
