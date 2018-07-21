@@ -1,4 +1,4 @@
-package me.loki2302;
+package io.agibalov;
 
 import org.jooq.DSLContext;
 import org.jooq.Record2;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static me.loki2302.db.Tables.NOTES;
+import static io.agibalov.db.Tables.NOTES;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 import static org.junit.Assert.assertEquals;

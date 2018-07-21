@@ -1,6 +1,6 @@
-package me.loki2302;
+package io.agibalov;
 
-import me.loki2302.db.tables.records.NotesRecord;
+import io.agibalov.db.tables.records.NotesRecord;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.exception.TooManyRowsException;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
-import static me.loki2302.db.Tables.NOTES;
+import static io.agibalov.db.Tables.NOTES;
 import static org.junit.Assert.*;
 
 @SpringBootTest

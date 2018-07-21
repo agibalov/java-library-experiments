@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-group 'me.loki2302'
+group 'io.agibalov'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -47,7 +47,7 @@ jooq {
                 inputSchema = 'PUBLIC'
             }
             target {
-                packageName = 'me.loki2302.db'
+                packageName = 'io.agibalov.db'
                 directory = 'src/generated/jooq'
             }
         }
