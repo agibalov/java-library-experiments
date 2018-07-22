@@ -14,7 +14,7 @@ repositories {
 }
 
 wrapper {
-    gradleVersion = '4.9'
+    gradleVersion = '4.5'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
@@ -25,6 +25,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jooq', version: '2.0.3.RELEASE'
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.1.4'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
 }
 
 flyway {
@@ -53,3 +54,18 @@ jooq {
         }
     }
 }
+
+clean.doFirst {
+    delete "${rootDir}/dbsample"
+    delete "${rootDir}/src/generated"
+}
+
+task generateJooqCode {
+    delete "${rootDir}/dbsample"
+    delete "${rootDir}/src/generated"
+    dependsOn flywayMigrate
+    dependsOn generateDummyJooqSchemaSource
+    generateDummyJooqSchemaSource.mustRunAfter flywayMigrate
+}
+
+test.dependsOn generateJooqCode
