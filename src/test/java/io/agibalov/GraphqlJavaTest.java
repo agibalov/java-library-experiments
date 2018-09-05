@@ -1,12 +1,8 @@
 package io.agibalov;
 
-import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
-import graphql.language.ObjectTypeDefinition;
-import graphql.language.TypeName;
 import graphql.schema.GraphQLSchema;
-import graphql.schema.StaticDataFetcher;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
@@ -21,12 +17,12 @@ import java.util.Map;
 import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
 import static org.junit.Assert.assertEquals;
 
-public class DummyTest {
+public class GraphqlJavaTest {
     @Test
     public void dummy() throws URISyntaxException {
         SchemaParser schemaParser = new SchemaParser();
         TypeDefinitionRegistry typeDefinitionRegistry = schemaParser
-                .parse(new File(DummyTest.class.getClassLoader().getResource("my.graphqls").toURI()));
+                .parse(new File(GraphqlJavaTest.class.getClassLoader().getResource("my.graphqls").toURI()));
 
         RuntimeWiring runtimeWiring = newRuntimeWiring()
                 .type("Query", builder -> builder
