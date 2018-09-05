@@ -9,3 +9,5 @@
   }
 }
 ```
+
+Also `http://localhost:8080/voyager` for API description.
