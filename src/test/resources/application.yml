@@ -1,0 +1,7 @@
+graphql:
+  servlet:
+    mapping: /graphql
+    enabled: true
+    corsEnabled: true
+  tools:
+    schemaLocationPattern: '**/dummy.graphqls'
