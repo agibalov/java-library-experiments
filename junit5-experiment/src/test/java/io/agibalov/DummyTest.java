@@ -1,4 +1,4 @@
-package me.loki2302;
+package io.agibalov;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -7,7 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -71,18 +70,14 @@ public class DummyTest {
     }
 
     public static class TestPrinterExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
-        private static final Logger LOG = Logger.getLogger(TestPrinterExtension.class.getName());
-
         @Override
-        public void beforeTestExecution(ExtensionContext context) throws Exception {
-            LOG.info("I am logging something");
-
+        public void beforeTestExecution(ExtensionContext context) {
             String displayName = context.getDisplayName();
             System.out.printf("Executing %s...\n", displayName);
         }
 
         @Override
-        public void afterTestExecution(ExtensionContext context) throws Exception {
+        public void afterTestExecution(ExtensionContext context) {
             String displayName = context.getDisplayName();
             System.out.printf("Executed %s\n", displayName);
         }

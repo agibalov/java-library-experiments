@@ -1,21 +1,6 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.3'
-    }
+plugins {
+    id 'java'
 }
-
-group 'me.loki2302'
-version '1.0-SNAPSHOT'
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.3.1'
-}
-
-apply plugin: 'java'
-apply plugin: 'org.junit.platform.gradle.plugin'
 
 sourceCompatibility = 1.8
 
@@ -23,13 +8,21 @@ repositories {
     mavenCentral()
 }
 
-junitPlatform {
-    logManager 'org.apache.logging.log4j.jul.LogManager'
+dependencies {
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.3.1'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
-dependencies {
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.3"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.3"
-    testRuntime "org.apache.logging.log4j:log4j-core:2.9.1"
-    testRuntime "org.apache.logging.log4j:log4j-jul:2.9.1"
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+    }
+}
+
+wrapper {
+    gradleVersion = '4.10.2'
 }
