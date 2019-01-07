@@ -1,0 +1,5 @@
+rootProject.name = 'junit-performance-testing-experiment'
+include 'app'
+include 'jmh'
+include 'metrics'
+include 'load'
