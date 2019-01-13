@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.0.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+}
+
+group 'io.agibalov'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile 'com.graphql-java:graphql-spring-boot-starter:5.0.2'
+    compile 'com.graphql-java:graphiql-spring-boot-starter:5.0.2'
+    compile 'com.graphql-java:voyager-spring-boot-starter:5.0.2'
+    compile group: 'com.graphql-java', name: 'graphql-java', version: '9.2'
+    compile group: 'com.graphql-java', name: 'graphql-java-tools', version: '5.2.3'
+    compileOnly group: 'org.projectlombok', name: 'lombok'
+}

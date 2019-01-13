@@ -1,0 +1,17 @@
+graphql:
+  servlet:
+    mapping: /graphql
+    enabled: true
+    corsEnabled: true
+  tools:
+    schemaLocationPattern: '**/dummy.graphqls'
+
+graphiql:
+  mapping: /graphiql
+  endpoint:
+    graphql: /graphql
+    subscriptions: /subscriptions
+  static:
+    basePath: /
+  enabled: true
+  pageTitle: GraphiQL
