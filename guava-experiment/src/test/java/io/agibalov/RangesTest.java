@@ -1,4 +1,4 @@
-package me.loki2302;
+package io.agibalov;
 
 import com.google.common.collect.Range;
 import org.junit.Test;

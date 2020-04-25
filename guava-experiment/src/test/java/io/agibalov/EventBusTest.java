@@ -1,4 +1,4 @@
-package me.loki2302;
+package io.agibalov;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

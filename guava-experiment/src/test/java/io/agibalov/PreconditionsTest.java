@@ -1,4 +1,4 @@
-package me.loki2302;
+package io.agibalov;
 
 import org.junit.Test;
 

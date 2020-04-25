@@ -1,4 +1,4 @@
-package me.loki2302;
+package io.agibalov;
 
 import com.google.common.reflect.TypeToken;
 import org.junit.Test;
