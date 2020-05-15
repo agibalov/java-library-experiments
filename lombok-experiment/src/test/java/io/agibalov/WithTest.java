@@ -1,12 +1,12 @@
 package io.agibalov;
 
 import lombok.AllArgsConstructor;
-import lombok.experimental.Wither;
+import lombok.With;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class WitherTest {
+public class WithTest {
     @Test
     public void canGenerateAWithMethod() {
         User user = new User("jsmith", "qwerty");
@@ -20,7 +20,7 @@ public class WitherTest {
     private static class User {
         private String username;
 
-        @Wither
+        @With
         private String password;
     }
 }

@@ -1,7 +1,7 @@
 package io.agibalov;
 
-import lombok.experimental.var;
 import lombok.val;
+import lombok.var;
 import org.junit.Test;
 
 import java.util.ArrayList;

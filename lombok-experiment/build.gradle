@@ -3,14 +3,17 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
 
+wrapper {
+    gradleVersion = '6.4'
+}
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
 }
