@@ -21,7 +21,6 @@ dependencies {
 
 test {
     testLogging {
-        //showStandardStreams = true
         events 'failed', 'passed', 'skipped'
     }
 }
