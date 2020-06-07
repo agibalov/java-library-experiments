@@ -12,8 +12,8 @@ public class StopwatchTest {
     public void dummy() throws InterruptedException {
         Stopwatch stopwatch = Stopwatch.createStarted();
         Thread.sleep(100);
-        stopwatch.stop();
-        assertTrue(stopwatch.elapsed(TimeUnit.MILLISECONDS) >= 100);
+        long elapsedMs = stopwatch.stop().elapsed(TimeUnit.MILLISECONDS);
+        assertTrue(elapsedMs >= 100);
         System.out.printf("time: %s\n", stopwatch);
     }
 }
