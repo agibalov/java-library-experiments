@@ -43,9 +43,9 @@ jooq {
     generateSchemaSourceOnCompilation = false
     db(sourceSets.main) {
         jdbc {
-            url = 'jdbc:mysql://localhost:3308/db1'
-            user = 'user1'
-            password = 'password1'
+            url = System.getenv('DB_URL')
+            user = System.getenv('DB_USER')
+            password = System.getenv('DB_PASSWORD')
         }
 
         generator {
@@ -56,7 +56,7 @@ jooq {
 
             database {
                 name = 'org.jooq.meta.mysql.MySQLDatabase'
-                inputSchema = 'db1'
+                inputSchema = System.getenv('DB_NAME')
                 outputSchemaToDefault = true
                 excludes = 'flyway_schema_history'
             }

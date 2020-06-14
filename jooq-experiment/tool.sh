@@ -2,6 +2,11 @@
 
 command=$1
 
+LOCAL_MYSQL_USER=user1
+LOCAL_MYSQL_PASSWORD=password1
+LOCAL_MYSQL_DB=db1
+LOCAL_MYSQL_URL=jdbc:mysql://localhost:3308/${LOCAL_MYSQL_DB}
+
 if [[ "${command}" == "start-db" ]]; then
   docker-compose stop db
   docker-compose up --build --no-start db
@@ -31,9 +36,9 @@ elif [[ "${command}" == "stop-db" ]]; then
   docker-compose stop db
 
 elif [[ "${command}" == "migrate-db" ]]; then
-  FLYWAY_USER=user1 \
-  FLYWAY_PASSWORD=password1 \
-  FLYWAY_URL=jdbc:mysql://localhost:3308/db1 \
+  FLYWAY_USER=${LOCAL_MYSQL_USER} \
+  FLYWAY_PASSWORD=${LOCAL_MYSQL_PASSWORD} \
+  FLYWAY_URL=${LOCAL_MYSQL_URL} \
   ./gradlew flywayMigrate -i
 
 elif [[ "${command}" == "delete-db-data" ]]; then
@@ -41,6 +46,10 @@ elif [[ "${command}" == "delete-db-data" ]]; then
   sudo rm -rf .data
 
 elif [[ "${command}" == "generate-jooq" ]]; then
+  DB_USER=${LOCAL_MYSQL_USER} \
+  DB_PASSWORD=${LOCAL_MYSQL_PASSWORD} \
+  DB_URL=${LOCAL_MYSQL_URL} \
+  DB_NAME=${LOCAL_MYSQL_DB} \
   ./gradlew cleanGenerateDbJooqSchemaSource generateDbJooqSchemaSource
 
 elif [[ "${command}" == "" ]]; then
