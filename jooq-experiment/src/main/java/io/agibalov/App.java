@@ -1,5 +1,6 @@
 package io.agibalov;
 
+import io.agibalov.db.Tables;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.boot.SpringApplication;
@@ -9,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-
-import static io.agibalov.db.Tables.SCHOOLS;
-import static io.agibalov.db.Tables.STUDENTS;
 
 @SpringBootApplication
 public class App {
@@ -30,10 +28,10 @@ public class App {
 
         @GetMapping("/")
         public ResponseEntity<?> index() {
-            int schoolCount = dslContext.selectCount().from(SCHOOLS).fetchOne(0, int.class);
+            int schoolCount = dslContext.selectCount().from(Tables.Schools).fetchOne(0, int.class);
             log.info("Schools: {}", schoolCount);
 
-            int studentCount = dslContext.selectCount().from(STUDENTS).fetchOne(0, int.class);
+            int studentCount = dslContext.selectCount().from(Tables.Students).fetchOne(0, int.class);
             log.info("Students: {}", studentCount);
 
             return ResponseEntity.ok(String.format("Hello world %s. Schools: %d, students: %d",

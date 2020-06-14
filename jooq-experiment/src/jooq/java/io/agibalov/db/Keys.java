@@ -4,10 +4,8 @@
 package io.agibalov.db;
 
 
-import io.agibalov.db.tables.Schools;
-import io.agibalov.db.tables.Students;
-import io.agibalov.db.tables.records.SchoolsRecord;
-import io.agibalov.db.tables.records.StudentsRecord;
+import io.agibalov.db.tables.records.Schools;
+import io.agibalov.db.tables.records.Students;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -31,25 +29,25 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<SchoolsRecord> KEY_SCHOOLS_PRIMARY = UniqueKeys0.KEY_SCHOOLS_PRIMARY;
-    public static final UniqueKey<StudentsRecord> KEY_STUDENTS_PRIMARY = UniqueKeys0.KEY_STUDENTS_PRIMARY;
+    public static final UniqueKey<Schools> KEY_Schools_PRIMARY = UniqueKeys0.KEY_Schools_PRIMARY;
+    public static final UniqueKey<Students> KEY_Students_PRIMARY = UniqueKeys0.KEY_Students_PRIMARY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<StudentsRecord, SchoolsRecord> STUDENTS_IBFK_1 = ForeignKeys0.STUDENTS_IBFK_1;
+    public static final ForeignKey<Students, Schools> Students_ibfk_1 = ForeignKeys0.Students_ibfk_1;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 {
-        public static final UniqueKey<SchoolsRecord> KEY_SCHOOLS_PRIMARY = Internal.createUniqueKey(Schools.SCHOOLS, "KEY_Schools_PRIMARY", new TableField[] { Schools.SCHOOLS.ID }, true);
-        public static final UniqueKey<StudentsRecord> KEY_STUDENTS_PRIMARY = Internal.createUniqueKey(Students.STUDENTS, "KEY_Students_PRIMARY", new TableField[] { Students.STUDENTS.ID }, true);
+        public static final UniqueKey<Schools> KEY_Schools_PRIMARY = Internal.createUniqueKey(io.agibalov.db.tables.Schools.Schools, "KEY_Schools_PRIMARY", new TableField[] { io.agibalov.db.tables.Schools.Schools.id }, true);
+        public static final UniqueKey<Students> KEY_Students_PRIMARY = Internal.createUniqueKey(io.agibalov.db.tables.Students.Students, "KEY_Students_PRIMARY", new TableField[] { io.agibalov.db.tables.Students.Students.id }, true);
     }
 
     private static class ForeignKeys0 {
-        public static final ForeignKey<StudentsRecord, SchoolsRecord> STUDENTS_IBFK_1 = Internal.createForeignKey(Keys.KEY_SCHOOLS_PRIMARY, Students.STUDENTS, "Students_ibfk_1", new TableField[] { Students.STUDENTS.SCHOOLID }, true);
+        public static final ForeignKey<Students, Schools> Students_ibfk_1 = Internal.createForeignKey(Keys.KEY_Schools_PRIMARY, io.agibalov.db.tables.Students.Students, "Students_ibfk_1", new TableField[] { io.agibalov.db.tables.Students.Students.schoolId }, true);
     }
 }

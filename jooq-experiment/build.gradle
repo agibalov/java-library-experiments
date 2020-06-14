@@ -51,7 +51,7 @@ jooq {
         generator {
             name = 'org.jooq.codegen.DefaultGenerator'
             strategy {
-                name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+                name = 'org.jooq.codegen.KeepNamesGeneratorStrategy'
             }
 
             database {

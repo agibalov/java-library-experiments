@@ -1,7 +1,7 @@
 package io.agibalov;
 
-import io.agibalov.db.routines.Addnumbers;
-import io.agibalov.db.tables.records.SchoolsRecord;
+import io.agibalov.db.routines.AddNumbers;
+import io.agibalov.db.tables.records.Schools;
 import io.agibalov.tools.IntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
-import static io.agibalov.db.Tables.SCHOOLS;
+import io.agibalov.db.Tables;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @IntegrationTest
@@ -40,39 +40,39 @@ public class JooqTest {
     public void canUseInsertSelect() {
         String schoolId = UUID.randomUUID().toString();
         String schoolName = String.format("School %s", schoolId);
-        dslContext.insertInto(SCHOOLS)
-                .columns(SCHOOLS.ID, SCHOOLS.NAME)
+        dslContext.insertInto(Tables.Schools)
+                .columns(Tables.Schools.id, Tables.Schools.name)
                 .values(schoolId, schoolName)
                 .execute();
 
-        String retrievedSchoolName = dslContext.selectFrom(SCHOOLS)
-                .where(SCHOOLS.ID.eq(schoolId))
-                .fetchOne(SCHOOLS.NAME);
+        String retrievedSchoolName = dslContext.selectFrom(Tables.Schools)
+                .where(Tables.Schools.id.eq(schoolId))
+                .fetchOne(Tables.Schools.name);
         assertEquals(schoolName, retrievedSchoolName);
     }
 
     @Test
     public void canUseGeneratedRecordClasses() {
         String schoolId = UUID.randomUUID().toString();
-        SchoolsRecord schoolsRecord = new SchoolsRecord();
-        schoolsRecord.setId(schoolId);
-        schoolsRecord.setName(String.format("School %s", schoolId));
+        Schools schoolsRecord = new Schools();
+        schoolsRecord.id(schoolId);
+        schoolsRecord.name(String.format("School %s", schoolId));
         dslContext.executeInsert(schoolsRecord);
 
-        SchoolsRecord retrievedSchoolsRecord = dslContext.selectFrom(SCHOOLS)
-                .where(SCHOOLS.ID.eq(schoolId))
+        Schools retrievedSchoolsRecord = dslContext.selectFrom(Tables.Schools)
+                .where(Tables.Schools.id.eq(schoolId))
                 .fetchOne();
-        assertEquals(schoolsRecord.getName(), retrievedSchoolsRecord.getName());
+        assertEquals(schoolsRecord.name(), retrievedSchoolsRecord.name());
     }
 
     @Test
     public void canCallAStoredProcedure() {
-        Addnumbers addnumbers = new Addnumbers();
-        addnumbers.setA(2);
-        addnumbers.setB(3);
-        addnumbers.execute(dslContext.configuration());
+        AddNumbers addNumbers = new AddNumbers();
+        addNumbers.a(2);
+        addNumbers.b(3);
+        addNumbers.execute(dslContext.configuration());
         Field<Long> resultField = DSL.field(DSL.name("aAndB"), SQLDataType.BIGINT);
-        Long result = addnumbers.getResults().get(0).getValue(0, resultField);
+        Long result = addNumbers.getResults().get(0).getValue(0, resultField);
         assertEquals(5L, result);
     }
 }

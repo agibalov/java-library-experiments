@@ -21,13 +21,13 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index STUDENTS_SCHOOLID = Indexes0.STUDENTS_SCHOOLID;
+    public static final Index schoolId = Indexes0.schoolId;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
-        public static Index STUDENTS_SCHOOLID = Internal.createIndex("schoolId", Students.STUDENTS, new OrderField[] { Students.STUDENTS.SCHOOLID }, false);
+        public static Index schoolId = Internal.createIndex("schoolId", Students.Students, new OrderField[] { Students.Students.schoolId }, false);
     }
 }

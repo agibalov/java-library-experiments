@@ -21,7 +21,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-    private static final long serialVersionUID = -1979578749;
+    private static final long serialVersionUID = -1279400285;
 
     /**
      * The reference instance of <code>DEFAULT_SCHEMA</code>
@@ -31,12 +31,12 @@ public class DefaultSchema extends SchemaImpl {
     /**
      * The table <code>Schools</code>.
      */
-    public final Schools SCHOOLS = Schools.SCHOOLS;
+    public final Schools Schools = io.agibalov.db.tables.Schools.Schools;
 
     /**
      * The table <code>Students</code>.
      */
-    public final Students STUDENTS = Students.STUDENTS;
+    public final Students Students = io.agibalov.db.tables.Students.Students;
 
     /**
      * No further instances allowed
@@ -54,7 +54,7 @@ public class DefaultSchema extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
-            Schools.SCHOOLS,
-            Students.STUDENTS);
+            Schools.Schools,
+            Students.Students);
     }
 }

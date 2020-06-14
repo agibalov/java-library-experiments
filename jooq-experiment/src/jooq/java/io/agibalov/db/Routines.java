@@ -4,7 +4,7 @@
 package io.agibalov.db;
 
 
-import io.agibalov.db.routines.Addnumbers;
+import io.agibalov.db.routines.AddNumbers;
 
 import org.jooq.Configuration;
 
@@ -18,10 +18,10 @@ public class Routines {
     /**
      * Call <code>AddNumbers</code>
      */
-    public static void addnumbers(Configuration configuration, Integer a, Integer b) {
-        Addnumbers p = new Addnumbers();
-        p.setA(a);
-        p.setB(b);
+    public static void AddNumbers(Configuration configuration, Integer a, Integer b) {
+        AddNumbers p = new AddNumbers();
+        p.a(a);
+        p.b(b);
 
         p.execute(configuration);
     }

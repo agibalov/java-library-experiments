@@ -17,10 +17,10 @@ public class Tables {
     /**
      * The table <code>Schools</code>.
      */
-    public static final Schools SCHOOLS = Schools.SCHOOLS;
+    public static final Schools Schools = io.agibalov.db.tables.Schools.Schools;
 
     /**
      * The table <code>Students</code>.
      */
-    public static final Students STUDENTS = Students.STUDENTS;
+    public static final Students Students = io.agibalov.db.tables.Students.Students;
 }
