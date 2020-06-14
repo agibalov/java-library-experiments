@@ -1,6 +1,5 @@
+.data
 .gradle
 .idea
-*.iml
 build
-src/generated
-dbsample
+*.iml

@@ -1,0 +1,10 @@
+spring:
+  main.banner-mode: off
+  datasource:
+    username: user1
+    password: password1
+    url: jdbc:mysql://localhost:3308/db1
+  jooq:
+    sql-dialect: mysql
+  flyway:
+    enabled: false
