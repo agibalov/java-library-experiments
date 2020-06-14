@@ -1,71 +1,109 @@
 plugins {
-    id 'org.flywaydb.flyway' version '5.1.4'
-    id 'nu.studer.jooq' version '2.0.11'
     id 'java'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.flywaydb.flyway' version '6.4.4'
+    id 'nu.studer.jooq' version '4.2'
 }
 
 group 'io.agibalov'
 version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 wrapper {
-    gradleVersion = '4.5'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+    gradleVersion = '6.3'
 }
+
+ext['jooq.version'] = '3.13.1'
 
 dependencies {
-    jooqRuntime group: 'com.h2database', name: 'h2', version: '1.4.197'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.0.3.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jooq', version: '2.0.3.RELEASE'
-    compile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    compile group: 'org.flywaydb', name: 'flyway-core', version: '5.1.4'
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
-}
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'mysql:mysql-connector-java:8.0.20'
+    jooqRuntime 'mysql:mysql-connector-java:8.0.20'
 
-flyway {
-    driver = 'org.h2.Driver'
-    url = 'jdbc:h2:./dbsample/dummy'
-    user = 'SA'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 jooq {
-    dummy(sourceSets.main) {
+    version = '3.13.1'
+    edition = 'OSS'
+    generateSchemaSourceOnCompilation = false
+    db(sourceSets.main) {
         jdbc {
-            driver = 'org.h2.Driver'
-            url = 'jdbc:h2:./dbsample/dummy'
-            user = 'SA'
+            url = 'jdbc:mysql://localhost:3308/db1'
+            user = 'user1'
+            password = 'password1'
         }
 
         generator {
-            database {
-                name = 'org.jooq.util.h2.H2Database'
-                inputSchema = 'PUBLIC'
+            name = 'org.jooq.codegen.DefaultGenerator'
+            strategy {
+                name = 'org.jooq.codegen.DefaultGeneratorStrategy'
             }
+
+            database {
+                name = 'org.jooq.meta.mysql.MySQLDatabase'
+                inputSchema = 'db1'
+                outputSchemaToDefault = true
+                excludes = 'flyway_schema_history'
+            }
+
+            generate {
+                records = true
+                relations = true
+            }
+
             target {
                 packageName = 'io.agibalov.db'
-                directory = 'src/generated/jooq'
+                directory = 'src/jooq/java'
             }
         }
     }
 }
 
-clean.doFirst {
-    delete "${rootDir}/dbsample"
-    delete "${rootDir}/src/generated"
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+        exceptionFormat = 'full'
+        events 'failed', 'passed', 'skipped', 'started'
+    }
+
+    beforeTest {
+        logger.lifecycle('*' * 60)
+    }
+
+    onOutput { descriptor, event ->
+        String message = event.message
+        logger.lifecycle(message.substring(0, message.length() - 1))
+    }
+
+    environment 'SPRING_PROFILES_ACTIVE', getEnvOrDefault('SPRING_PROFILES_ACTIVE', 'test')
+    environment 'TEST_MYSQL_HOST', getEnvOrDefault('TEST_MYSQL_HOST', 'localhost')
+    environment 'TEST_MYSQL_PORT', getEnvOrDefault('TEST_MYSQL_PORT', '3308')
+    environment 'TEST_MYSQL_ROOT_USERNAME', getEnvOrDefault('TEST_MYSQL_ROOT_USERNAME', 'root')
+    environment 'TEST_MYSQL_ROOT_PASSWORD', getEnvOrDefault('TEST_MYSQL_ROOT_PASSWORD', 'qwerty')
+    environment 'TEST_MYSQL_DATABASE', getEnvOrDefault('TEST_MYSQL_DATABASE', 'testdb')
+    environment 'TEST_MYSQL_USERNAME', getEnvOrDefault('TEST_MYSQL_USERNAME', 'testuser')
+    environment 'TEST_MYSQL_PASSWORD', getEnvOrDefault('TEST_MYSQL_PASSWORD', 'testpassword')
 }
 
-task generateJooqCode {
-    delete "${rootDir}/dbsample"
-    delete "${rootDir}/src/generated"
-    dependsOn flywayMigrate
-    dependsOn generateDummyJooqSchemaSource
-    generateDummyJooqSchemaSource.mustRunAfter flywayMigrate
+def getEnvOrDefault(String key, String defaultValue) {
+    return System.getenv().getOrDefault(key, defaultValue);
 }
-
-test.dependsOn generateJooqCode
