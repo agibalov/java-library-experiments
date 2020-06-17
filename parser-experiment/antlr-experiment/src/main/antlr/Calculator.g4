@@ -1,7 +1,7 @@
 grammar Calculator;
 
 @header {
-  package me.loki2302.calcgrammar;
+package io.agibalov.calcgrammar;
 }
 
 program
