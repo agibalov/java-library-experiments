@@ -19,6 +19,13 @@ public class HelloControllerTest {
     HttpClient client;
 
     @Test
+    void testIndexResponse() {
+        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.GET("/"), String.class);
+        assertEquals(HttpStatus.OK, response.getStatus());
+        assertEquals("this is the index page", response.body());
+    }
+
+    @Test
     void testHelloResponse() {
         HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.GET("/hello"), String.class);
         assertEquals(HttpStatus.OK, response.getStatus());
