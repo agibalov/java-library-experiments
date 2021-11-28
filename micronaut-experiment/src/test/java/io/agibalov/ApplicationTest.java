@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import jakarta.inject.Inject;
 
 @MicronautTest
-class IoAgibalovTest {
-
+class ApplicationTest {
     @Inject
     EmbeddedApplication<?> application;
 
@@ -17,5 +16,4 @@ class IoAgibalovTest {
     void testItWorks() {
         Assertions.assertTrue(application.isRunning());
     }
-
 }
