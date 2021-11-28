@@ -1,6 +1,6 @@
 # micronaut-experiment
 
-A Micronaut hello world. The goal is to take a brief look into it and figure out what it is.
+A [Micronaut](https://micronaut.io/) hello world. The goal is to take a brief look into it and figure out what it is.
 
 ## Prerequisites
 
