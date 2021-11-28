@@ -1,3 +1,5 @@
 micronaut:
   application:
-    name: ioAgibalov
+    name: The Micronaut Experiment
+
+app.hello-message-suffix: hi there
