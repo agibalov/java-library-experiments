@@ -22,7 +22,7 @@ public class HelloControllerTest {
     void testIndexResponse() {
         HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.GET("/"), String.class);
         assertEquals(HttpStatus.OK, response.getStatus());
-        assertEquals("this is the index page", response.body());
+        assertTrue(response.body().startsWith("this is the index page"));
     }
 
     @Test
