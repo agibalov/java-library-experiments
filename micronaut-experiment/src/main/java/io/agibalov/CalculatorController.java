@@ -4,6 +4,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
+import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,9 @@ import lombok.NoArgsConstructor;
 
 @Controller("calculator")
 public class CalculatorController {
+    @Inject
+    AdderService adderService;
+
     @Post("add")
     public HttpResponse<AddNumbersResponseBody> addNumbers(@Body AddNumbersRequestBody requestBody) {
         if (requestBody.getA() > 100 || requestBody.getB() > 100) {
@@ -18,7 +22,7 @@ public class CalculatorController {
         }
 
         return HttpResponse.ok(AddNumbersResponseBody.builder()
-                .result(requestBody.getA() + requestBody.getB())
+                .result(adderService.addNumbers(requestBody.getA(), requestBody.getB()))
                 .build());
     }
 
