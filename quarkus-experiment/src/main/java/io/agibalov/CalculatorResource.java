@@ -1,5 +1,6 @@
 package io.agibalov;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,7 @@ public class CalculatorResource {
                 .build();
     }
 
+    @RegisterForReflection
     @Data
     @Builder
     @AllArgsConstructor
@@ -38,6 +40,7 @@ public class CalculatorResource {
         private int b;
     }
 
+    @RegisterForReflection
     @Data
     @Builder
     @AllArgsConstructor
