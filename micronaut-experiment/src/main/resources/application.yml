@@ -1,0 +1,5 @@
+micronaut:
+  application:
+    name: The Micronaut Experiment
+
+app.hello-message-suffix: hi there
