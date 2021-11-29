@@ -13,7 +13,7 @@ A [Quarkus](https://quarkus.io/) hello world. The goal is to take a brief look i
   * http://localhost:8080/ for static home page
   * http://localhost:8080/hello for API
   * http://localhost:8080/q/dev/ Quarks's built-in dev UI
-* TODO: test
+* `./gradlew test` to run tests.
 * `./gradlew build -Dquarkus.package.type=uber-jar` to build an executable *.jar (~15MB), and then `java -jar build/quarkus-experiment-1.0-runner.jar` to run it. The app reports 1000ms-1300ms "started in" time. 
 * `./gradlew build -Dquarkus.package.type=native` to build a native image (~50MB), and then `./build/quarkus-experiment-1.0-runner` to run it. The app reports ~25ms "started in" time.
 * `docker-compose up --build` to build a native image and run in `debian:11.1-slim`.
