@@ -1,0 +1,9 @@
+**
+!/gradle
+!/src
+!/*.js
+!/build.gradle
+!/gradle.properties
+!/gradlew
+!/micronaut-cli.yml
+!/settings.gradle

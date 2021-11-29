@@ -13,6 +13,7 @@ A [Micronaut](https://micronaut.io/) hello world. The goal is to take a brief lo
 * `./gradlew test` to run tests.
 * `./gradlew assemble` to build an executable *.jar (~13MB), and then `java -jar build/libs/micronaut-experiment-0.1-all.jar` to run it. The app reports 900-2500ms "startup completed" time. 
 * `./gradlew nativeBuild` to build a native image (~58MB), and then `./build/native/nativeCompile/micronaut-experiment` to run it. The app reports ~200ms "startup completed" time.
+* `docker-compose up --build` to build a native image and run in `debian:11.1-slim`.
 
 ## Notes
 
